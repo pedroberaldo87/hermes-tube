@@ -1,0 +1,309 @@
+/* Small pieces and states: Why, Stat, Count, Dot, EmptyView/ErrorView/LoadingState, RpcUnavailableNotice, DialogFrame. */
+
+/* --------------------------------------------------------------- Why ("why is this here") */
+
+.PFX_why {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  min-height: var(--PFX_lh-label);
+  margin: 0;
+  color: var(--PFX_fg3);
+  white-space: nowrap;
+}
+
+.PFX_why-icon {
+  flex: none;
+  color: var(--ui-text-quaternary);
+}
+
+.PFX_why-label {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ui-text-secondary);
+}
+
+.PFX_why-detail {
+  flex: 0 10 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --------------------------------------------------------------- Stat / Count / Dot */
+
+.PFX_stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.PFX_stat-label {
+  color: var(--PFX_fg3);
+  letter-spacing: 0.04em;
+}
+
+.PFX_stat-value {
+  color: var(--ui-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.PFX_stat-hint {
+  color: var(--PFX_fg3);
+}
+
+.PFX_count {
+  display: inline-flex;
+  overflow: hidden;
+  font-variant-numeric: tabular-nums;
+  vertical-align: bottom;
+}
+
+.PFX_count[data-tone='new'] {
+  color: var(--ui-accent);
+  font-weight: 550;
+}
+
+.PFX_count-value {
+  display: inline-block;
+  animation: PFX_count-in 180ms var(--PFX_ease);
+}
+
+.PFX_dot {
+  display: inline-block;
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ui-text-quaternary);
+}
+
+.PFX_dot[data-tone='new'] {
+  background: var(--ui-accent);
+}
+
+.PFX_dot[data-tone='success'] {
+  background: var(--ui-green);
+}
+
+.PFX_dot[data-tone='warning'] {
+  background: var(--ui-yellow);
+}
+
+.PFX_dot[data-tone='error'] {
+  background: var(--ui-red);
+}
+
+/* --------------------------------------------------------------- States (empty, error, loading, no RPC) */
+
+.PFX_state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--PFX_s3);
+  min-height: 200px;
+  padding: var(--PFX_s6) var(--PFX_s4);
+  text-align: center;
+  color: var(--ui-text-secondary);
+}
+
+.PFX_state[data-compact='true'] {
+  min-height: 0;
+  padding: var(--PFX_s4);
+}
+
+.PFX_state-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--ui-bg-tertiary);
+  color: var(--PFX_fg3);
+}
+
+.PFX_state[data-tone='error'] .PFX_state-icon {
+  color: var(--ui-red);
+}
+
+/* title + text of the state: kit markup (not the SDK's EmptyState/ErrorState, see components/states.tsx) */
+.PFX_state-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--PFX_s1);
+  min-width: 0;
+  max-width: 44ch;
+}
+
+.PFX_state-title {
+  margin: 0;
+  font-size: var(--PFX_fs-head);
+  line-height: var(--PFX_lh-head);
+  font-weight: 600;
+  color: var(--ui-text-primary);
+  text-wrap: balance;
+}
+
+.PFX_state[data-compact='true'] .PFX_state-title {
+  font-size: var(--PFX_fs-body);
+  line-height: var(--PFX_lh-body);
+}
+
+.PFX_state-desc {
+  margin: 0;
+  font-size: var(--PFX_fs-label);
+  line-height: var(--PFX_lh-label);
+  color: var(--PFX_fg3);
+  text-wrap: pretty;
+}
+
+.PFX_state-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--PFX_s2);
+}
+
+/* --------------------------------------------------------------- DialogFrame */
+
+.PFX_dialog {
+  width: min(100% - 32px, 560px);
+  max-width: none;
+}
+
+.PFX_dialog[data-size='sm'] {
+  width: min(100% - 32px, 420px);
+}
+
+.PFX_dialog[data-size='lg'] {
+  width: min(100% - 32px, 760px);
+}
+
+.PFX_dialog[data-size='xl'] {
+  width: min(100% - 32px, 980px);
+}
+
+/* the body scrolls inside; header and footer (buttons) stay fixed. The edge shadow says there is more. */
+.PFX_dialog-scroll {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  margin: 0 calc(-1 * var(--PFX_s2));
+}
+
+.PFX_dialog-scroll::before,
+.PFX_dialog-scroll::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 14px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_dialog-scroll::before {
+  top: 0;
+  border-top: 1px solid var(--ui-stroke-tertiary);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--ui-base) 9%, transparent), transparent);
+}
+
+.PFX_dialog-scroll::after {
+  bottom: 0;
+  border-bottom: 1px solid var(--ui-stroke-tertiary);
+  background: linear-gradient(to top, color-mix(in srgb, var(--ui-base) 9%, transparent), transparent);
+}
+
+.PFX_dialog-scroll[data-overflow='top']::before,
+.PFX_dialog-scroll[data-overflow='both']::before,
+.PFX_dialog-scroll[data-overflow='bottom']::after,
+.PFX_dialog-scroll[data-overflow='both']::after {
+  opacity: 1;
+}
+
+.PFX_dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--PFX_s4);
+  min-width: 0;
+  max-height: min(62vh, 620px);
+  padding: var(--PFX_s1) var(--PFX_s2) var(--PFX_s2);
+  overflow: auto;
+  overscroll-behavior: contain;
+  container-type: inline-size;
+  container-name: PFX_dialog;
+}
+
+/* Pane's own header when the app zone does not show the tab strip (pane alone in the zone).
+   Same typography as the app's pane strips/labels: small uppercase, spaced, secondary color; the total of
+   new ones like the app label's "meta" (no uppercase, tabular figures, text tone — the accent stays on the
+   tree counters, right below). Never a big title. */
+.PFX_pane-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--PFX_s2);
+  min-width: 0;
+  padding: var(--PFX_s3) var(--PFX_pad) var(--PFX_s1);
+  font-size: 0.64rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ui-text-secondary);
+}
+
+.PFX_pane-head-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.PFX_pane-head-count {
+  flex: none;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  color: var(--ui-text-secondary);
+}
+
+/* Opens the page in the center. Pushed to the right edge of the header; reads as a quiet link until hovered. */
+.PFX_pane-head-open {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  padding: 4px 8px;
+  border: 1px solid var(--ui-stroke-secondary);
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ui-text-secondary);
+  cursor: pointer;
+}
+
+.PFX_pane-head-open:hover,
+.PFX_pane-head-open:focus-visible {
+  border-color: var(--ui-accent);
+  color: var(--ui-text-primary);
+}
+
+.PFX_pane-head-open:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 1px;
+}

@@ -1,0 +1,125 @@
+{
+  "title": "Organize with Hermes",
+  "intro": {
+    "lead": "Hermes reads each channel's name and latest videos and suggests a folder.",
+    "count_none": "Channels without a folder",
+    "count_selection": "Selected channels",
+    "model_exact": "Uses {model}",
+    "model_last": "Last suggestions by {model}",
+    "model_main": "Uses your Hermes model ({model}), or the one you pick for this task",
+    "model_unknown": "Uses the model you set up in Hermes",
+    "choose_model": "Choose model",
+    "start": "Suggest folders",
+    "not_now": "Not now",
+    "steps_label": "What happens next"
+  },
+  "steps": {
+    "read": "Hermes reads names and recent videos",
+    "suggest": "It suggests a folder (and tags) for each channel",
+    "review": "You review: nothing changes until you accept"
+  },
+  "progress": {
+    "label": "Organizing",
+    "channels": "{done} of {total} channels",
+    "percent": "{percent}%",
+    "preparing": "Getting started…",
+    "arriving": "More suggestions on the way",
+    "accept_ready_one": "Accept {count} ready",
+    "accept_ready_other": "Accept {count} ready",
+    "cancel": "Cancel",
+    "background": "Keep going in the background"
+  },
+  "review": {
+    "suggestions_one": "{count} suggestion",
+    "suggestions_other": "{count} suggestions",
+    "folders_one": "{count} folder",
+    "folders_other": "{count} folders",
+    "new_folders_one": "{count} new",
+    "new_folders_other": "{count} new",
+    "by_model": "by {model}",
+    "nothing_changes": "Nothing changes until you accept.",
+    "accept_all": "Accept all ({count})",
+    "shortcut_mac": "⌘↵ accepts all",
+    "shortcut_other": "Ctrl+Enter accepts all",
+    "done": "Done",
+    "close": "Close",
+    "suggest_again": "Suggest again",
+    "list_label": "Suggested folders"
+  },
+  "group": {
+    "new": "new folder",
+    "tags_only": "New tags (the folder stays the same)"
+  },
+  "row": {
+    "change_folder": "Change folder for {channel}",
+    "folder_input": "Folder for {channel}",
+    "folder_hint": "Enter to keep · Esc to give up",
+    "edited": "changed by you",
+    "from": "now in {folder}",
+    "add_tags_one": "add tag {tags}",
+    "add_tags_other": "add tags {tags}"
+  },
+  "undo": {
+    "organized_one": "{count} channel organized",
+    "organized_other": "{count} channels organized",
+    "action": "Undo organization",
+    "undoing": "Undoing…"
+  },
+  "reject": {
+    "pending_one": "{count} suggestion rejected",
+    "pending_other": "{count} suggestions rejected",
+    "undo": "Undo"
+  },
+  "partial": {
+    "title_one": "{count} channel got no suggestion",
+    "title_other": "{count} channels got no suggestion",
+    "timeout": "Time ran out before the end.",
+    "batch": "A batch didn't come back from the model, or Hermes wasn't sure.",
+    "retry": "Try those again"
+  },
+  "uncovered": {
+    "title_one": "{count} channel without a folder isn't in these suggestions",
+    "title_other": "{count} channels without a folder aren't in these suggestions",
+    "desc": "They arrived after these suggestions were made, or the last run did not reach them.",
+    "action": "Suggest for them"
+  },
+  "notice": {
+    "busy": "An organization was already running, so you're following it.",
+    "cancelled": "Cancelled. Nothing was applied; suggestions that already arrived stay here for you to review.",
+    "cancel_failed": "Couldn't cancel; the work will finish on its own. Nothing changes until you accept."
+  },
+  "nothing": {
+    "title": "Every channel already has a folder",
+    "desc": "New subscriptions without a folder will show up here.",
+    "action": "See channels"
+  },
+  "empty": {
+    "title": "No suggestions this time",
+    "desc": "Hermes didn't find a good folder for these channels.",
+    "retry": "Try again"
+  },
+  "no_model": {
+    "title": "Choose a model so Hermes can organize",
+    "desc": "Hermes needs an AI model for this task. Pick one and sign in under Settings → Models, then come back and try again.",
+    "action": "Choose model",
+    "retry": "Try again"
+  },
+  "provider_unavailable": {
+    "title": "Hermes couldn't reach your AI model",
+    "action": "Open model settings",
+    "retry": "Try again"
+  },
+  "error": {
+    "title": "Couldn't suggest folders",
+    "accept": "Couldn't apply",
+    "reject": "Couldn't reject",
+    "undo": "Couldn't undo",
+    "retry": "Try again"
+  },
+  "ai": {
+    "no_model_title": "No AI model is available",
+    "no_model_desc": "Hermes needs an AI model to suggest folders. Pick one and sign in under Settings → Models first.",
+    "choose_model": "Choose model",
+    "provider_unavailable_title": "Hermes couldn't reach your AI model"
+  }
+}

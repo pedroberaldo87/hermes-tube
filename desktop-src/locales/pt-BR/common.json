@@ -1,0 +1,266 @@
+{
+  "plugin_name": "HermesTube",
+  "loading": "Carregando…",
+  "empty": "Nada por aqui ainda",
+  "retry": "Tentar de novo",
+  "close": "Fechar",
+  "error_title": "Algo deu errado",
+  "open_desktop_backend": "Isto precisa da IA do Hermes. Abra pelo app Hermes Desktop com o backend local (ou use /tube no chat).",
+  "reconnect_open_hermes": "Abra o Hermes para reconectar a extensão do navegador.",
+  "already_executed": "Já executado — use Reinscrever em Faxina → Ex-inscrições.",
+  "no_model": "Nenhum modelo de IA disponível. Escolha um e entre na conta em Ajustes → Modelos.",
+  "provider_unavailable": "O Hermes não conseguiu acessar seu modelo de IA ({route}). Entre na conta de novo ou escolha outro modelo para “YouTube curator” em Settings → Model → Auxiliary models.",
+  "provider_unavailable_plain": "O Hermes não conseguiu acessar seu modelo de IA. Entre na conta de novo ou escolha outro modelo para “YouTube curator” em Settings → Model → Auxiliary models.",
+  "nav": {
+    "home": "Inscrições",
+    "manage": "Gerenciar inscrições",
+    "cleanup": "Faxina",
+    "extras": "Extras"
+  },
+  "routes": {
+    "home": "Inscrições",
+    "manage": "Gerenciar",
+    "cleanup": "Faxina",
+    "extras": "Extras",
+    "watch": "Assistindo"
+  },
+  "pane": {
+    "title": "Inscrições",
+    "open_page": "Abrir o HermesTube",
+    "open_page_short": "Abrir",
+    "open_page_tip": "Abrir o HermesTube no centro"
+  },
+  "chip": {
+    "new": "▶ {count} novos",
+    "title": "Abrir Inscrições",
+    "refreshing": "atualizando…"
+  },
+  "palette": {
+    "open-home": "Inscrições: abrir",
+    "organize": "Inscrições: organizar com o Hermes",
+    "cleanup": "Inscrições: faxina",
+    "new-theme-tab": "Inscrições: nova aba por assunto",
+    "refresh-now": "Inscrições: atualizar agora",
+    "open-extras": "Inscrições: extras"
+  },
+  "refresh": {
+    "started": "Atualizando as inscrições…",
+    "running": "Já existe uma atualização em andamento",
+    "skipped": "As inscrições já estão em dia"
+  },
+  "dialogs": {
+    "onboarding": "Boas-vindas",
+    "tab-editor": "Aba",
+    "organize": "Organizar com o Hermes",
+    "theme": "Nova aba por assunto",
+    "list-import": "Importar uma lista",
+    "history": "Histórico",
+    "create-tab": "Criar aba com a seleção"
+  },
+  "placeholder": {
+    "title": "Em breve",
+    "description": "Esta tela ainda está sendo construída."
+  },
+  "video": {
+    "new": "Novo",
+    "open": "Abrir no YouTube",
+    "short": "Short",
+    "live": "Ao vivo",
+    "premiere": "Estreia",
+    "kind": {
+      "video": "Vídeo"
+    },
+    "duration": {
+      "h": "{count} h",
+      "m": "{count} min",
+      "s": "{count} s"
+    },
+    "views": "{count} visualizações",
+    "why": {
+      "folder": "Pasta",
+      "tag": "Tag",
+      "channel": "Canal",
+      "theme": "Assunto",
+      "hn": "Hacker News",
+      "list": "Lista"
+    },
+    "badge": {
+      "hn": "HN recomenda"
+    }
+  },
+  "errors": {
+    "not_found": "Não encontrado.",
+    "conflict": "Isso conflita com algo que já existe.",
+    "invalid": "Alguma informação está inválida.",
+    "unauthorized": "Não autorizado.",
+    "undo_refused": "Esta mudança não pode ser desfeita.",
+    "approval_refused": "Esta aprovação foi recusada.",
+    "timeout": "Demorou demais. Tente de novo.",
+    "busy": "O Hermes está ocupado com outra tarefa. Tente daqui a pouco.",
+    "llm_unavailable": "Nenhum modelo de IA disponível. Escolha um e entre na conta em Ajustes → Modelos.",
+    "llm_invalid": "A IA respondeu num formato inesperado. Tente de novo.",
+    "youtube_error": "O YouTube não respondeu como esperado.",
+    "http_error": "Uma requisição de rede falhou.",
+    "origin_forbidden": "Esta origem não é permitida.",
+    "origin_required": "A requisição veio sem origem.",
+    "origin_mismatch": "A requisição veio de outra origem.",
+    "host_forbidden": "Este host não é permitido.",
+    "plugin_disabled": "O plugin está desligado neste perfil. Ligue em Capabilities → Plugins.",
+    "no_active_code": "Não há código de pareamento ativo.",
+    "invalid_code": "Código de pareamento errado.",
+    "expired": "O código de pareamento expirou.",
+    "used": "O código de pareamento já foi usado.",
+    "locked": "Tentativas demais. Gere um código novo.",
+    "ext_endpoint_down": "O endereço da extensão está fora do ar. Abra o Hermes para reconectar.",
+    "internal": "Erro inesperado."
+  },
+  "kit": {
+    "shortcut_label": "{label} ({key})",
+    "actions": {
+      "label": "Ações rápidas",
+      "watched": "Visto",
+      "later": "Depois",
+      "archive": "Arquivar",
+      "up": "Gostei",
+      "down": "Não curti",
+      "open": "Abrir",
+      "watched_do": "Marcar como visto",
+      "watched_undo": "Desfazer visto",
+      "later_do": "Guardar em Ver depois",
+      "later_undo": "Tirar de Ver depois",
+      "archive_do": "Arquivar",
+      "archive_undo": "Desarquivar",
+      "up_do": "Gostei",
+      "up_undo": "Tirar o gostei",
+      "down_do": "Não curti",
+      "down_undo": "Desfazer não curti"
+    },
+    "density": {
+      "label": "Densidade",
+      "comfortable": "Confortável",
+      "compact": "Compacta",
+      "list": "Lista"
+    },
+    "tabs": {
+      "label": "Abas",
+      "add": "Nova aba",
+      "new_count": "{count} novos",
+      "menu": "Opções da aba {name}"
+    },
+    "filter": {
+      "search": "Buscar",
+      "clear": "Limpar filtros",
+      "results": "{count} resultados"
+    },
+    "thumb": {
+      "watched": "Visto",
+      "new": "Novo",
+      "progress": "Assistido {percent}%",
+      "unavailable": "Miniatura indisponível"
+    },
+    "why": {
+      "label": "Por que está aqui"
+    },
+    "channel": {
+      "favorite": "Favorito",
+      "no_folder": "Sem pasta",
+      "no_videos": "Sem vídeos ainda",
+      "select": "Selecionar {name}",
+      "columns": {
+        "channel": "Canal",
+        "folder": "Pasta",
+        "tags": "Tags",
+        "new": "Novos",
+        "last": "Último vídeo",
+        "actions": "Ações"
+      }
+    },
+    "tree": {
+      "expand": "Expandir",
+      "collapse": "Recolher",
+      "drop": "Solte aqui para mover",
+      "new_count": "{count} novos"
+    },
+    "steps": {
+      "waiting": "Esperando",
+      "running": "Em andamento",
+      "done": "Feito",
+      "failed": "Falhou"
+    },
+    "suggest": {
+      "accept": "Aceitar",
+      "reject": "Recusar",
+      "accept_all": "Aceitar grupo",
+      "reject_all": "Recusar grupo",
+      "by_model": "por {model}",
+      "confidence": "{percent}% de certeza",
+      "accepted": "Aceita",
+      "rejected": "Recusada",
+      "count": "{count} sugestões",
+      "count_one": "{count} sugestão"
+    },
+    "approval": {
+      "what": "O que vai acontecer",
+      "cancel": "Cancelar",
+      "not_now": "Agora não"
+    },
+    "pairing": {
+      "label": "Código de pareamento",
+      "expires": "Expira em {time}",
+      "expired": "O código expirou",
+      "regenerate": "Gerar outro",
+      "copy": "Copiar código",
+      "steps_label": "Como parear",
+      "step_open": "Abra a extensão",
+      "step_open_hint": "Clique no ícone dela na barra do navegador.",
+      "step_code": "Digite este código",
+      "step_done": "Pronto",
+      "waiting": "Aguardando a extensão…",
+      "paired": "Conectada. Trazendo suas inscrições.",
+      "done_hint": "Suas inscrições aparecem aqui assim que ela conectar."
+    },
+    "banner": {
+      "dismiss": "Dispensar"
+    },
+    "chip": {
+      "remove": "Remover {name}"
+    },
+    "path": {
+      "recommended": "Recomendado"
+    },
+    "welcome": {
+      "title": "Boas-vindas",
+      "tagline": "Suas inscrições. Do seu jeito."
+    },
+    "dialog": {
+      "more_above": "Há mais acima",
+      "more_below": "Há mais abaixo"
+    }
+  },
+  "sections": {
+    "label": "Seções do HermesTube",
+    "menu": "Seção: {section}",
+    "back": "Voltar",
+    "close_video": "Fechar vídeo"
+  },
+  "playlists": {
+    "add": "Adicionar à playlist",
+    "count": "{count} vídeos",
+    "count_one": "1 vídeo",
+    "saved": "Salvo em {name}",
+    "removed": "Removido de {name}",
+    "failed": "Não deu para salvar a playlist: {error}",
+    "picker": {
+      "title": "Adicionar à playlist",
+      "description": "Suas playlists ficam no HermesTube, neste computador. Nada muda no YouTube.",
+      "loading": "Carregando suas playlists…",
+      "empty": "Nenhuma playlist ainda. Crie a primeira aqui embaixo.",
+      "new": "Nova playlist…",
+      "name_label": "Nome da playlist",
+      "name_placeholder": "ex.: Física",
+      "create": "Criar",
+      "cancel": "Cancelar",
+      "done": "Pronto"
+    }
+  }
+}

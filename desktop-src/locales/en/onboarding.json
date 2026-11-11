@@ -1,0 +1,286 @@
+{
+  "title": "Welcome",
+  "hero": {
+    "tagline": "Your subscriptions. Your way.",
+    "lead": "Bring your YouTube subscriptions into Hermes and organize them however you like. Pick a way to start — the others stay here for later."
+  },
+  "paths": {
+    "label": "How to start",
+    "key_hint": "Press {key}",
+    "pair": {
+      "title": "Connect the browser extension",
+      "desc": "Brings all your subscriptions and what you watch, straight from your browser. No password.",
+      "action": "Connect",
+      "hint": "Recommended"
+    },
+    "link": {
+      "title": "Paste a channel",
+      "desc": "Paste a channel link or an @handle to follow it here, without the extension.",
+      "action": "Paste a link",
+      "hint": "No extension"
+    },
+    "demo": {
+      "title": "Try the demo",
+      "desc": "40 real public channels in 6 folders, to explore before connecting anything.",
+      "action": "Load the demo",
+      "hint": "One click",
+      "loaded_desc": "The demo is loaded. Clear it whenever you like — what you added stays.",
+      "loaded_action": "Manage the demo"
+    }
+  },
+  "back": "All options",
+  "plural": {
+    "channels_one": "{count} channel",
+    "channels_other": "{count} channels",
+    "folders_one": "{count} folder",
+    "folders_other": "{count} folders",
+    "videos_one": "{count} video",
+    "videos_other": "{count} videos"
+  },
+  "pair": {
+    "title": "Connect the browser extension",
+    "desc": "Type this code in the extension to link your browser to Hermes.",
+    "desc_syncing": "Connected. Reading your subscriptions…",
+    "desc_done": "Connected. You're all set.",
+    "code_label": "Your code",
+    "steps_label": "Steps to connect",
+    "step_open": "Open the extension in Chrome and type the code",
+    "step_open_detail": "Click the extension icon in the browser toolbar",
+    "step_read": "Reading your subscriptions",
+    "step_read_detail": "The extension opens your subscriptions page in a tab for a few seconds; nothing in your account is changed",
+    "step_ready": "Ready",
+    "waiting": "Waiting for the extension…",
+    "expired_hint": "This code expired. Create another one — it takes a second.",
+    "connected_title": "{name} connected",
+    "connected_desc": "This fills in by itself; it usually takes a few seconds.",
+    "done_title": "Your subscriptions are here",
+    "slow": "The first read can take a few minutes when you follow many channels. You can close this — channels show up on their own.",
+    "close": "Close",
+    "unnamed": "Your browser",
+    "endpoint_down": "The extension talks to Hermes only while Hermes is open. Keep it open (in the background is fine) and the extension reconnects by itself.",
+    "install": {
+      "title": "Don't have the extension yet?",
+      "body": "In Chrome, open the Extensions page, turn on Developer mode and choose “Load unpacked” with the extension folder. Then pin it to the toolbar.",
+      "store_url": "",
+      "store_link": "Get the extension"
+    },
+    "setup": {
+      "title": "Set up the extension",
+      "desc": "Hermes puts the HermesTube extension in a folder in your home folder and opens {browser}'s Extensions page. The browser then needs two clicks from you.",
+      "action": "Set up the extension",
+      "busy": "Setting up…",
+      "choose_browser": "Browser",
+      "browser_generic": "your browser",
+      "no_browser_found": "Hermes didn't find Chrome, Edge, Brave, Chromium, Vivaldi or Opera on the computer where it runs. It can still prepare the folder; then open your browser's Extensions page yourself.",
+      "update_title": "A new version of the extension is ready",
+      "update_desc": "Hermes replaces the files in the same folder (version {version}). Then press Reload on the extension's card in the browser.",
+      "update_action": "Update the extension",
+      "ready_title": "The extension folder is ready",
+      "reopen": "Open the Extensions page",
+      "steps_label": "Steps to install the extension",
+      "step_folder": "Hermes put the extension in a folder",
+      "step_updated": "Hermes updated the extension to version {version}",
+      "step_dev": "Turn on “{dev}”",
+      "step_drag": "Drag the “HermesTube Extension” folder onto that page",
+      "step_drag_detail": "Or click “{load}” and choose the folder — its path can be copied above",
+      "step_reload": "Press Reload on the HermesTube card in {browser}",
+      "step_reload_detail": "On the browser's Extensions page. The extension stays connected to Hermes.",
+      "step_code": "Type the code below in the extension",
+      "step_code_detail": "The extension opens a tab by itself and asks for the code",
+      "copy_path": "Copy the folder path",
+      "opened": "{browser}'s Extensions page and the folder are open.",
+      "opened_page_only": "{browser}'s Extensions page is open. Use the path below to find the folder.",
+      "not_opened_title": "Hermes couldn't open {browser}",
+      "open_yourself": "Extensions page:",
+      "copy_url": "Copy the address",
+      "other_computer": "If Hermes runs on another computer, the folder was created there, not on this one. The extension only talks to a Hermes on the same computer, so follow the install guide on the computer where Hermes runs.",
+      "problem": {
+        "no_browser": "{browser} wasn't found on the computer where Hermes runs.",
+        "no_display": "The computer where Hermes runs has no screen to open {browser} on.",
+        "failed": "{browser} didn't start on the computer where Hermes runs.",
+        "unsupported": "Hermes can't open a browser on this system."
+      },
+      "manual_title": "Or do it by hand",
+      "manual_open": "In {browser}, open",
+      "manual_dev": "Turn on “{dev}”",
+      "manual_load": "Click “{load}” and choose this folder:",
+      "manual_load_above": "Click “{load}” and choose the folder above.",
+      "manual_folder_later": "Hermes creates this folder when you press “Set up the extension”.",
+      "manual_code": "Type the code below in the tab the extension opens (or click its icon in the toolbar).",
+      "browsers": {
+        "chrome": {
+          "dev": "Developer mode",
+          "load": "Load unpacked",
+          "where": "The switch is at the top right of the Extensions page."
+        },
+        "chromium": {
+          "dev": "Developer mode",
+          "load": "Load unpacked",
+          "where": "The switch is at the top right of the Extensions page."
+        },
+        "edge": {
+          "dev": "Developer mode",
+          "load": "Load unpacked",
+          "where": "The switch is in the left-hand panel of the Extensions page (if the panel is hidden, open it with the menu button at the top left)."
+        },
+        "brave": {
+          "dev": "Developer mode",
+          "load": "Load unpacked",
+          "where": "The switch is at the top right of the Extensions page."
+        },
+        "vivaldi": {
+          "dev": "Developer mode",
+          "load": "Load unpacked",
+          "where": "The switch is at the top right of the Extensions page."
+        },
+        "opera": {
+          "dev": "Developer mode",
+          "load": "Load unpacked",
+          "where": "The switch is at the top right of the Extensions page."
+        },
+        "arc": {
+          "dev": "Developer mode",
+          "load": "Load unpacked",
+          "where": "The switch is at the top right of the Extensions page."
+        },
+        "generic": {
+          "dev": "Developer mode",
+          "load": "Load unpacked",
+          "where": "The switch is on the browser's Extensions page, usually at the top right."
+        }
+      },
+      "sandbox": {
+        "flatpak_title": "{browser} is a Flatpak and can't see this folder yet",
+        "flatpak_body": "Give it read access to the folder once — run this in a terminal, then close and reopen the browser:",
+        "copy_command": "Copy the command",
+        "snap_title": "{browser} is a snap and can't see this folder",
+        "snap_body": "Snap browsers only see folders under /home. Use a version of the browser that is not a snap, or another browser."
+      },
+      "ask": {
+        "title": "Stuck? Hermes can help",
+        "desc": "Opens a new chat with a ready request: your system, the folder, the browser and the steps. Nothing is sent until you press Send, and the request tells Hermes not to touch the browser's profile, not to skip the browser's own steps and not to install anything without asking.",
+        "action": "Ask Hermes to help",
+        "busy": "Opening a chat…",
+        "sent": "A new chat has the request. Read it and press Send.",
+        "failed": "Hermes couldn't open a chat. Copy the request and paste it into a chat with Hermes:",
+        "copy_title": "Copy a request for Hermes",
+        "copy_desc": "A ready request with your system, the folder, the browser and the steps, for a chat with Hermes. It tells Hermes not to touch the browser's profile, not to skip the browser's own steps and not to install anything without asking.",
+        "copy_label": "Copy a request for Hermes"
+      },
+      "remote_title": "Hermes runs on another computer ({name})",
+      "remote_body": "This button sets up the extension on that computer. The extension only talks to a Hermes on the same computer, so use the browser there.",
+      "wsl": {
+        "title": "Hermes runs inside WSL",
+        "localhost": "The browser runs on Windows and reaches Hermes inside WSL through WSL's localhost forwarding, which is on by default. If the code never connects, use “{ask}” below.",
+        "no_interop": "Hermes runs inside WSL with interop off: open the browser yourself.",
+        "wsl_disk": "The folder is on the WSL disk: copy it to your Windows user folder if the browser refuses this path."
+      },
+      "not_ours_title": "There's already a folder named “HermesTube Extension”",
+      "not_ours_body": "Hermes didn't create it, so it won't touch it. Rename or move that folder, then check again.",
+      "check_again": "Check again",
+      "error_title": "Hermes couldn't set up the extension",
+      "error_body": "Try again, or follow the steps by hand below.",
+      "read_failed": "Couldn't check the extension folder yet — trying again on its own. The button works anyway.",
+      "show_folder": "Show the folder"
+    },
+    "errors": {
+      "ext_endpoint_down": {
+        "title": "Hermes couldn't open the connection to your browser",
+        "body": "Close and reopen Hermes, then try again. If it keeps happening, another app may be in the way."
+      },
+      "timeout": {
+        "title": "Hermes took too long to answer",
+        "body": "It may still be starting up. Try again in a moment."
+      },
+      "generic": {
+        "title": "We couldn't create a code",
+        "body": "Hermes didn't answer as expected. Try again."
+      }
+    }
+  },
+  "done": {
+    "closing": "Opening your subscriptions in {seconds} s",
+    "stay": "Stay here",
+    "open_now": "See my subscriptions"
+  },
+  "link": {
+    "title": "Paste a channel",
+    "desc": "A channel link, a video link or an @handle. You follow it here — nothing changes on YouTube.",
+    "label": "Channel link or @handle",
+    "placeholder": "@veritasium or youtube.com/@veritasium",
+    "examples": "For example @mkbhd, youtube.com/@3blue1brown or a video link",
+    "submit": "Add",
+    "list_title": "Added here",
+    "undo": "Undo",
+    "retry": "Try again",
+    "dismiss": "Dismiss",
+    "add_again": "Add again",
+    "done": "Done",
+    "status": {
+      "pending": "Looking it up on YouTube…",
+      "added": "Following · {handle}",
+      "added_plain": "Following",
+      "exists": "Already in your list",
+      "late": "YouTube is slow — it shows up in your list in a moment",
+      "undoing": "Undoing…",
+      "undone": "Removed from your list"
+    },
+    "errors": {
+      "empty": "Paste a channel link or an @handle.",
+      "format": "That doesn't look like a YouTube channel. Use an @handle, a channel link or a video link.",
+      "not_found": "We couldn't find this channel on YouTube. Check the link or the @handle.",
+      "rate_limited": "YouTube is limiting requests right now. Try again in a few minutes.",
+      "youtube_down": "YouTube isn't answering right now. Try again in a moment.",
+      "timeout": "YouTube took too long to answer. Try again.",
+      "generic": "We couldn't add this channel. Try again.",
+      "undo_failed": "We couldn't undo it. Try again."
+    }
+  },
+  "demo": {
+    "title": "Demo mode",
+    "desc": "40 real public channels in 6 folders, a few favorites and a topic tab. Nothing touches your YouTube account.",
+    "steps_label": "Loading the demo",
+    "step_channels": "Adding channels and folders",
+    "step_videos": "Fetching the latest videos",
+    "step_ready": "Ready to explore",
+    "load": "Load the demo",
+    "loaded_title": "The demo is loaded",
+    "loaded_desc": "Demo channels are in your list. Clearing removes only them — anything you added stays.",
+    "clear": "Clear the demo",
+    "cleared_title": "Demo cleared",
+    "cleared_desc": "Only the demo channels were removed.",
+    "load_again": "Load it again",
+    "skipped": "{count} of the demo channels were already yours and stayed as they were",
+    "videos_later": "Videos keep arriving in the background.",
+    "rss_down": "YouTube's feed is unstable right now — videos arrive little by little.",
+    "errors": {
+      "load": "We couldn't load the demo. Try again.",
+      "clear": "We couldn't clear the demo. Try again."
+    }
+  },
+  "devices": {
+    "title": "Connected browsers",
+    "desc": "Browsers linked to Hermes through the extension.",
+    "seen": "Active {when}",
+    "never_seen": "Not seen yet",
+    "online": "Online now",
+    "revoke": "Disconnect",
+    "revoke_label": "Disconnect {name}",
+    "revoke_title": "Disconnect {name}?",
+    "revoke_desc": "Your subscriptions and folders stay here.",
+    "revoke_effect_stop": "The extension in this browser stops syncing with Hermes",
+    "revoke_effect_again": "To connect it again, create a new code here",
+    "revoke_confirm": "Disconnect {name}",
+    "revoke_cancel": "Not now",
+    "revoke_failed": "We couldn't disconnect {name}. Try again.",
+    "error": "We couldn't load your connected browsers."
+  },
+  "reach": {
+    "remote_title": "You're connected to {name}, not this computer",
+    "remote_body": "The extension talks to the Hermes on the computer where your browser is. Switch to {local} to set it up.",
+    "local_default": "This device",
+    "anyway": "My browser is on {name}",
+    "off_title": "The plugin isn't on in “{profile}”",
+    "off_body": "You're in the “{profile}” profile. Go back to the profile where you installed it, or turn it on here: Capabilities → Plugins → HermesTube."
+  }
+}

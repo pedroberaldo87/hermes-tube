@@ -1,0 +1,365 @@
+{
+  "version": 1,
+  "exportedAt": "2026-11-09T19:20:00.000Z",
+  "state": {
+    "organizables": [
+      {
+        "type": "channel",
+        "youtubeId": "UCHnyfMqiRRG1u-2MsSQLbXA",
+        "name": "Veritasium",
+        "thumbnailUrl": "https://yt3.googleusercontent.com/7vCbvtCqtjQ3YLgsJt7Y952MQV1sBvhllSCSxHP8_sVZdcPCBrITfhkN2RdyCuwPnsByq-1GoA=s900-c-k-c0x00ffffff-no-rj",
+        "url": "https://www.youtube.com/@veritasium",
+        "handle": "veritasium",
+        "folderId": "7c2028d2-f36c-408c-ac00-074ea8e5d0e1",
+        "tagIds": [
+          "0cbff4f8-6888-4a03-a322-d3d8e388e048",
+          "7536fb36-e403-42db-b0ed-4de067db15f7"
+        ],
+        "isSubscribed": true,
+        "id": "8113c99c-d9db-4d53-90ee-993c3c7703a4",
+        "muted": false,
+        "addedAt": 1785542400000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UCYO_jab_esuFRV4b17AJtAw",
+        "name": "3Blue1Brown",
+        "thumbnailUrl": "https://yt3.googleusercontent.com/ytc/AIdro_nFzZFPLxPZRHcE3SSwzdrbuWqfoWYwLAu0_2iO6blQYAU=s900-c-k-c0x00ffffff-no-rj",
+        "url": "https://www.youtube.com/@3blue1brown",
+        "handle": "3blue1brown",
+        "folderId": "7c2028d2-f36c-408c-ac00-074ea8e5d0e1",
+        "tagIds": [
+          "7536fb36-e403-42db-b0ed-4de067db15f7"
+        ],
+        "isSubscribed": true,
+        "id": "cf86e646-b266-4503-b472-f3640f722bf1",
+        "muted": false,
+        "addedAt": 1785546000000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UCoxcjq-8xIDTYp3uz647V5A",
+        "name": "Numberphile",
+        "thumbnailUrl": "https://yt3.googleusercontent.com/ytc/AIdro_nmbQSAGKk1OZCBBf_sPJqLoFfYOVDWRDzALocBjGQtHeI=s900-c-k-c0x00ffffff-no-rj",
+        "url": "https://www.youtube.com/@numberphile",
+        "handle": "numberphile",
+        "folderId": "7c2028d2-f36c-408c-ac00-074ea8e5d0e1",
+        "tagIds": [],
+        "isSubscribed": true,
+        "id": "e1bac841-c2a5-46be-87a0-0fdc8dae5893",
+        "muted": true,
+        "addedAt": 1785549600000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UCEIwxahdLz7bap-VDs9h35A",
+        "name": "Steve Mould",
+        "thumbnailUrl": "",
+        "url": "https://www.youtube.com/@SteveMould",
+        "handle": "stevemould",
+        "folderId": "7c2028d2-f36c-408c-ac00-074ea8e5d0e1",
+        "tagIds": [],
+        "isSubscribed": true,
+        "id": "e9a2e073-d8cd-4b3f-a981-d9162574c5df",
+        "muted": true,
+        "addedAt": 1785553200000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UC6107grRI4m0o2-emgoDnAA",
+        "name": "SmarterEveryDay",
+        "thumbnailUrl": "https://yt3.googleusercontent.com/ytc/AIdro_l59Ewmp0DHZBRWbY9dVqjd2_mWwvrn8ad0bJfmdbMRYcA=s900-c-k-c0x00ffffff-no-rj",
+        "url": "https://www.youtube.com/@smartereveryday",
+        "handle": "smartereveryday",
+        "folderId": "7c2028d2-f36c-408c-ac00-074ea8e5d0e1",
+        "tagIds": [
+          "0cbff4f8-6888-4a03-a322-d3d8e388e048"
+        ],
+        "isSubscribed": true,
+        "id": "421a51e5-189d-4255-adce-6eeffc6dd408",
+        "muted": true,
+        "addedAt": 1785556800000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UCKHhA5hN2UohhFDfNXB_cvQ",
+        "name": "Manual do Mundo",
+        "thumbnailUrl": "",
+        "url": "https://www.youtube.com/@manualdomundo",
+        "handle": "manualdomundo",
+        "folderId": "7c2028d2-f36c-408c-ac00-074ea8e5d0e1",
+        "tagIds": [
+          "e6090c08-0058-4011-a580-882d7742f98c"
+        ],
+        "isSubscribed": true,
+        "id": "4a43204f-f06e-4f96-9628-9bfe1f9139ee",
+        "muted": true,
+        "addedAt": 1785560400000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UCsXVk37bltHxD1rDPwtNM8Q",
+        "name": "Kurzgesagt – In a Nutshell",
+        "thumbnailUrl": "https://yt3.googleusercontent.com/ytc/AIdro_n1Ribd7LwdP_qKtqWL3ZDfIgv9M1d6g78VwpHGXVR2Ir4=s900-c-k-c0x00ffffff-no-rj",
+        "url": "https://www.youtube.com/@kurzgesagt",
+        "handle": "kurzgesagt",
+        "folderId": "495b9062-10e5-4633-838c-37dd48922e8f",
+        "tagIds": [
+          "0cbff4f8-6888-4a03-a322-d3d8e388e048"
+        ],
+        "isSubscribed": true,
+        "id": "7b11189f-cee5-48a0-8618-acbc4f0db442",
+        "muted": false,
+        "addedAt": 1785564000000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UCn9Erjy00mpnWeLnRqhsA1g",
+        "name": "Ciência Todo Dia",
+        "thumbnailUrl": "https://yt3.googleusercontent.com/ytc/AIdro_lQoeh3pIl35H0tiDQ6fG3YeSrn2hWxKKCIxN11NQvnDdg=s900-c-k-c0x00ffffff-no-rj",
+        "url": "https://www.youtube.com/@CienciaTodoDia",
+        "handle": "cienciatododia",
+        "folderId": "495b9062-10e5-4633-838c-37dd48922e8f",
+        "tagIds": [
+          "e6090c08-0058-4011-a580-882d7742f98c",
+          "7536fb36-e403-42db-b0ed-4de067db15f7"
+        ],
+        "isSubscribed": true,
+        "id": "110d4382-9ba9-4fb1-b1ee-1ab75b30492d",
+        "muted": true,
+        "addedAt": 1785567600000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UCLA_DiR1FfKNvjuUpBHmylQ",
+        "name": "NASA",
+        "thumbnailUrl": "",
+        "url": "https://www.youtube.com/@NASA",
+        "handle": "nasa",
+        "folderId": "c39b4c0a-e5f6-4e78-9008-797075c363a9",
+        "tagIds": [],
+        "isSubscribed": true,
+        "id": "bbe7abcf-aa83-4675-9d12-fb8ec80ba8c4",
+        "muted": true,
+        "addedAt": 1785571200000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UCSUu1lih2RifWkKtDOJdsBA",
+        "name": "NASASpaceflight",
+        "thumbnailUrl": "",
+        "url": "https://www.youtube.com/@NASASpaceflight",
+        "handle": "nasaspaceflight",
+        "folderId": "c39b4c0a-e5f6-4e78-9008-797075c363a9",
+        "tagIds": [],
+        "isSubscribed": true,
+        "id": "ad4a2135-7479-4643-b988-1051312cb465",
+        "muted": false,
+        "addedAt": 1785574800000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UClu474HMt895mVxZdlIHXEA",
+        "name": "Nerdologia",
+        "thumbnailUrl": "",
+        "url": "https://www.youtube.com/@nerdologia",
+        "handle": "nerdologia",
+        "folderId": null,
+        "tagIds": [
+          "e6090c08-0058-4011-a580-882d7742f98c"
+        ],
+        "isSubscribed": true,
+        "id": "c0bdfecc-ab79-4366-bcb5-c4e955268f43",
+        "muted": true,
+        "addedAt": 1785578400000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UCsBjURrPoezykLs9EqgamOA",
+        "name": "Fireship",
+        "thumbnailUrl": "",
+        "url": "https://www.youtube.com/@Fireship",
+        "handle": "fireship",
+        "folderId": null,
+        "tagIds": [
+          "c3acfbc5-f762-4765-80e3-ba396a1dfe0c",
+          "0cbff4f8-6888-4a03-a322-d3d8e388e048"
+        ],
+        "isSubscribed": true,
+        "id": "6fa83aec-73d4-4f1b-8dc4-d1ad511992a3",
+        "muted": false,
+        "addedAt": 1785582000000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UC9-y-6csu5WGm29I7JiwpnA",
+        "name": "Computerphile",
+        "thumbnailUrl": "",
+        "url": "https://www.youtube.com/@Computerphile",
+        "handle": "computerphile",
+        "folderId": null,
+        "tagIds": [
+          "c3acfbc5-f762-4765-80e3-ba396a1dfe0c",
+          "7536fb36-e403-42db-b0ed-4de067db15f7"
+        ],
+        "isSubscribed": true,
+        "id": "d102a6f4-fc52-4747-91d3-8f526afb8fe1",
+        "muted": true,
+        "addedAt": 1785585600000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "type": "channel",
+        "youtubeId": "UCj1VqrHhDte54oLgPG4xpuQ",
+        "name": "Stuff Made Here",
+        "thumbnailUrl": "https://yt3.googleusercontent.com/ytc/AIdro_mzfzJ9E1WEzyt1YlPXemHOwGBBnVCKzXva_mzmS5qqMg=s900-c-k-c0x00ffffff-no-rj",
+        "url": "https://www.youtube.com/channel/UCj1VqrHhDte54oLgPG4xpuQ",
+        "folderId": null,
+        "tagIds": [],
+        "isSubscribed": true,
+        "id": "10984357-1a9a-4189-a1b2-97ddc56d4dcf",
+        "muted": true,
+        "addedAt": 1785614400000,
+        "lastSyncedAt": 1794121200000
+      },
+      {
+        "id": "a8a53437-b977-4153-a125-e4d6eaab7795",
+        "type": "channel",
+        "youtubeId": "UCBa659QWEk1AI4Tg--mrJ2A",
+        "name": "Tom Scott",
+        "thumbnailUrl": "https://yt3.googleusercontent.com/WxHs0Jf1Jp_4ZU84wxnRL0owNHkzaLUEiD-GIfgCrVjZ0JhgriPTdPfGrkf-U7zwIs5zQl9ccg=s900-c-k-c0x00ffffff-no-rj",
+        "url": "https://www.youtube.com/@TomScottGo",
+        "folderId": null,
+        "tagIds": [
+          "7536fb36-e403-42db-b0ed-4de067db15f7"
+        ],
+        "isSubscribed": false,
+        "addedAt": 1788998400000,
+        "lastSyncedAt": 1788998400000,
+        "muted": true
+      },
+      {
+        "id": "997eb35e-3abc-4920-9d35-40942bc8dd6a",
+        "type": "playlist",
+        "youtubeId": "PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+        "name": "Essence of linear algebra",
+        "thumbnailUrl": "https://i.ytimg.com/vi/fNk_zzaMoSs/hqdefault.jpg",
+        "url": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",
+        "folderId": "7c2028d2-f36c-408c-ac00-074ea8e5d0e1",
+        "tagIds": [
+          "7536fb36-e403-42db-b0ed-4de067db15f7"
+        ],
+        "isSubscribed": false,
+        "addedAt": 1789084800000,
+        "lastSyncedAt": 1789084800000
+      },
+      {
+        "id": "d332e721-d817-4187-8078-9d6cf4afbdde",
+        "type": "video",
+        "youtubeId": "KfODG5REyss",
+        "name": "I finally saw quantum mechanics with my own eyes... (It's spookier than I expected)",
+        "thumbnailUrl": "",
+        "url": "https://www.youtube.com/watch?v=KfODG5REyss&t=754s",
+        "folderId": "7c2028d2-f36c-408c-ac00-074ea8e5d0e1",
+        "tagIds": [
+          "0cbff4f8-6888-4a03-a322-d3d8e388e048"
+        ],
+        "isSubscribed": false,
+        "addedAt": 1793836800000,
+        "lastSyncedAt": 1793836800000,
+        "channelName": "Veritasium"
+      }
+    ],
+    "folders": [
+      {
+        "id": "7c2028d2-f36c-408c-ac00-074ea8e5d0e1",
+        "name": "Ciência",
+        "parentId": null,
+        "color": "#2196f3",
+        "order": 0
+      },
+      {
+        "id": "495b9062-10e5-4633-838c-37dd48922e8f",
+        "name": "Espaço",
+        "parentId": "7c2028d2-f36c-408c-ac00-074ea8e5d0e1",
+        "color": "#673ab7",
+        "order": 0
+      },
+      {
+        "id": "c39b4c0a-e5f6-4e78-9008-797075c363a9",
+        "name": "Lançamentos",
+        "parentId": "495b9062-10e5-4633-838c-37dd48922e8f",
+        "color": "#ff5722",
+        "order": 0
+      }
+    ],
+    "tags": [
+      {
+        "id": "0cbff4f8-6888-4a03-a322-d3d8e388e048",
+        "name": "favorito",
+        "color": "#f44336"
+      },
+      {
+        "id": "7536fb36-e403-42db-b0ed-4de067db15f7",
+        "name": "aprender",
+        "color": "#4caf50"
+      },
+      {
+        "id": "e6090c08-0058-4011-a580-882d7742f98c",
+        "name": "PT-BR",
+        "color": "#009688"
+      },
+      {
+        "id": "c3acfbc5-f762-4765-80e3-ba396a1dfe0c",
+        "name": "programação",
+        "color": "#ff9800"
+      }
+    ],
+    "deletedYoutubeIds": [
+      "channel:UCY1kMZp36IQSyNx_9h4mpCg"
+    ],
+    "newVideoCounts": {
+      "UCHnyfMqiRRG1u-2MsSQLbXA": 2,
+      "UCsBjURrPoezykLs9EqgamOA": 5,
+      "UCSUu1lih2RifWkKtDOJdsBA": 3
+    }
+  },
+  "watchHistory": [
+    {
+      "videoId": "KfODG5REyss",
+      "channelId": "UCHnyfMqiRRG1u-2MsSQLbXA",
+      "title": "I finally saw quantum mechanics with my own eyes... (It's spookier than I expected)",
+      "watchedAt": 1793844000000
+    },
+    {
+      "videoId": "iw9SZgyahqg",
+      "channelId": "UCsBjURrPoezykLs9EqgamOA",
+      "title": "The one thing holding theoretical CS together just broke... kinda",
+      "watchedAt": 1794106800000
+    },
+    {
+      "videoId": "fNk_zzaMoSs",
+      "channelId": "UCYO_jab_esuFRV4b17AJtAw",
+      "title": "Vectors | Chapter 1, Essence of linear algebra",
+      "watchedAt": 1789088400000
+    },
+    {
+      "videoId": "5C_HPTJg5ek",
+      "channelId": "UCsBjURrPoezykLs9EqgamOA",
+      "title": "Rust in 100 Seconds",
+      "watchedAt": 1790726400000
+    }
+  ]
+}

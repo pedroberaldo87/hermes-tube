@@ -1,0 +1,154 @@
+{
+  "title": "Nova aba por assunto",
+  "description": "O Hermes pesquisa no YouTube, faz a curadoria com IA e mostra uma prévia. Nada é salvo antes de você confirmar.",
+  "field": {
+    "label": "Sobre o que você quer uma aba?",
+    "placeholder": "ex.: agentes de IA, pão de fermentação natural, história de Roma",
+    "hint": "Poucas palavras bastam. O Hermes planeja as buscas.",
+    "too_short": "Digite pelo menos 2 caracteres.",
+    "invalid": "O Hermes não conseguiu usar este texto. Tente outras palavras."
+  },
+  "examples": {
+    "label": "Experimente",
+    "ex1": "agentes de IA",
+    "ex2": "pão de fermentação natural",
+    "ex3": "história de Roma",
+    "ex4": "café espresso em casa",
+    "ex5": "aprender Rust"
+  },
+  "options": {
+    "label": "Opções",
+    "language": "Vídeos em",
+    "lang_any": "Qualquer idioma",
+    "lang_pt": "Português",
+    "lang_en": "Inglês",
+    "classics": "Incluir clássicos",
+    "classics_hint": "vídeos antigos e consagrados também"
+  },
+  "hints": {
+    "lang_pt": "(vídeos em português)",
+    "lang_en": "(vídeos em inglês)",
+    "classics": "(incluir clássicos: vídeos antigos e consagrados)"
+  },
+  "steps": {
+    "label": "Progresso",
+    "expand": "Expandindo o assunto",
+    "search": "Pesquisando no YouTube",
+    "curate": "Curando com a IA",
+    "preview": "Montando a prévia",
+    "expand_running": "lendo o assunto…",
+    "searches_one": "{count} busca",
+    "searches_other": "{count} buscas",
+    "search_running_one": "{count} busca no YouTube…",
+    "search_running_other": "{count} buscas no YouTube…",
+    "found_one": "{count} vídeo",
+    "found_other": "{count} vídeos",
+    "rating_one": "avaliando {count} vídeo…",
+    "rating_other": "avaliando {count} vídeos…",
+    "rated_progress": "{done} de {total} avaliados",
+    "rated_one": "{count} avaliado",
+    "rated_other": "{count} avaliados",
+    "kept_one": "{count} mantido",
+    "kept_other": "{count} mantidos",
+    "channels_one": "{count} canal",
+    "channels_other": "{count} canais"
+  },
+  "progress": {
+    "lead": "Costuma levar de 1 a 3 minutos: o Hermes lê os candidatos um por um.",
+    "background": "Fechar esta janela não interrompe: a aba continua sendo montada e Inscrições avisa quando ficar pronta.",
+    "elapsed": "Tempo decorrido {time}",
+    "coming": "Prévia",
+    "coming_desc": "Os vídeos que o Hermes mantiver aparecem aqui.",
+    "cancel_failed": "Não deu para cancelar; a busca termina sozinha. Nada é salvo antes de você confirmar."
+  },
+  "preview": {
+    "name_label": "Nome da aba",
+    "name_empty": "Dê um nome à aba.",
+    "name_long": "Até {max} caracteres.",
+    "about": "Sobre “{query}”",
+    "videos": "Vídeos",
+    "videos_desc": "Tire o que não combina com 👎 (ou D no vídeo em foco). O Hermes aprende com isso.",
+    "grid_label": "Vídeos da prévia",
+    "down": "Não é pra mim",
+    "reason_search": "achado na busca",
+    "reason_classics": "clássico",
+    "reason_rss": "de um canal-semente",
+    "seeds": "Canais-semente",
+    "seeds_desc": "Canais com 3 ou mais vídeos mantidos. Segui-los mantém a aba sempre nova.",
+    "seeds_empty": "Nenhum canal apareceu 3 vezes ou mais; a aba vai depender da busca.",
+    "seed_kept_one": "{count} vídeo mantido",
+    "seed_kept_other": "{count} vídeos mantidos",
+    "seed_choice": "O que fazer com {name}",
+    "follow": "Seguir",
+    "ignore": "Ignorar",
+    "follow_all": "Seguir todos",
+    "ignore_all": "Ignorar todos",
+    "in_list": "Já está na sua lista",
+    "folder": "Também criar a pasta “{name}”",
+    "folder_plain": "Também criar uma pasta",
+    "partial_title": "Prévia parcial",
+    "partial": "O tempo acabou antes de o Hermes avaliar tudo. Dá para salvar o que já está aqui ou tentar de novo.",
+    "saved_title": "Este assunto já virou uma aba",
+    "saved": "Abra em Inscrições ou comece um assunto novo.",
+    "all_removed_title": "Você tirou todos os vídeos",
+    "all_removed": "Traga de volta ou reformule o assunto."
+  },
+  "footer": {
+    "not_now": "Agora não",
+    "start": "Montar prévia",
+    "cancel": "Cancelar",
+    "background": "Continuar em segundo plano",
+    "discard": "Descartar",
+    "save": "Salvar aba",
+    "save_folder": "Salvar aba e pasta",
+    "open_home": "Abrir em Inscrições",
+    "rephrase": "Reformular",
+    "new_theme": "Novo assunto",
+    "save_shortcut": "⌘Enter salva"
+  },
+  "empty": {
+    "title": "Nada encontrado sobre “{query}”",
+    "desc": "Tente menos palavras, termos mais amplos ou um assunto vizinho.",
+    "restore": "Trazer de volta"
+  },
+  "ai": {
+    "no_model_title": "Nenhum modelo de IA disponível",
+    "no_model_desc": "As abas por assunto precisam de um modelo para planejar as buscas e fazer a curadoria. Escolha um e entre na conta em Ajustes → Modelos antes.",
+    "open_settings": "Abrir Ajustes",
+    "provider_unavailable_title": "O Hermes não conseguiu acessar seu modelo de IA",
+    "provider_unavailable_action": "Abrir ajustes do modelo"
+  },
+  "no_model": {
+    "title": "Escolha um modelo de IA primeiro",
+    "desc": "As abas por assunto precisam de um modelo para planejar as buscas e fazer a curadoria. Escolha um e entre na conta em Ajustes → Modelos.",
+    "action": "Abrir Ajustes"
+  },
+  "provider_unavailable": {
+    "title": "O Hermes não conseguiu acessar seu modelo de IA",
+    "action": "Abrir ajustes do modelo",
+    "retry": "Tentar de novo"
+  },
+  "busy": {
+    "title": "Já tem uma aba por assunto sendo montada",
+    "desc": "O Hermes monta uma aba por assunto por vez. Acompanhe essa ou tente de novo quando ela terminar.",
+    "follow": "Acompanhar",
+    "retry": "Tentar de novo"
+  },
+  "error": {
+    "title": "Não deu para montar a prévia",
+    "load_title": "Não deu para abrir esta prévia",
+    "expired_title": "Essa busca não existe mais",
+    "expired": "As prévias ficam guardadas por 7 dias. Comece uma nova.",
+    "save_title": "Não deu para salvar",
+    "conflict": "Este assunto já foi salvo como aba."
+  },
+  "toast": {
+    "saved": "Aba “{name}” criada",
+    "undo": "Desfazer",
+    "undone": "Aba “{name}” removida",
+    "reopen": "Reabrir a prévia",
+    "undo_failed": "Não deu para desfazer: {error}",
+    "removed": "“{title}” saiu da prévia",
+    "down_failed": "Não deu para tirar: {error}"
+  }
+}

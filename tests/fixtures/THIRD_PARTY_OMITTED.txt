@@ -1,0 +1,37 @@
+Real third-party pages left out of this cut (--no-third-party-pages).
+The tests that depend on them are skipped with a reason (tests/conftest.py).
+
+tests/fixtures/hackertube/DATA.md
+tests/fixtures/hackertube/LICENSE-NOTE.md
+tests/fixtures/hackertube/api-export.json
+tests/fixtures/hackertube/videos.sample.jsonl
+tests/fixtures/lists/hn-ask-youtube-channels-intellectually-curious.32220192.html
+tests/fixtures/mytube/youtube-channel-videos.html
+tests/fixtures/youtube/channel/c.Fireship.html
+tests/fixtures/youtube/channel/c.kurzgesagt.404.html
+tests/fixtures/youtube/channel/channel-id.UCsBjURrPoezykLs9EqgamOA.html
+tests/fixtures/youtube/channel/handle.Fireship.html
+tests/fixtures/youtube/channel_videos.UCHnyfMqiRRG1u-2MsSQLbXA.html
+tests/fixtures/youtube/channel_videos.UCsBjURrPoezykLs9EqgamOA.html
+tests/fixtures/youtube/channel_videos.missing.UCzzzzzzzzzzzzzzzzzzzzzz.html
+tests/fixtures/youtube/playlist/missing.UUSHXUPKJO5MZQN11PqgIvyuvQ.html
+tests/fixtures/youtube/playlist/shorts.UUSHHnyfMqiRRG1u-2MsSQLbXA.html
+tests/fixtures/youtube/playlist/shorts.UUSHsBjURrPoezykLs9EqgamOA.html
+tests/fixtures/youtube/playlist/uploads.UUHnyfMqiRRG1u-2MsSQLbXA.html
+tests/fixtures/youtube/playlist/uploads.UUsBjURrPoezykLs9EqgamOA.html
+tests/fixtures/youtube/rss/fireship.xml
+tests/fixtures/youtube/rss/veritasium.xml
+tests/fixtures/youtube/search/en-rust-programming.date.html
+tests/fixtures/youtube/search/en-rust-programming.relevance.html
+tests/fixtures/youtube/search/en-rust-programming.videos.html
+tests/fixtures/youtube/search/en-rust-programming.week.html
+tests/fixtures/youtube/search/pt-receita-de-pao-caseiro.relevance.html
+tests/fixtures/youtube/search/pt-receita-de-pao-caseiro.relevance.pt-BR.html
+tests/fixtures/youtube/search/pt-receita-de-pao-caseiro.week.html
+tests/fixtures/youtube/shorts/normal.KfODG5REyss.txt
+tests/fixtures/youtube/shorts/page.rL0qEmTRI-I.html
+tests/fixtures/youtube/shorts/short.rL0qEmTRI-I.txt
+tests/fixtures/youtube/watch/live-ended.jfKfPfyJRdk.html
+tests/fixtures/youtube/watch/live-now.ROboUHfPUrU.html
+tests/fixtures/youtube/watch/normal.KfODG5REyss.html
+tests/fixtures/youtube/watch/upcoming.9XM0lpVlvo0.html

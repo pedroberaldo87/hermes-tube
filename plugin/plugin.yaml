@@ -1,0 +1,42 @@
+name: hermes-tube
+version: 0.1.0
+manifest_version: 2
+description: "Take back control of what you watch: HermesTube brings your YouTube subscriptions into Hermes, in folders, tags and tabs you set up, with topic tabs your Hermes model builds. Nothing is unsubscribed without your click."
+author: "Pedro Beraldo"
+license: MIT
+requires_hermes: ">=0.23.1"
+tags: [youtube, subscriptions, desktop, dashboard]
+provides_tools:
+  - tube_status
+  - tube_feed
+  - tube_channels
+  - tube_add_channel
+  - tube_organize
+  - tube_cleanup_scan
+  - tube_theme_create
+  - tube_tab
+  - tube_mark
+provides_hooks:
+  - pre_llm_call
+config_schema:
+  rss_interval_min:
+    type: int
+    default: 30
+    label: "RSS refresh interval (minutes)"
+    description: "Minimum time between automatic RSS checks of your channels (5 or more)."
+  language:
+    type: str
+    choices: [auto, en, pt-BR]
+    default: auto
+    label: "Language"
+    description: "Language of the plugin screens and messages (auto follows the app)."
+  ex_retention_days:
+    type: int
+    default: 30
+    label: "Keep ex-subscriptions (days)"
+    description: "How long cancelled channels stay in Ex-subscriptions before being ignored."
+  theme_refresh_days:
+    type: int
+    default: 7
+    label: "Topic tabs refresh (days)"
+    description: "Saved with each new topic tab and shown in its preview. This version does not refresh topic tabs on its own yet: refresh one by hand to search YouTube again."

@@ -1,0 +1,248 @@
+#!/usr/bin/env bash
+# scripts/check — the repository's single verification. Runs from the worktree root or from
+# anywhere (it changes to the root). One line per step: `OK|FAIL|SKIP <step> (<reason>)`; ends with
+# `CHECK: OK` or `CHECK: FAIL (<steps>)` and a non-zero exit code if any step fails.
+#
+#   scripts/check                 everything
+#   scripts/check --fast          skips the builds (build-desktop, build-ext) and artifacts
+#   scripts/check --only a,b      only the listed steps (names below)
+#   scripts/check --keep          keeps the temporary folder (builds) and prints its path
+#
+# Steps, in this order: ruff · pytest · doctor · tsc · vitest · build-desktop · build-ext ·
+# gen-types · id-literal · catalog (Hermes catalog admission) · artifacts (main only: compares committed artifacts
+# — plugin/desktop/plugin.js, extension/dist, plugin/extension — with the rebuild).
+# Works with the bash 3.2 that ships with macOS.
+set -uo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT" || exit 2
+# shellcheck disable=SC1091
+[ -f .unit-env ] && source .unit-env
+
+# Hermes Agent checkout (packages and `hermes_cli` for the tests); exported for the Python tests.
+export HERMES_SRC="${HERMES_SRC:-$HOME/.hermes/hermes-agent}"
+
+# The project's Python (`make venv`): TUBE_PY; else this folder's .venv; in a worktree, the main
+# checkout's .venv; else the Hermes Python; finally python3 from PATH.
+find_py() {
+  local common cand
+  common="$(git -C "$ROOT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+  for cand in "$ROOT/.venv/bin/python" "${common:+$(dirname "$common")/.venv/bin/python}" \
+    "$HERMES_SRC/venv/bin/python"; do
+    [ -n "$cand" ] && [ -x "$cand" ] && { echo "$cand"; return; }
+  done
+  command -v python3 || echo python3
+}
+PY="${TUBE_PY:-$(find_py)}"
+NODE_BIN="$ROOT/node_modules/.bin"
+
+FAST=0
+KEEP=0
+ONLY=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --fast) FAST=1 ;;
+    --keep) KEEP=1 ;;
+    --only) shift; ONLY="${1:-}" ;;
+    --only=*) ONLY="${1#--only=}" ;;
+    -h|--help) sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) echo "scripts/check: unknown argument: $1" >&2; exit 2 ;;
+  esac
+  shift
+done
+
+mkdir -p "${TMPDIR:-/tmp}"
+SCRATCH="$(mktemp -d "${TMPDIR:-/tmp}/tube-check.XXXXXX")" || exit 2
+if [ "$KEEP" = 1 ]; then
+  echo "scratch: $SCRATCH"
+else
+  trap 'rm -rf "$SCRATCH"' EXIT
+fi
+
+now() {
+  if [ -n "${EPOCHREALTIME:-}" ]; then echo "$EPOCHREALTIME"; else "$PY" -c 'import time; print(time.time())' 2>/dev/null || date +%s; fi
+}
+elapsed() { awk -v a="$1" -v b="$(now)" 'BEGIN { printf "%.1fs", b - a }'; }
+
+T0="$(now)"
+FAILED=""
+REASON=""
+
+# run_step <name> <function>: the function returns 0 = OK, 1 = FAIL, 3 = SKIP and may set REASON
+run_step() {
+  local name="$1" fn="$2" log="$SCRATCH/$1.log" t rc
+  if [ -n "$ONLY" ]; then
+    case ",$ONLY," in *",$name,"*) ;; *) return 0 ;; esac
+  fi
+  REASON=""
+  t="$(now)"
+  "$fn" >"$log" 2>&1
+  rc=$?
+  case "$rc" in
+    0) echo "OK $name (${REASON:+$REASON, }$(elapsed "$t"))" ;;
+    3) echo "SKIP $name (${REASON:-nothing to check})" ;;
+    *)
+      echo "FAIL $name (${REASON:-exit code $rc}, $(elapsed "$t"))"
+      tail -n 60 "$log" | sed 's/^/    /'
+      FAILED="${FAILED:+$FAILED, }$name"
+      ;;
+  esac
+}
+
+need_node() {
+  if [ ! -x "$NODE_BIN/tsc" ]; then REASON="node_modules missing: run npm ci"; return 1; fi
+  return 0
+}
+
+# ---------------------------------------------------------------- steps
+
+step_ruff() {
+  local rc=0
+  "$PY" -m ruff check --quiet . || rc=1
+  "$PY" -m ruff format --check --quiet . || { rc=1; REASON="ruff format --check"; }
+  return $rc
+}
+
+step_pytest() {
+  PYTHONPATH="$HERMES_SRC${PYTHONPATH:+:$PYTHONPATH}" "$PY" -m pytest -p no:cacheprovider
+  local rc=$?
+  if [ $rc -eq 5 ]; then REASON="no tests collected"; return 0; fi
+  [ $rc -eq 0 ] || return 1
+  REASON="$(grep -Eo '[0-9]+ passed' "$SCRATCH/pytest.log" | tail -1)"
+  return 0
+}
+
+step_doctor() {
+  if [ ! -f plugin/plugin.yaml ]; then REASON="plugin/plugin.yaml missing"; return 3; fi
+  local hermes="${HERMES_BIN:-$(command -v hermes || true)}"
+  if [ -z "$hermes" ]; then REASON="hermes command not found"; return 1; fi
+  mkdir -p "$SCRATCH/hermes-home"
+  HERMES_HOME="$SCRATCH/hermes-home" "$hermes" plugins doctor plugin/ --ci
+}
+
+step_tsc() {
+  need_node || return 1
+  local rc=0 p
+  for p in tsconfig.desktop.json tsconfig.ext.json tsconfig.node.json; do
+    echo "== tsc -p $p"
+    "$NODE_BIN/tsc" -p "$p" || rc=1
+  done
+  return $rc
+}
+
+step_vitest() {
+  need_node || return 1
+  "$NODE_BIN/vitest" run --reporter=dot || return 1
+  REASON="$(grep -Eo 'Tests +[0-9]+ passed' "$SCRATCH/vitest.log" | tail -1 | tr -s ' ')"
+  [ -n "$REASON" ] || REASON="no tests"
+  return 0
+}
+
+step_build_desktop() {
+  if [ ! -f desktop-src/main.tsx ]; then REASON="desktop-src/main.tsx missing"; return 3; fi
+  need_node || return 1
+  node desktop-src/esbuild.config.mjs --outdir "$SCRATCH/desktop" || return 1
+  REASON="$(wc -c <"$SCRATCH/desktop/plugin.js" | tr -d ' ') bytes"
+}
+
+step_build_ext() {
+  if [ ! -f extension/manifest.json ]; then REASON="extension/manifest.json missing"; return 3; fi
+  need_node || return 1
+  export EXT_DIST_DIR="$SCRATCH/ext"
+  npm run -s build:ext || return 1
+  REASON="$(find "$EXT_DIST_DIR" -type f | wc -l | tr -d ' ') files"
+}
+
+step_gen_types() {
+  if [ ! -f scripts/gen_types.py ]; then REASON="scripts/gen_types.py missing"; return 3; fi
+  PYTHONPATH="$HERMES_SRC${PYTHONPATH:+:$PYTHONPATH}" "$PY" scripts/gen_types.py --check
+}
+
+step_id_literal() {
+  "$PY" scripts/check_id_literal.py --root "$ROOT"
+}
+
+step_artifacts() {
+  local branch
+  branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '?')"
+  if [ "$branch" != "main" ]; then REASON="not on main ($branch)"; return 3; fi
+  local any=0 rc=0
+  if [ -n "$(git ls-files plugin/desktop/plugin.js)" ]; then
+    any=1
+    if [ ! -f "$SCRATCH/desktop/plugin.js" ]; then
+      echo "plugin/desktop/plugin.js is committed, but build-desktop produced nothing"; rc=1
+    elif ! cmp plugin/desktop/plugin.js "$SCRATCH/desktop/plugin.js"; then
+      echo "plugin/desktop/plugin.js differs from the rebuild"; rc=1
+    fi
+  fi
+  if [ -n "$(git ls-files extension/dist | head -n 1)" ]; then
+    any=1
+    if [ ! -d "$SCRATCH/ext" ]; then
+      echo "extension/dist is committed, but build-ext produced nothing"; rc=1
+    elif ! diff -r extension/dist "$SCRATCH/ext"; then
+      echo "extension/dist differs from the rebuild"; rc=1
+    fi
+  fi
+  # the built extension shipped inside the plugin ("Set up the extension" copies it to the home folder);
+  # regenerate with `npm run build:ext:plugin`
+  if [ -n "$(git ls-files plugin/extension | head -n 1)" ]; then
+    any=1
+    if [ ! -d "$SCRATCH/ext" ]; then
+      echo "plugin/extension is committed, but build-ext produced nothing"; rc=1
+    elif ! diff -r plugin/extension "$SCRATCH/ext"; then
+      echo "plugin/extension differs from the rebuild (run npm run build:ext:plugin)"; rc=1
+    fi
+  fi
+  if [ $any -eq 0 ]; then REASON="no committed artifacts"; return 3; fi
+  return $rc
+}
+
+# Hermes catalog admission (`hermes plugins validate`): manifest, isolated register() probe,
+# security scanner, rule 9 (private core imports). A warning fails too: the PR gets reviewed.
+# Runs in a temporary HERMES_HOME; with HERMES_TUBE_DEV_PROFILE, runs in that profile (`hermes -p`).
+step_catalog() {
+  command -v hermes >/dev/null 2>&1 || { REASON="hermes not on PATH"; return 3; }
+  local out
+  if [ -n "${HERMES_TUBE_DEV_PROFILE:-}" ]; then
+    out="$(hermes -p "$HERMES_TUBE_DEV_PROFILE" plugins validate plugin 2>&1)"
+  else
+    mkdir -p "$SCRATCH/catalog-home"
+    out="$(HERMES_HOME="$SCRATCH/catalog-home" hermes plugins validate plugin 2>&1)"
+  fi
+  if ! printf '%s\n' "$out" | grep -q "Validation passed"; then
+    printf '%s\n' "$out" | grep -E "✗|⚠|private core|Validation" ; return 1
+  fi
+  if printf '%s\n' "$out" | grep -q "⚠"; then
+    printf '%s\n' "$out" | grep -A3 "⚠"; echo "a catalog warning counts as a failure"; return 1
+  fi
+}
+
+# ---------------------------------------------------------------- run
+
+run_step ruff step_ruff
+run_step pytest step_pytest
+run_step doctor step_doctor
+run_step tsc step_tsc
+run_step vitest step_vitest
+if [ "$FAST" = 1 ]; then
+  [ -z "$ONLY" ] && echo "SKIP build-desktop (--fast)" && echo "SKIP build-ext (--fast)"
+else
+  run_step build-desktop step_build_desktop
+  run_step build-ext step_build_ext
+fi
+run_step gen-types step_gen_types
+run_step id-literal step_id_literal
+run_step catalog step_catalog
+if [ "$FAST" = 1 ]; then
+  [ -z "$ONLY" ] && echo "SKIP artifacts (--fast)"
+else
+  run_step artifacts step_artifacts
+fi
+
+echo "time: $(elapsed "$T0")"
+if [ -n "$FAILED" ]; then
+  echo "CHECK: FAIL ($FAILED)"
+  exit 1
+fi
+echo "CHECK: OK"
+exit 0

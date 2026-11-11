@@ -1,0 +1,91 @@
+{
+  "tree": {
+    "label": "Inscrições",
+    "all": "Tudo",
+    "later": "Ver depois",
+    "unfiled": "Sem pasta"
+  },
+  "row": {
+    "menu": "Mais ações para {name}",
+    "favorite": "Favorito",
+    "muted": "Silenciado"
+  },
+  "search": {
+    "placeholder": "Achar um canal ou pasta",
+    "empty_title": "Nada com “{query}”",
+    "empty_desc": "Tente parte do nome do canal, um @handle ou uma pasta.",
+    "clear": "Limpar a busca"
+  },
+  "empty": {
+    "title": "Nenhuma inscrição ainda",
+    "description": "Conecte a extensão do navegador, cole o link de um canal ou experimente a demonstração — leva um minuto.",
+    "action": "Começar"
+  },
+  "error": {
+    "title": "Não deu para carregar suas inscrições",
+    "unavailable": "O plugin não está ligado em “{profile}”",
+    "offline": "Sem conexão com o Hermes agora",
+    "unavailable_hint": "Você está no perfil “{profile}”. Volte ao perfil onde instalou o plugin, ou ligue aqui: Capabilities → Plugins → HermesTube.",
+    "offline_hint": "Veja se o Hermes está rodando e tente de novo."
+  },
+  "banner": {
+    "counts_failed": "Não deu para ler quantos vídeos novos há.",
+    "retry": "Tentar de novo",
+    "ext_disconnected": "Extensão do navegador desconectada.",
+    "reconnect": "Reconectar",
+    "rss_down": "O feed do YouTube está fora do ar — mostrando o que já temos."
+  },
+  "menu": {
+    "open_home": "Abrir em Inscrições",
+    "mark_read": "Marcar como lido",
+    "mark_all_read": "Marcar tudo como lido",
+    "favorite": "Favoritar",
+    "unfavorite": "Tirar dos favoritos",
+    "mute": "Silenciar",
+    "unmute": "Reativar",
+    "move": "Mover para…",
+    "new_tab": "Nova aba com esta pasta",
+    "open_youtube": "Abrir no YouTube"
+  },
+  "move": {
+    "title": "Mover “{name}” para…",
+    "description_channel": "Escolha a pasta deste canal.",
+    "description_folder": "Escolha onde esta pasta fica.",
+    "no_folder": "Sem pasta",
+    "top_level": "Nível principal",
+    "cancel": "Cancelar"
+  },
+  "nav": {
+    "no_tab": "Inscrições ainda não tem uma aba para {name}.",
+    "create_tab": "Criar aba"
+  },
+  "toast": {
+    "moved_channel": "{name} foi para {folder}",
+    "moved_channel_none": "{name} saiu da pasta",
+    "moved_folder": "{name} agora está dentro de {folder}",
+    "moved_folder_root": "{name} foi para o nível principal",
+    "favorite_on": "{name} entrou nos favoritos",
+    "favorite_off": "{name} saiu dos favoritos",
+    "muted_on": "{name} silenciado",
+    "muted_off": "{name} reativado",
+    "read": "{name} marcado como lido",
+    "read_all": "Tudo marcado como lido",
+    "read_nothing": "Nada novo em {name}",
+    "read_nothing_all": "Nada novo para marcar",
+    "cycle": "Uma pasta não pode ir para dentro dela mesma",
+    "undo": "Desfazer",
+    "failed": "Não deu para salvar: {error}",
+    "undo_failed": "Não deu para desfazer: {error}"
+  },
+  "palette": {
+    "show": {
+      "label": "HermesTube: mostrar o painel de canais",
+      "keywords": "youtube inscrições canais painel lateral mostrar abrir aba"
+    }
+  },
+  "toggle": {
+    "show": "Mostrar o painel de canais",
+    "hide": "Esconder o painel de canais",
+    "elsewhere": "O painel de canais não está na barra lateral direita. Para escondê-lo, clique com o botão direito na aba dele e escolha Hide (Ocultar)."
+  }
+}

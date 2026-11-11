@@ -1,0 +1,377 @@
+/* Channel: ChannelAvatar, FolderChip/TagChip, ChannelTable/ChannelRow, Tree/TreeItem. */
+
+/* --------------------------------------------------------------- Avatar */
+
+.PFX_avatar {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 999px;
+  object-fit: cover;
+  background: var(--ui-bg-tertiary);
+  box-shadow: inset 0 0 0 1px var(--ui-stroke-quaternary);
+  color: var(--ui-text-secondary);
+  font-weight: 600;
+  line-height: 1;
+  user-select: none;
+}
+
+/* fallback (no photo or the photo failed): stable tone derived from the name (the SDK's profileColor), soft on the background
+   and mixed with the theme text on the letter — legible in light and dark */
+.PFX_avatar-fallback {
+  background: var(--PFX_avatar-soft, var(--ui-bg-tertiary));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--PFX_avatar-tone, var(--ui-text-secondary)) 22%, transparent);
+  color: color-mix(in srgb, var(--PFX_avatar-tone, var(--ui-text-secondary)) 52%, var(--ui-text-primary));
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+
+img.PFX_avatar {
+  background: var(--ui-bg-quaternary);
+}
+
+/* --------------------------------------------------------------- Chips (folder, tag) */
+
+.PFX_chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 12rem;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--ui-stroke-tertiary);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ui-text-secondary);
+  font-size: var(--PFX_fs-label);
+  line-height: var(--PFX_lh-label);
+  font-weight: 450;
+  white-space: nowrap;
+  transition:
+    border-color var(--PFX_dur) var(--PFX_ease),
+    background-color var(--PFX_dur) var(--PFX_ease);
+}
+
+button.PFX_chip:hover {
+  border-color: var(--ui-stroke-secondary);
+  background: var(--ui-bg-quinary);
+  color: var(--ui-text-primary);
+}
+
+.PFX_chip[data-active='true'] {
+  border-color: var(--ui-text-quaternary);
+  background: var(--ui-bg-quaternary);
+  color: var(--ui-text-primary);
+}
+
+.PFX_chip-icon {
+  flex: none;
+  color: var(--PFX_fg3);
+}
+
+.PFX_chip-hash {
+  color: var(--ui-text-quaternary);
+}
+
+.PFX_chip-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.PFX_chip-count {
+  color: var(--PFX_fg3);
+  font-variant-numeric: tabular-nums;
+}
+
+.PFX_chip-remove {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  margin-right: -4px;
+  border-radius: 999px;
+  color: var(--PFX_fg3);
+}
+
+.PFX_chip-remove:hover {
+  background: var(--ui-control-hover-background);
+  color: var(--ui-text-primary);
+}
+
+.PFX_chip[data-skeleton] {
+  width: 72px;
+}
+
+/* --------------------------------------------------------------- ChannelTable / ChannelRow */
+
+.PFX_table {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  container-type: inline-size;
+  container-name: PFX_table;
+}
+
+.PFX_crow {
+  --PFX_cols: minmax(200px, 2.4fr) minmax(108px, 1fr) minmax(120px, 1.2fr) 56px minmax(150px, 1.6fr) 32px;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--PFX_cols);
+  align-items: center;
+  column-gap: var(--PFX_s3);
+  min-height: 52px;
+  padding: 6px var(--PFX_s3);
+  border-bottom: 1px solid var(--ui-stroke-quaternary);
+  color: var(--ui-text-primary);
+  transition: background-color var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_table[data-selectable='true'] .PFX_crow {
+  --PFX_cols: 20px minmax(200px, 2.4fr) minmax(108px, 1fr) minmax(120px, 1.2fr) 56px minmax(150px, 1.6fr) 32px;
+}
+
+.PFX_crow[data-head='true'] {
+  min-height: 32px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-bottom-color: var(--ui-stroke-tertiary);
+  color: var(--PFX_fg3);
+}
+
+.PFX_crow:not([data-head='true']):hover {
+  background: var(--ui-row-hover-background);
+}
+
+.PFX_crow[aria-selected='true'] {
+  background: var(--ui-row-active-background);
+}
+
+.PFX_ccell {
+  display: flex;
+  align-items: center;
+  gap: var(--PFX_s2);
+  min-width: 0;
+}
+
+.PFX_ccell[data-col='new'] {
+  justify-content: flex-end;
+}
+
+.PFX_ccell[data-col='tags'],
+.PFX_ccell[data-col='folder'] {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.PFX_chead {
+  font-size: var(--PFX_fs-label);
+  line-height: var(--PFX_lh-label);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.PFX_cname {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.PFX_cname-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-weight: 550;
+}
+
+.PFX_cname-sub {
+  color: var(--PFX_fg3);
+}
+
+.PFX_clast {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--ui-text-secondary);
+}
+
+.PFX_clast-when {
+  color: var(--PFX_fg3);
+  font-variant-numeric: tabular-nums;
+}
+
+.PFX_cnone {
+  color: var(--PFX_fg3);
+}
+
+.PFX_fav {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  color: var(--ui-text-tertiary);
+}
+
+.PFX_fav:hover {
+  background: var(--ui-control-hover-background);
+  color: var(--ui-text-secondary);
+}
+
+.PFX_fav[aria-pressed='true'] {
+  color: var(--ui-text-primary);
+}
+
+@container PFX_table (max-width: 860px) {
+  .PFX_crow,
+  .PFX_table[data-selectable='true'] .PFX_crow {
+    --PFX_cols: minmax(180px, 2fr) minmax(100px, 1fr) 48px minmax(130px, 1.4fr) 32px;
+  }
+
+  .PFX_table[data-selectable='true'] .PFX_crow {
+    --PFX_cols: 20px minmax(180px, 2fr) minmax(100px, 1fr) 48px minmax(130px, 1.4fr) 32px;
+  }
+
+  .PFX_ccell[data-col='tags'] {
+    display: none;
+  }
+}
+
+@container PFX_table (max-width: 600px) {
+  .PFX_crow {
+    --PFX_cols: minmax(0, 1fr) 40px 28px;
+  }
+
+  .PFX_table[data-selectable='true'] .PFX_crow {
+    --PFX_cols: 20px minmax(0, 1fr) 40px 28px;
+  }
+
+  .PFX_ccell[data-col='folder'],
+  .PFX_ccell[data-col='last'] {
+    display: none;
+  }
+
+  .PFX_crow {
+    padding-left: var(--PFX_s2);
+    padding-right: var(--PFX_s2);
+  }
+}
+
+/* --------------------------------------------------------------- Tree / TreeItem (side pane) */
+
+.PFX_tree {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 0;
+  padding: var(--PFX_s1);
+  list-style: none;
+}
+
+.PFX_tree-item {
+  list-style: none;
+  outline: none;
+}
+
+.PFX_tree-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 1px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.PFX_tree-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 var(--PFX_s2) 0 calc(4px + (var(--PFX_level, 1) - 1) * 16px);
+  border-radius: var(--PFX_r-control);
+  color: var(--ui-text-secondary);
+  font-size: var(--PFX_fs-body);
+  line-height: var(--PFX_lh-body);
+  cursor: default;
+  user-select: none;
+  transition: background-color 120ms var(--PFX_ease);
+}
+
+.PFX_tree-row:hover {
+  background: var(--ui-row-hover-background);
+}
+
+.PFX_tree-item[aria-selected='true'] > .PFX_tree-row {
+  background: var(--ui-row-active-background);
+  color: var(--ui-text-primary);
+}
+
+.PFX_tree-item:focus-visible > .PFX_tree-row {
+  outline: 2px solid var(--PFX_ring);
+  outline-offset: -2px;
+}
+
+.PFX_tree-row[data-drop='true'] {
+  background: var(--ui-bg-quaternary);
+  box-shadow: inset 0 0 0 1px var(--ui-text-quaternary);
+}
+
+.PFX_tree-caret {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  color: var(--PFX_fg3);
+  transition: transform var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_tree-caret:hover {
+  color: var(--ui-text-secondary);
+}
+
+.PFX_tree-item[aria-expanded='true'] > .PFX_tree-row .PFX_tree-caret {
+  transform: rotate(90deg);
+}
+
+.PFX_tree-spacer {
+  flex: none;
+  width: 16px;
+}
+
+.PFX_tree-icon {
+  flex: none;
+  color: var(--PFX_fg3);
+}
+
+.PFX_tree-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.PFX_tree-count {
+  flex: none;
+  color: var(--ui-accent);
+  font-size: var(--PFX_fs-label);
+  line-height: var(--PFX_lh-label);
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+
+.PFX_tree-actions {
+  display: none;
+  flex: none;
+  align-items: center;
+}
+
+.PFX_tree-row:hover .PFX_tree-actions,
+.PFX_tree-item:focus-within > .PFX_tree-row .PFX_tree-actions {
+  display: inline-flex;
+}

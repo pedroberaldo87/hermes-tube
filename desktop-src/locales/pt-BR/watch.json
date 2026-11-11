@@ -1,0 +1,86 @@
+{
+  "tab": {
+    "title": "Assistindo"
+  },
+  "label": "Assistindo: {title}",
+  "player": {
+    "label": "Player do Hermes",
+    "note": "Alguns canais só deixam tocar no YouTube. Se o player avisar, use Abrir no YouTube.",
+    "larger": "Player maior",
+    "larger_hint": "Amplia o player (fica menos nítido). O app o desenha com até 640 × 360.",
+    "larger_off_hint": "Volta ao player no tamanho dele (mais nítido)"
+  },
+  "tip": {
+    "always_allow": "Dica: clique no ▾ ao lado de \"Load YouTube\" e escolha \"Always allow YouTube\". Daí em diante os vídeos abrem direto no player.",
+    "dismiss": "Entendi"
+  },
+  "meta": {
+    "published": "Publicado {date}",
+    "views": "{count} visualizações",
+    "duration": "Duração {duration}"
+  },
+  "description": {
+    "label": "Descrição",
+    "more": "Mostrar mais",
+    "less": "Mostrar menos"
+  },
+  "actions": {
+    "label": "Ações do vídeo",
+    "mark_watched": "Marcar como visto",
+    "watched": "Visto",
+    "open": "Abrir no YouTube"
+  },
+  "next": {
+    "title": "A seguir",
+    "from": "A seguir · {source}",
+    "label": "Fila: a seguir nesta lista",
+    "list": "Fila",
+    "previous": "Anterior",
+    "next": "Próximo",
+    "position": "{index} de {total}",
+    "end": "Fim da fila.",
+    "keys": "N / P para andar · o próximo não começa sozinho",
+    "edit_keys": "Arraste pela alça ou use Alt+↑ / Alt+↓ para mudar a ordem · Delete tira da fila",
+    "now_playing": "Tocando agora",
+    "remove": "Tirar da fila",
+    "play_next": "Tocar em seguida",
+    "drag": "Arraste para mudar a ordem",
+    "removed": "Saiu da fila: {title}",
+    "restored": "De volta à fila: {title}",
+    "moved": "{title}: posição {index} de {total}",
+    "queued_next": "{title} toca em seguida",
+    "empty": "A fila está vazia.",
+    "empty_hint": "O vídeo continua aqui. Abra outro vídeo em Inscrições para começar uma fila nova."
+  },
+  "state": {
+    "loading": "Carregando os detalhes do vídeo…",
+    "unknown_title": "Fora da sua biblioteca",
+    "unknown_desc": "Não temos os detalhes deste vídeo. Ele ainda pode tocar aqui, ou você pode abrir no YouTube.",
+    "error": "Não deu para carregar os detalhes: {error}",
+    "retry": "Tentar de novo",
+    "empty_title": "Nada tocando",
+    "empty_desc": "Clique num vídeo em Inscrições para assistir aqui.",
+    "empty_action": "Ir para Inscrições"
+  },
+  "open_mode": {
+    "label": "Abrir vídeos",
+    "hermes": "No Hermes",
+    "youtube": "No YouTube",
+    "hermes_hint": "Os vídeos tocam aqui no HermesTube, com o player do Hermes",
+    "youtube_hint": "Os vídeos abrem no YouTube, no navegador"
+  },
+  "toast": {
+    "watched": "Marcado como visto",
+    "unwatched": "Marcado como não visto",
+    "later": "Salvo em Ver depois",
+    "unlater": "Tirado de Ver depois",
+    "archived": "Arquivado",
+    "unarchived": "De volta à lista",
+    "up": "Gostei",
+    "down": "Marcado como não curti",
+    "reaction_cleared": "Reação removida",
+    "undo": "Desfazer",
+    "failed": "Não deu para salvar: {error}",
+    "undo_failed": "Não deu para desfazer: {error}"
+  }
+}

@@ -1,0 +1,802 @@
+{
+  "folders": [
+    {
+      "key": "tech",
+      "name": "Tech",
+      "color": "#2563eb"
+    },
+    {
+      "key": "science",
+      "name": "Science",
+      "color": "#16a34a"
+    },
+    {
+      "key": "cooking",
+      "name": "Cooking",
+      "color": "#ea580c"
+    },
+    {
+      "key": "music",
+      "name": "Music",
+      "color": "#db2777"
+    },
+    {
+      "key": "nature",
+      "name": "Nature",
+      "color": "#0f766e"
+    },
+    {
+      "key": "games",
+      "name": "Games",
+      "color": "#7c3aed"
+    }
+  ],
+  "channels": [
+    {
+      "id": "UCsampletech1xxxxxxxxxxx",
+      "title": "Bench Lamp Electronics",
+      "handle": "@BenchLampElectronics",
+      "folder": "tech",
+      "favorite": true,
+      "avatar": {
+        "bg": "#1e293b",
+        "fg": "#fde047",
+        "monogram": "BL"
+      }
+    },
+    {
+      "id": "UCsampletech2xxxxxxxxxxx",
+      "title": "Patch Cable Diaries",
+      "handle": "@PatchCableDiaries",
+      "folder": "tech",
+      "favorite": false,
+      "avatar": {
+        "bg": "#0f172a",
+        "fg": "#38bdf8",
+        "monogram": "PC"
+      }
+    },
+    {
+      "id": "UCsampletech3xxxxxxxxxxx",
+      "title": "Beige Box Revival",
+      "handle": "@BeigeBoxRevival",
+      "folder": "tech",
+      "favorite": false,
+      "avatar": {
+        "bg": "#f5f0e1",
+        "fg": "#7c2d12",
+        "monogram": "BB"
+      }
+    },
+    {
+      "id": "UCsamplesci1xxxxxxxxxxxx",
+      "title": "Pocket Telescope Notes",
+      "handle": "@PocketTelescopeNotes",
+      "folder": "science",
+      "favorite": false,
+      "avatar": {
+        "bg": "#052e16",
+        "fg": "#bbf7d0",
+        "monogram": "PT"
+      }
+    },
+    {
+      "id": "UCsamplesci2xxxxxxxxxxxx",
+      "title": "Slow Chemistry Club",
+      "handle": "@SlowChemistryClub",
+      "folder": "science",
+      "favorite": true,
+      "avatar": {
+        "bg": "#fef3c7",
+        "fg": "#14532d",
+        "monogram": "SC"
+      }
+    },
+    {
+      "id": "UCsamplesci3xxxxxxxxxxxx",
+      "title": "Tide Pool Statistics",
+      "handle": "@TidePoolStatistics",
+      "folder": "science",
+      "favorite": false,
+      "avatar": {
+        "bg": "#164e63",
+        "fg": "#ecfeff",
+        "monogram": "TP"
+      }
+    },
+    {
+      "id": "UCsamplecook1xxxxxxxxxxx",
+      "title": "Overnight Proof Kitchen",
+      "handle": "@OvernightProofKitchen",
+      "folder": "cooking",
+      "favorite": true,
+      "avatar": {
+        "bg": "#7c2d12",
+        "fg": "#ffedd5",
+        "monogram": "OP"
+      }
+    },
+    {
+      "id": "UCsamplecook2xxxxxxxxxxx",
+      "title": "Cast Iron Tuesdays",
+      "handle": "@CastIronTuesdays",
+      "folder": "cooking",
+      "favorite": false,
+      "avatar": {
+        "bg": "#171717",
+        "fg": "#fb923c",
+        "monogram": "CI"
+      }
+    },
+    {
+      "id": "UCsamplecook3xxxxxxxxxxx",
+      "title": "Brine and Patience",
+      "handle": "@BrineandPatience",
+      "folder": "cooking",
+      "favorite": false,
+      "avatar": {
+        "bg": "#ecfccb",
+        "fg": "#365314",
+        "monogram": "BA"
+      }
+    },
+    {
+      "id": "UCsamplemus1xxxxxxxxxxxx",
+      "title": "Tape Hiss Sessions",
+      "handle": "@TapeHissSessions",
+      "folder": "music",
+      "favorite": false,
+      "avatar": {
+        "bg": "#500724",
+        "fg": "#fbcfe8",
+        "monogram": "TH"
+      }
+    },
+    {
+      "id": "UCsamplemus2xxxxxxxxxxxx",
+      "title": "Drone Kettle Mornings",
+      "handle": "@DroneKettleMornings",
+      "folder": "music",
+      "favorite": false,
+      "avatar": {
+        "bg": "#fdf2f8",
+        "fg": "#9d174d",
+        "monogram": "DK"
+      }
+    },
+    {
+      "id": "UCsamplemus3xxxxxxxxxxxx",
+      "title": "Fretboard Footnotes",
+      "handle": "@FretboardFootnotes",
+      "folder": "music",
+      "favorite": true,
+      "avatar": {
+        "bg": "#312e81",
+        "fg": "#fef9c3",
+        "monogram": "FF"
+      }
+    },
+    {
+      "id": "UCsamplenat1xxxxxxxxxxxx",
+      "title": "Hawthorn Lane Field Notes",
+      "handle": "@HawthornLaneFieldNotes",
+      "folder": "nature",
+      "favorite": false,
+      "avatar": {
+        "bg": "#134e4a",
+        "fg": "#ccfbf1",
+        "monogram": "HL"
+      }
+    },
+    {
+      "id": "UCsamplenat2xxxxxxxxxxxx",
+      "title": "Dusk Heron Hide",
+      "handle": "@DuskHeronHide",
+      "folder": "nature",
+      "favorite": false,
+      "avatar": {
+        "bg": "#1c1917",
+        "fg": "#5eead4",
+        "monogram": "DH"
+      }
+    },
+    {
+      "id": "UCsamplenat3xxxxxxxxxxxx",
+      "title": "Cairn Path Rambles",
+      "handle": "@CairnPathRambles",
+      "folder": "nature",
+      "favorite": false,
+      "avatar": {
+        "bg": "#f0fdfa",
+        "fg": "#115e59",
+        "monogram": "CP"
+      }
+    },
+    {
+      "id": "UCsamplegame1xxxxxxxxxxx",
+      "title": "Felt Tray Almanac",
+      "handle": "@FeltTrayAlmanac",
+      "folder": "games",
+      "favorite": false,
+      "avatar": {
+        "bg": "#2e1065",
+        "fg": "#ddd6fe",
+        "monogram": "FT"
+      }
+    },
+    {
+      "id": "UCsamplegame2xxxxxxxxxxx",
+      "title": "Meeple Maintenance",
+      "handle": "@MeepleMaintenance",
+      "folder": "games",
+      "favorite": false,
+      "avatar": {
+        "bg": "#ede9fe",
+        "fg": "#5b21b6",
+        "monogram": "MM"
+      }
+    },
+    {
+      "id": "UCsamplegame3xxxxxxxxxxx",
+      "title": "Late Night Roguelike Log",
+      "handle": "@LateNightRoguelikeLog",
+      "folder": "games",
+      "favorite": false,
+      "avatar": {
+        "bg": "#0c0a09",
+        "fg": "#c4b5fd",
+        "monogram": "LN"
+      }
+    }
+  ],
+  "videos": [
+    {
+      "id": "smpV0001abc",
+      "channel_id": "UCsampletech1xxxxxxxxxxx",
+      "title": "Rebuilding a bench power supply from a dead transformer",
+      "duration_s": 1480,
+      "age_hours": 3,
+      "thumbnail_prompt": "A cluttered electronics workbench lit by a single warm desk lamp, a half-assembled green circuit board and a soldering iron resting in its stand."
+    },
+    {
+      "id": "smpV0002abc",
+      "channel_id": "UCsamplegame3xxxxxxxxxxx",
+      "title": "Forty runs deep: notes on a dungeon crawler I cannot quit",
+      "duration_s": 2210,
+      "age_hours": 7,
+      "thumbnail_prompt": "A dim bedroom desk at night with a glowing monitor showing abstract pixel-art corridors in purple and a cold mug of tea beside the keyboard."
+    },
+    {
+      "id": "smpV0003abc",
+      "channel_id": "UCsamplecook1xxxxxxxxxxx",
+      "title": "A 72-hour sourdough, hour by hour",
+      "duration_s": 1860,
+      "age_hours": 12,
+      "thumbnail_prompt": "Close-up of a scored sourdough loaf with a deep golden crust on a floured wooden board, steam still rising."
+    },
+    {
+      "id": "smpV0004abc",
+      "channel_id": "UCsamplenat2xxxxxxxxxxxx",
+      "title": "Four hours in a hide: herons at the reed edge",
+      "duration_s": 2640,
+      "age_hours": 19,
+      "thumbnail_prompt": "A grey heron standing motionless in shallow misty water among tall reeds at dawn."
+    },
+    {
+      "id": "smpV0005abc",
+      "channel_id": "UCsamplemus2xxxxxxxxxxxx",
+      "title": "Patching a slow evolving drone from scratch",
+      "duration_s": 1320,
+      "age_hours": 26,
+      "thumbnail_prompt": "A wall of colourful patch cables plugged into a eurorack-style synthesizer panel with softly glowing knobs."
+    },
+    {
+      "id": "smpV0006abc",
+      "channel_id": "UCsamplesci1xxxxxxxxxxxx",
+      "title": "Mapping the Moon's craters with a 70mm refractor",
+      "duration_s": 1750,
+      "age_hours": 33,
+      "thumbnail_prompt": "A small white refractor telescope on a tripod in a dark field with a bright full moon rising behind a tree line."
+    },
+    {
+      "id": "smpV0007abc",
+      "channel_id": "UCsampletech2xxxxxxxxxxx",
+      "title": "Cleaning up cable runs behind a home rack",
+      "duration_s": 980,
+      "age_hours": 41,
+      "thumbnail_prompt": "The back of a small network rack with neatly bundled blue and yellow cables tied with velcro straps."
+    },
+    {
+      "id": "smpV0008abc",
+      "channel_id": "UCsamplecook2xxxxxxxxxxx",
+      "title": "One skillet, five dinners, no recipe card",
+      "duration_s": 1540,
+      "age_hours": 48,
+      "thumbnail_prompt": "A well-seasoned cast iron skillet full of sizzling vegetables and sausage seen from above on a stovetop."
+    },
+    {
+      "id": "smpV0009abc",
+      "channel_id": "UCsamplesci2xxxxxxxxxxxx",
+      "title": "Crystals from kitchen salt: a week of slow growth",
+      "duration_s": 1190,
+      "age_hours": 57,
+      "thumbnail_prompt": "A glass jar on a windowsill holding a cluster of large clear salt crystals on a string, backlit by morning sun."
+    },
+    {
+      "id": "smpV0010abc",
+      "channel_id": "UCsamplemus3xxxxxxxxxxxx",
+      "title": "Why your open chords sound thin, and what to do",
+      "duration_s": 1680,
+      "age_hours": 66,
+      "thumbnail_prompt": "Close-up of a hand pressing strings on the neck of an acoustic guitar with the headstock out of focus."
+    },
+    {
+      "id": "smpV0011abc",
+      "channel_id": "UCsamplenat1xxxxxxxxxxxx",
+      "title": "A mossy lane in late autumn, with no commentary",
+      "duration_s": 1260,
+      "age_hours": 74,
+      "thumbnail_prompt": "A narrow sunken country lane covered in thick green moss and fallen amber leaves under bare branches."
+    },
+    {
+      "id": "smpV0012abc",
+      "channel_id": "UCsamplegame1xxxxxxxxxxx",
+      "title": "Painting a thousand tiny dice trays",
+      "duration_s": 1410,
+      "age_hours": 83,
+      "thumbnail_prompt": "An overhead view of hand-painted wooden dice trays in different colours with a scatter of polyhedral dice."
+    },
+    {
+      "id": "smpV0013abc",
+      "channel_id": "UCsamplemus1xxxxxxxxxxxx",
+      "title": "Recording a piano onto cassette in a stairwell",
+      "duration_s": 2020,
+      "age_hours": 92,
+      "thumbnail_prompt": "An old cassette recorder sitting on the step of a concrete stairwell with a microphone on a thin stand."
+    },
+    {
+      "id": "smpV0014abc",
+      "channel_id": "UCsampletech3xxxxxxxxxxx",
+      "title": "Reviving a 1990s desktop tower with a new power rail",
+      "duration_s": 2330,
+      "age_hours": 101,
+      "thumbnail_prompt": "An open beige computer tower on a garage workbench with a yellowed fan and dusty ribbon cables exposed."
+    },
+    {
+      "id": "smpV0015abc",
+      "channel_id": "UCsamplecook3xxxxxxxxxxx",
+      "title": "Fermented carrots, week three: what changed",
+      "duration_s": 880,
+      "age_hours": 112,
+      "thumbnail_prompt": "A glass jar of bright orange sliced carrots in cloudy brine with small bubbles rising, on a rustic kitchen shelf."
+    },
+    {
+      "id": "smpV0016abc",
+      "channel_id": "UCsamplenat3xxxxxxxxxxxx",
+      "title": "Ten kilometres along a windy ridge in early spring",
+      "duration_s": 3120,
+      "age_hours": 124,
+      "thumbnail_prompt": "A grassy mountain ridge with a thin footpath curving into the distance under fast-moving clouds."
+    },
+    {
+      "id": "smpV0017abc",
+      "channel_id": "UCsamplesci3xxxxxxxxxxxx",
+      "title": "Counting snails on a rocky shore: a tidy dataset",
+      "duration_s": 1370,
+      "age_hours": 133,
+      "thumbnail_prompt": "A shallow rocky tide pool with small spiral shelled snails and green seaweed under clear water."
+    },
+    {
+      "id": "smpV0018abc",
+      "channel_id": "UCsamplegame2xxxxxxxxxxx",
+      "title": "Sleeving, storing and sorting a growing board game shelf",
+      "duration_s": 1090,
+      "age_hours": 145,
+      "thumbnail_prompt": "A tall wooden shelf packed with colourful board game boxes arranged by size, lit by a nearby window."
+    },
+    {
+      "id": "smpV0019abc",
+      "channel_id": "UCsampletech1xxxxxxxxxxx",
+      "title": "Why my oscilloscope probe lies to me at high frequency",
+      "duration_s": 1920,
+      "age_hours": 156,
+      "thumbnail_prompt": "A close shot of an oscilloscope screen displaying a clean green sine wave with a hand holding a probe tip over a board."
+    },
+    {
+      "id": "smpV0020abc",
+      "channel_id": "UCsamplecook1xxxxxxxxxxx",
+      "title": "Shaping rolls with wet hands: three folding methods",
+      "duration_s": 760,
+      "age_hours": 168,
+      "thumbnail_prompt": "A pair of floury hands shaping soft bread dough on a marble counter, rows of rolls waiting beside them."
+    },
+    {
+      "id": "smpV0021abc",
+      "channel_id": "UCsamplemus2xxxxxxxxxxxx",
+      "title": "A short walk through every module in my small case",
+      "duration_s": 2480,
+      "age_hours": 177,
+      "thumbnail_prompt": "A compact wooden synth case filled with modules and knobs photographed at a low angle on a rug."
+    },
+    {
+      "id": "smpV0022abc",
+      "channel_id": "UCsamplenat1xxxxxxxxxxxx",
+      "title": "Counting fungi along one hedgerow, an afternoon walk",
+      "duration_s": 1630,
+      "age_hours": 189,
+      "thumbnail_prompt": "A cluster of small orange mushrooms growing on a rotting log beside a hedgerow in soft afternoon light."
+    },
+    {
+      "id": "smpV0023abc",
+      "channel_id": "UCsamplegame3xxxxxxxxxxx",
+      "title": "Building a daily-run spreadsheet for a card-based roguelike",
+      "duration_s": 1740,
+      "age_hours": 198,
+      "thumbnail_prompt": "A laptop screen showing abstract coloured grids and charts beside a stack of playing cards on a desk."
+    },
+    {
+      "id": "smpV0024abc",
+      "channel_id": "UCsamplesci1xxxxxxxxxxxx",
+      "title": "A very patient guide to finding faint galaxies",
+      "duration_s": 2760,
+      "age_hours": 211,
+      "thumbnail_prompt": "A wide night sky filled with stars and a faint smear of the Milky Way above a silhouetted hill."
+    },
+    {
+      "id": "smpV0025abc",
+      "channel_id": "UCsampletech2xxxxxxxxxxx",
+      "title": "Crimping network cables in bulk: a calm how-to",
+      "duration_s": 840,
+      "age_hours": 224,
+      "thumbnail_prompt": "A hand holding a crimping tool beside a spool of twisted-pair cable and a pile of small clear connectors."
+    },
+    {
+      "id": "smpV0026abc",
+      "channel_id": "UCsamplecook2xxxxxxxxxxx",
+      "title": "What a flat-top skillet taught me about heat",
+      "duration_s": 1130,
+      "age_hours": 236,
+      "thumbnail_prompt": "A wide shallow skillet with a golden seared flatbread and a wooden spatula on a gas burner."
+    },
+    {
+      "id": "smpV0027abc",
+      "channel_id": "UCsamplemus3xxxxxxxxxxxx",
+      "title": "Learning a slow tune on a borrowed mandolin",
+      "duration_s": 1880,
+      "age_hours": 247,
+      "thumbnail_prompt": "A small wooden mandolin leaning against a worn armchair next to a window with rain on the glass."
+    },
+    {
+      "id": "smpV0028abc",
+      "channel_id": "UCsamplenat3xxxxxxxxxxxx",
+      "title": "Sleeping out under a tarp near the treeline",
+      "duration_s": 2950,
+      "age_hours": 259,
+      "thumbnail_prompt": "A small olive tarp shelter pitched between two pines at the edge of a forest at dusk with a thin stream of campfire smoke."
+    },
+    {
+      "id": "smpV0029abc",
+      "channel_id": "UCsampletech3xxxxxxxxxxx",
+      "title": "Replacing a failing capacitor on an old monitor",
+      "duration_s": 1580,
+      "age_hours": 271,
+      "thumbnail_prompt": "A tilted old CRT monitor with its back cover off and a hand holding a small electrolytic capacitor with tweezers."
+    },
+    {
+      "id": "smpV0030abc",
+      "channel_id": "UCsamplesci2xxxxxxxxxxxx",
+      "title": "Colour changes in red cabbage: a titration afternoon",
+      "duration_s": 1050,
+      "age_hours": 283,
+      "thumbnail_prompt": "A row of glass beakers on a white table filled with liquid in a gradient from deep purple to pink to green."
+    },
+    {
+      "id": "smpV0031abc",
+      "channel_id": "UCsamplecook3xxxxxxxxxxx",
+      "title": "Making kimchi-style cabbage without a special crock",
+      "duration_s": 1720,
+      "age_hours": 296,
+      "thumbnail_prompt": "A large bowl of chopped cabbage coated in red chili paste with a pair of gloved hands mixing it."
+    },
+    {
+      "id": "smpV0032abc",
+      "channel_id": "UCsamplemus1xxxxxxxxxxxx",
+      "title": "Tape loops, wobble and noise: a four-track workflow",
+      "duration_s": 1960,
+      "age_hours": 307,
+      "thumbnail_prompt": "An overhead view of a portable multitrack tape recorder with tangled cables and a small loop of tape hanging off a pencil."
+    },
+    {
+      "id": "smpV0033abc",
+      "channel_id": "UCsamplegame1xxxxxxxxxxx",
+      "title": "Rolling for stats: the maths of a generous character sheet",
+      "duration_s": 1330,
+      "age_hours": 318,
+      "thumbnail_prompt": "A hand rolling a set of translucent polyhedral dice across a green felt table with a candle lit in the background."
+    },
+    {
+      "id": "smpV0034abc",
+      "channel_id": "UCsamplenat2xxxxxxxxxxxx",
+      "title": "Winter river bank: kingfisher watching in the cold",
+      "duration_s": 2400,
+      "age_hours": 329,
+      "thumbnail_prompt": "A small bright blue and orange kingfisher perched on a bare branch above a frozen river bank."
+    },
+    {
+      "id": "smpV0035abc",
+      "channel_id": "UCsamplegame2xxxxxxxxxxx",
+      "title": "Repairing a warped board with a heavy book and patience",
+      "duration_s": 940,
+      "age_hours": 341,
+      "thumbnail_prompt": "A folded game board lying flat under a stack of heavy books on a wooden table with a roll of tape nearby."
+    },
+    {
+      "id": "smpV0036abc",
+      "channel_id": "UCsamplesci3xxxxxxxxxxxx",
+      "title": "Why the beach smells different after a storm",
+      "duration_s": 1215,
+      "age_hours": 352,
+      "thumbnail_prompt": "A stormy grey shoreline with heaps of seaweed on pebbles and foam at the edge of the waves."
+    },
+    {
+      "id": "smpV0037abc",
+      "channel_id": "UCsampletech1xxxxxxxxxxx",
+      "title": "Reading a datasheet without panic",
+      "duration_s": 1450,
+      "age_hours": 365,
+      "thumbnail_prompt": "A printed technical datasheet with a highlighter and a magnifying glass lying on a green cutting mat next to a small chip."
+    },
+    {
+      "id": "smpV0038abc",
+      "channel_id": "UCsamplecook1xxxxxxxxxxx",
+      "title": "The flour question: what each bag is good for",
+      "duration_s": 1010,
+      "age_hours": 378,
+      "thumbnail_prompt": "Five small bowls of different flours in shades of white and brown arranged in a row on a wooden table."
+    },
+    {
+      "id": "smpV0039abc",
+      "channel_id": "UCsamplemus3xxxxxxxxxxxx",
+      "title": "Tuning by ear in a noisy room",
+      "duration_s": 1260,
+      "age_hours": 389,
+      "thumbnail_prompt": "A hand turning a tuning peg on a guitar headstock with the blurred shapes of a crowded room behind it."
+    },
+    {
+      "id": "smpV0040abc",
+      "channel_id": "UCsamplenat3xxxxxxxxxxxx",
+      "title": "A day in the quarry where the swifts nest",
+      "duration_s": 2180,
+      "age_hours": 396,
+      "thumbnail_prompt": "A pale limestone quarry wall with small birds flying near hollows under a bright blue sky."
+    }
+  ],
+  "topic": {
+    "query": "wildlife documentaries",
+    "name": "Wildlife Documentaries",
+    "icon": "🦁",
+    "channels": [
+      {
+        "id": "UCsampletp1xxxxxxxxxxxxx",
+        "title": "Snowpatch Cameras",
+        "handle": "@SnowpatchCameras",
+        "avatar": {
+          "bg": "#0c4a6e",
+          "fg": "#e0f2fe",
+          "monogram": "SC"
+        }
+      },
+      {
+        "id": "UCsampletp2xxxxxxxxxxxxx",
+        "title": "Understory Cameras",
+        "handle": "@UnderstoryCameras",
+        "avatar": {
+          "bg": "#14532d",
+          "fg": "#dcfce7",
+          "monogram": "UC"
+        }
+      },
+      {
+        "id": "UCsampletp3xxxxxxxxxxxxx",
+        "title": "Salt Flat Safari Logs",
+        "handle": "@SaltFlatSafariLogs",
+        "avatar": {
+          "bg": "#fef3c7",
+          "fg": "#78350f",
+          "monogram": "SF"
+        }
+      },
+      {
+        "id": "UCsampletp4xxxxxxxxxxxxx",
+        "title": "Upper Branch Cameras",
+        "handle": "@UpperBranchCameras",
+        "avatar": {
+          "bg": "#064e3b",
+          "fg": "#a7f3d0",
+          "monogram": "UB"
+        }
+      },
+      {
+        "id": "UCsampletp5xxxxxxxxxxxxx",
+        "title": "Reedbed Observers",
+        "handle": "@ReedbedObservers",
+        "avatar": {
+          "bg": "#422006",
+          "fg": "#fde68a",
+          "monogram": "RO"
+        }
+      },
+      {
+        "id": "UCsampletp6xxxxxxxxxxxxx",
+        "title": "Long Lens Expeditions",
+        "handle": "@LongLensExpeditions",
+        "avatar": {
+          "bg": "#1e1b4b",
+          "fg": "#c7d2fe",
+          "monogram": "LL"
+        }
+      },
+      {
+        "id": "UCsampletp7xxxxxxxxxxxxx",
+        "title": "Northern Fur Archive",
+        "handle": "@NorthernFurArchive",
+        "avatar": {
+          "bg": "#f1f5f9",
+          "fg": "#1e3a8a",
+          "monogram": "NF"
+        }
+      }
+    ],
+    "videos": [
+      {
+        "id": "smpT0001abc",
+        "channel_id": "UCsampletp1xxxxxxxxxxxxx",
+        "title": "A full winter with an Arctic wolf pack on the tundra",
+        "duration_s": 3480,
+        "age_hours": 5,
+        "reason": "Full episode on Arctic wolves",
+        "thumbnail_prompt": "A white Arctic wolf walking across a snowy tundra plain under pale pink dawn light."
+      },
+      {
+        "id": "smpT0002abc",
+        "channel_id": "UCsampletp2xxxxxxxxxxxxx",
+        "title": "The red fox kits of the old orchard",
+        "duration_s": 2160,
+        "age_hours": 18,
+        "reason": "Follows a fox family through spring",
+        "thumbnail_prompt": "Three red fox kits tumbling in tall grass in front of an orchard fence."
+      },
+      {
+        "id": "smpT0003abc",
+        "channel_id": "UCsampletp3xxxxxxxxxxxxx",
+        "title": "Flamingos at the edge of the salt flats",
+        "duration_s": 1740,
+        "age_hours": 34,
+        "reason": "Large flocks filmed across a season",
+        "thumbnail_prompt": "A huge flock of pink flamingos standing in shallow water at golden hour."
+      },
+      {
+        "id": "smpT0004abc",
+        "channel_id": "UCsampletp4xxxxxxxxxxxxx",
+        "title": "Canopy life: a day among howler monkeys",
+        "duration_s": 2820,
+        "age_hours": 52,
+        "reason": "A day in the life of tree dwellers",
+        "thumbnail_prompt": "A howler monkey sitting on a thick branch in a rainforest canopy with mist behind."
+      },
+      {
+        "id": "smpT0005abc",
+        "channel_id": "UCsampletp5xxxxxxxxxxxxx",
+        "title": "Otters of the reedbed, fourteen months watched",
+        "duration_s": 3300,
+        "age_hours": 71,
+        "reason": "Long-term study of river otters",
+        "thumbnail_prompt": "Two river otters sliding on a muddy bank covered in reeds at sunrise."
+      },
+      {
+        "id": "smpT0006abc",
+        "channel_id": "UCsampletp6xxxxxxxxxxxxx",
+        "title": "A lone polar bear crossing the drifting pack ice",
+        "duration_s": 2580,
+        "age_hours": 95,
+        "reason": "Slow documentary on sea ice hunting",
+        "thumbnail_prompt": "A polar bear walking on thin pack ice with open dark water on either side."
+      },
+      {
+        "id": "smpT0007abc",
+        "channel_id": "UCsampletp7xxxxxxxxxxxxx",
+        "title": "Snowy owls hunting over the winter fields",
+        "duration_s": 1620,
+        "age_hours": 120,
+        "reason": "Close views of hunting owls",
+        "thumbnail_prompt": "A snowy owl in flight over a snow-covered field with a low sun behind it."
+      },
+      {
+        "id": "smpT0008abc",
+        "channel_id": "UCsampletp1xxxxxxxxxxxxx",
+        "title": "Musk oxen and the storm that did not stop",
+        "duration_s": 2400,
+        "age_hours": 148,
+        "reason": "Survival story of an Arctic herd",
+        "thumbnail_prompt": "A herd of shaggy musk oxen huddled together in blowing snow on an open plain."
+      },
+      {
+        "id": "smpT0009abc",
+        "channel_id": "UCsampletp3xxxxxxxxxxxxx",
+        "title": "Elephants and the last waterhole of the dry season",
+        "duration_s": 3720,
+        "age_hours": 176,
+        "reason": "Elephants gather as water runs out",
+        "thumbnail_prompt": "A group of elephants drinking at a muddy waterhole in dry golden grassland."
+      },
+      {
+        "id": "smpT0010abc",
+        "channel_id": "UCsampletp4xxxxxxxxxxxxx",
+        "title": "Night shift in the cloud forest",
+        "duration_s": 1980,
+        "age_hours": 209,
+        "reason": "Nocturnal animals filmed with low light",
+        "thumbnail_prompt": "A small tree frog with large eyes clinging to a wet leaf in a dark forest."
+      },
+      {
+        "id": "smpT0011abc",
+        "channel_id": "UCsampletp6xxxxxxxxxxxxx",
+        "title": "Whales along an unlit fjord",
+        "duration_s": 4260,
+        "age_hours": 241,
+        "reason": "Whale migration through a quiet fjord",
+        "thumbnail_prompt": "A humpback whale tail rising out of calm grey water beside steep snowy mountain walls."
+      },
+      {
+        "id": "smpT0012abc",
+        "channel_id": "UCsampletp2xxxxxxxxxxxxx",
+        "title": "Badger setts: a spring watched from dusk",
+        "duration_s": 1500,
+        "age_hours": 276,
+        "reason": "A season at one badger sett",
+        "thumbnail_prompt": "A badger emerging from a burrow in a woodland bank at twilight."
+      },
+      {
+        "id": "smpT0013abc",
+        "channel_id": "UCsampletp7xxxxxxxxxxxxx",
+        "title": "The wolverine in the high mountains",
+        "duration_s": 2040,
+        "age_hours": 318,
+        "reason": "Rare footage of an elusive hunter",
+        "thumbnail_prompt": "A wolverine trotting across a rocky snow-patched mountain slope."
+      },
+      {
+        "id": "smpT0014abc",
+        "channel_id": "UCsampletp5xxxxxxxxxxxxx",
+        "title": "Reed warblers and the long migration home",
+        "duration_s": 1260,
+        "age_hours": 372,
+        "reason": "Small birds on a long journey",
+        "thumbnail_prompt": "A tiny reed warbler singing from the top of a reed stem against a pale sky."
+      }
+    ]
+  },
+  "playlists": [
+    {
+      "name": "Weekend projects",
+      "videos": [
+        "smpV0001abc",
+        "smpV0007abc",
+        "smpV0014abc",
+        "smpV0025abc",
+        "smpV0029abc",
+        "smpV0019abc"
+      ]
+    },
+    {
+      "name": "Slow evenings",
+      "videos": [
+        "smpV0011abc",
+        "smpV0004abc",
+        "smpV0016abc",
+        "smpV0034abc",
+        "smpT0014abc"
+      ]
+    }
+  ]
+}

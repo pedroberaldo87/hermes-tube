@@ -1,0 +1,2680 @@
+openapi: 3.1.0
+info:
+  title: Plugin REST contract (plugin_api + extension server)
+  version: 1.0.0
+  description: |
+    Source of truth for the plugin's HTTP routes. Extension prose: `contract/ext-protocol.md`;
+    RPC and events: `contract/rpc.yaml` and `contract/events.md`. Generated TS types: `shared/api-types.ts`.
+
+    General rules
+    - **Envelope** on every response: `{"ok": true, "data": …}` or `{"ok": false, "error": {code, message, reason?, details?}}`.
+      The schema of each operation's `data` is in `x-data`; the possible codes in `x-errors`.
+    - **plugin_api REST (x-transport: rest)** — prefix `/api/plugins/<PLUGIN_ID>`, called by the Desktop with `ctx.rest`.
+      Always **HTTP 200**, errors included (the Desktop treats 401/403 as re-authentication and 502/503/504 as backend down;
+      an unhandled exception becomes a FastAPI 500 and `internal`). Plain `def` routes, < 2 s (`REST_BUDGET_S`), **no AI** and no
+      blocking operation: only database reads/writes, `Refresher.kick_if_due`/`kick_channel` or a short HTTP request
+      when the route says so. In the gateway topology the gateway strips `Authorization`, cookies and tokens before the plugin host: routes
+      get neither identity nor `ctx` (configuration through `load_config_readonly()` via `Settings`). REST routes **emit no event**.
+      Invalid body → `invalid` (no FastAPI 422: read the body as a `dict` and validate it).
+    - **The extension's own server (x-transport: ext)** — `http://127.0.0.1:<port>`, preferred port 47615, range
+      of 10 (47615–47624). Only the extension's service worker calls it. Auth `Authorization: Bearer <device token>`
+      (`deviceToken`) everywhere except `GET /health` and `POST /pair/complete`. Here the HTTP status follows `x-error-codes[*].http`
+      (the body is still the envelope). Each route has `x-handler` (pure function in `x-module`, signature in ext-protocol.md)
+      and `x-deps` (services that `wiring` injects). Transport errors possible on any route: `x-transport-errors`.
+    - `x-module` = implementing file; `x-unit` = owner (contract/owners.yaml). Stubs return the `example`.
+    - Time = integer seconds, UTC (`Timestamp`). Ids: channel `UC`+22, video 11 characters, the rest opaque.
+    - The contract evolves additively: clients ignore unknown fields.
+
+servers:
+  - url: /api/plugins/{plugin_id}
+    description: plugin_api in the gateway/plugin host (Desktop via ctx.rest)
+    variables:
+      plugin_id:
+        default: PLUGIN_ID
+        description: value from plugin/_id.py (shared/ids.ts)
+
+x-error-codes:
+  # domain (ERRORS in plugin/core/types.py). `http` only applies on the extension server; REST answers 200.
+  not_found: {http: 404, where: domain, description: Entity does not exist (NotFound).}
+  conflict: {http: 409, where: domain, description: 'The state does not allow it (invalid transition, default tab, expired item, Extra off).'}
+  invalid: {http: 422, where: domain, description: 'Invalid body/parameter (ValidationError); `details.field` when there is one.'}
+  unauthorized: {http: 401, where: domain, description: 'Device token missing, wrong, Basic or revoked. On the extension server it comes with `WWW-Authenticate: Bearer`.'}
+  undo_refused: {http: 409, where: domain, description: 'Undo refused; `reason` = already_executed | not_undoable | already_undone. Nothing changes.'}
+  approval_refused: {http: 403, where: domain, description: 'Unsubscribe approval outside `desktop_rpc`/`ask_choice` (ApprovalRefused).'}
+  timeout: {http: 504, where: domain, description: The operation ran out of time (OperationTimeout).}
+  busy: {http: 409, where: domain, description: 'Resource busy (AI semaphore full, lock).'}
+  llm_unavailable: {http: 503, where: domain, description: 'No model for the `curator` task; the interface says what is missing.'}
+  llm_invalid: {http: 502, where: domain, description: AI answer outside the schema even after a retry.}
+  youtube_error: {http: 502, where: domain, description: 'YouTube network/parse failure with a readable message.'}
+  http_error: {http: 502, where: domain, description: Generic network failure (HttpError).}
+  # extension transport
+  origin_forbidden: {http: 403, where: ext, description: '`Origin` present and not `chrome-extension://` (a web page). Response without CORS headers.'}
+  origin_required: {http: 403, where: ext, description: '`POST /pair/complete` without `Origin` (the service worker always sends it on POST): the origin is pinned at pairing.'}
+  origin_mismatch: {http: 403, where: ext, description: 'Token paired by another extension (the pinned origin differs from the `Origin` present).'}
+  host_forbidden: {http: 403, where: ext, description: '`Host` other than `127.0.0.1:<port>`/`localhost:<port>` (anti DNS rebinding).'}
+  plugin_disabled: {http: 503, where: ext, description: 'Plugin disabled in the profile; the server answers this and shuts down.'}
+  no_active_code: {http: 400, where: ext, description: No active pairing code on this server.}
+  invalid_code: {http: 400, where: ext, description: 'Wrong code (uses 1 of the 5 attempts).'}
+  expired: {http: 400, where: ext, description: 'Expired code (300 s).'}
+  used: {http: 400, where: ext, description: 'Code already used (single use).'}
+  locked: {http: 400, where: ext, description: '5 wrong attempts; ask the Desktop for a new code.'}
+  # general transport
+  ext_endpoint_down: {http: 503, where: rest, description: 'The extension server did not start (range busy/error); `POST /pair/start` and `pair.start`.'}
+  internal: {http: 500, where: any, description: 'Unhandled exception (bug); short message, no stack.'}
+
+x-transport-errors:
+  # can come from any x-transport: ext route (answered by _server.py before the handler)
+  unauthorized: routes with deviceToken
+  origin_forbidden: all
+  origin_mismatch: routes with deviceToken
+  host_forbidden: all
+  plugin_disabled: all
+  internal: all
+
+components:
+  securitySchemes:
+    deviceToken:
+      type: http
+      scheme: bearer
+      description: 'Device token (`PairedDevice.token`, 32 urlsafe bytes); the database keeps only the hash.'
+
+  schemas:
+    # ------------------------------------------------------------------ envelope and errors
+    ErrorCode:
+      description: Stable error code (`x-error-codes`).
+      type: string
+      enum: [not_found, conflict, invalid, unauthorized, undo_refused, approval_refused, timeout, busy,
+             llm_unavailable, llm_invalid, youtube_error, http_error, origin_forbidden, origin_required,
+             origin_mismatch, host_forbidden, plugin_disabled, no_active_code, invalid_code, expired, used,
+             locked, ext_endpoint_down, internal]
+    ApiError:
+      type: object
+      required: [code, message]
+      properties:
+        code: {$ref: '#/components/schemas/ErrorCode'}
+        message: {type: string, description: 'Readable text (backend language); the interface may translate it by `code`.'}
+        reason:
+          type: string
+          description: 'Stable sub-reason. `undo_refused`: already_executed | not_undoable | already_undone.'
+        details: {type: object, description: 'Free extra (e.g. `{"field": "rules.include"}`).'}
+    OkEnvelope:
+      type: object
+      required: [ok, data]
+      properties:
+        ok: {const: true}
+        data: {description: 'See the operation''s `x-data`.'}
+    ErrorEnvelope:
+      type: object
+      required: [ok, error]
+      properties:
+        ok: {const: false}
+        error: {$ref: '#/components/schemas/ApiError'}
+    AnyEnvelope:
+      description: Envelope of any response (`Envelope<T>` in TS).
+      oneOf:
+        - {$ref: '#/components/schemas/OkEnvelope'}
+        - {$ref: '#/components/schemas/ErrorEnvelope'}
+
+    # ------------------------------------------------------------------ common
+    IdList:
+      type: object
+      required: [ids]
+      properties:
+        ids: {type: array, items: {type: string}, minItems: 1}
+    CountResult:
+      type: object
+      required: [count]
+      properties:
+        count: {type: integer, minimum: 0}
+    Deleted:
+      type: object
+      required: [id]
+      properties:
+        id: {type: string}
+    KickResult:
+      type: object
+      required: [result]
+      properties:
+        result:
+          enum: [started, skipped, running]
+          description: Return value of `Refresher.kick_if_due` / `kick_channel`.
+
+    # ------------------------------------------------------------------ state
+    StatusResponse:
+      description: '`GET /status`: `StatusSnapshot` + `ext_port` (extension server port, `null` when down). Contract request: `ext_port` in `StatusSnapshot`.'
+      allOf:
+        - $ref: '../shared/domain.schema.json#/$defs/StatusSnapshot'
+        - type: object
+          required: [ext_port]
+          properties:
+            ext_port: {type: [integer, 'null']}
+            channels_total:
+              type: integer
+              minimum: 0
+              description: '`subscribed`+`followed` channels (muted included) = `total` of `GET /channels?relation=subscribed,followed`. Absent = not known yet (never a false 0).'
+            subscribed_total:
+              type: integer
+              minimum: 0
+              description: '`subscribed` channels = `total` of `GET /channels?relation=subscribed`. Absent = not known yet.'
+            details_pending:
+              type: integer
+              minimum: 0
+              description: 'Recent videos (last 30 days or just arrived) still without a duration or a type (Short/video) that the background lookup is about to fetch — the screen can say "fetching durations" while it is > 0. Stays at 0 while the lookup is backing off (failure or 429). Absent = lookup off or not known yet.'
+            ext_last_sync_at:
+              type: [integer, 'null']
+              description: 'UTC seconds of the last subscription read the extension delivered (`POST /ext/sync/subscriptions` accepted with `signal` complete, or partial with at least one channel). Moves forward even when the read brings no new channel (re-pairing), so the welcome dialog can tell the read finished. `null` = no read yet; absent = not known yet (older backend).'
+    StateResponse:
+      type: object
+      required: [counts, videos]
+      properties:
+        counts: {$ref: '../shared/domain.schema.json#/$defs/NewCounts'}
+        videos:
+          type: object
+          description: 'video_id → state, only for requested `ids` that have a row (absent = `new` with no reaction).'
+          additionalProperties: {$ref: '../shared/domain.schema.json#/$defs/VideoStateRow'}
+    VideoStateChange:
+      description: 'Changes the state and/or the reaction. At least one of `state`/`reaction`. `reaction: null` clears 👍/👎; `down` becomes a negative example for the next theme curation.'
+      type: object
+      required: [video_ids]
+      properties:
+        video_ids: {type: array, items: {type: string, pattern: '^[A-Za-z0-9_-]{11}$'}, minItems: 1, maxItems: 500}
+        state: {$ref: '../shared/domain.schema.json#/$defs/VideoState'}
+        reaction:
+          anyOf:
+            - $ref: '../shared/domain.schema.json#/$defs/Reaction'
+            - type: 'null'
+    ChangedResult:
+      type: object
+      required: [changed]
+      properties:
+        changed: {type: integer, minimum: 0}
+    ReadResult:
+      description: '`POST /read`: `ChangedResult` + ids of the entries written to the history (with `?change_ids=true`).'
+      allOf:
+        - $ref: '#/components/schemas/ChangedResult'
+        - type: object
+          properties:
+            change_ids:
+              type: array
+              items: {type: integer, minimum: 1}
+              description: 'Only with `?change_ids=true`: the `mark_read` entries written (exact undo: `POST /changes/{id}/undo`); empty when nothing changed.'
+    FeedPreviewRequest:
+      type: object
+      required: [rules]
+      properties:
+        rules: {$ref: '../shared/domain.schema.json#/$defs/TabRulesInput'}
+        limit: {type: integer, minimum: 1, maximum: 100, default: 30}
+        cursor: {type: [string, 'null']}
+        sort: {type: string, enum: [newest, oldest, longest, shortest, views], default: newest, description: 'As in `GET /feed`.'}
+        group: {type: string, enum: [none, channel, folder, day, kind], default: none, description: 'As in `GET /feed`.'}
+        tz_offset_min: {type: integer, minimum: -840, maximum: 840, default: 0, description: 'As in `GET /feed` (only for `group=day`).'}
+
+    # ------------------------------------------------------------------ channels
+    ChannelRow:
+      description: Row of the Manage screen and of the panel.
+      type: object
+      required: [channel, new_count, watched_90d]
+      properties:
+        channel: {$ref: '../shared/domain.schema.json#/$defs/Channel'}
+        new_count: {type: integer, minimum: 0, description: 'New videos (watermark) of the channel.'}
+        watched_90d:
+          type: [integer, 'null']
+          description: 'Watched in 90 days (`watch_history`); `null` if no device has sent history yet.'
+    ChannelPatchBody:
+      description: 'Absent fields do not change; `null` clears where accepted. `relation` only followed|ignored (the extension subscribes; `ex` only through the queue). Writes history.'
+      type: object
+      minProperties: 1
+      properties:
+        folder_id: {type: [string, 'null']}
+        favorite: {type: boolean}
+        muted: {type: boolean}
+        ai_note: {type: [string, 'null']}
+        title: {type: string, minLength: 1}
+        tag_ids: {type: array, items: {type: string}}
+        relation: {enum: [followed, ignored]}
+    ChannelBatchBody:
+      description: '`op` = BatchOp or `unsubscribe`. `unsubscribe` **only** creates cleanup candidates (`Cleanup.propose`, manual group): never a queue item.'
+      type: object
+      required: [op, channel_ids]
+      properties:
+        op:
+          anyOf:
+            - $ref: '../shared/domain.schema.json#/$defs/BatchOp'
+            - const: unsubscribe
+        channel_ids: {type: array, items: {type: string}, minItems: 1}
+        value: {type: [string, 'null'], description: 'folder_id (move; null = no folder) or tag_id (tag/untag).'}
+        reason: {type: [string, 'null'], description: 'The user''s reason (unsubscribe only).'}
+    ChannelBatchResult:
+      type: object
+      required: [batch, proposed]
+      properties:
+        batch:
+          anyOf:
+            - $ref: '../shared/domain.schema.json#/$defs/BatchResult'
+            - type: 'null'
+        proposed:
+          type: array
+          items: {$ref: '../shared/domain.schema.json#/$defs/CleanupCandidate'}
+    ChannelAddBody:
+      type: object
+      required: [url_or_handle]
+      properties:
+        url_or_handle: {type: string, minLength: 2, description: 'Channel/video link, @handle or UC… id.'}
+        folder_id: {type: [string, 'null']}
+
+    # ------------------------------------------------------------------ folders, tags, tabs
+    FolderCreate:
+      type: object
+      required: [name]
+      properties:
+        name: {type: string, minLength: 1}
+        parent_id: {type: [string, 'null']}
+        color: {type: [string, 'null']}
+    FolderPatch:
+      description: '`parent_id` present = move (cycle → invalid).'
+      type: object
+      minProperties: 1
+      properties:
+        name: {type: string, minLength: 1}
+        color: {type: [string, 'null']}
+        parent_id: {type: [string, 'null']}
+    TagCreate:
+      type: object
+      required: [name]
+      properties:
+        name: {type: string, minLength: 1}
+        color: {type: [string, 'null']}
+    TagPatch:
+      type: object
+      minProperties: 1
+      properties:
+        name: {type: string, minLength: 1}
+        color: {type: [string, 'null']}
+    TabCreate:
+      type: object
+      required: [name, kind]
+      properties:
+        name: {type: string, minLength: 1}
+        kind: {$ref: '../shared/domain.schema.json#/$defs/TabKind'}
+        rules: {$ref: '../shared/domain.schema.json#/$defs/TabRulesInput'}
+        icon: {type: [string, 'null']}
+        filters: {type: object, description: 'Interface view state (the engine ignores it).'}
+    TabPatchBody:
+      type: object
+      minProperties: 1
+      properties:
+        name: {type: string, minLength: 1}
+        kind: {$ref: '../shared/domain.schema.json#/$defs/TabKind'}
+        rules: {$ref: '../shared/domain.schema.json#/$defs/TabRulesInput'}
+        icon: {type: [string, 'null']}
+        filters: {type: object}
+    TabFromChannels:
+      type: object
+      required: [name, channel_ids]
+      properties:
+        name: {type: string, minLength: 1}
+        channel_ids: {type: array, items: {type: string}, minItems: 1}
+        icon: {type: [string, 'null']}
+
+    # ------------------------------------------------------------------ pairing
+    PairStartResponse:
+      description: '6-digit code (300 s, single use, 5 attempts; a new code invalidates the previous one) + port of the extension server, already on.'
+      allOf:
+        - $ref: '../shared/domain.schema.json#/$defs/PairingCode'
+        - type: object
+          required: [port]
+          properties:
+            port: {type: integer, minimum: 1024, maximum: 65535}
+
+    # ------------------------------------------------------------------ extension setup
+    ExtensionSetupPlatform:
+      description: Operating system of the computer where Hermes runs (where the folder is created and the browser is opened).
+      type: string
+      enum: [macos, linux, windows, other]
+    ExtensionBrowserKey:
+      description: The closed list of Chromium browsers the setup knows (`arc` only on macOS). The only thing a caller may choose.
+      type: string
+      enum: [chrome, edge, brave, chromium, vivaldi, opera, arc]
+    ExtensionBrowser:
+      description: |
+        A Chromium browser found on the computer where Hermes runs. `extensions_url` is its own Extensions page
+        (`edge://extensions/`…). `sandbox`: `snap` or `flatpak` (Linux) when the browser runs confined, else `null`;
+        `app_id` is then the snap name or the Flatpak id. `folder_visible` is `false` when that sandbox cannot read the
+        extension folder (a Flatpak without access to the home folder, a snap with a home folder outside `/home`): the
+        screen then says how to give it access.
+      type: object
+      required: [key, name, extensions_url, sandbox, app_id, folder_visible]
+      properties:
+        key: {$ref: '#/components/schemas/ExtensionBrowserKey'}
+        name: {type: string}
+        extensions_url: {type: string}
+        sandbox:
+          anyOf:
+            - {type: string, enum: [snap, flatpak]}
+            - type: 'null'
+        app_id: {type: [string, 'null']}
+        folder_visible: {type: boolean}
+    ExtensionSetupStatus:
+      description: |
+        What the "Set up the extension" button offers. `path` is the fixed folder in the home folder of the computer
+        where Hermes runs, written as on that system (backslashes on Windows). `state`: `not_installed` (no folder) ·
+        `installed` (our folder, up to date) · `update_available` (the bundled build is newer, or a file of ours is
+        missing) · `not_ours` (a folder or file with that name exists without our marker: Hermes will not touch it) ·
+        `unavailable` (this copy of the plugin ships no built extension). `browsers`: the Chromium browsers found there,
+        in the order offered (first = default); empty when none was found.
+      type: object
+      required: [state, path, bundled_version, installed_version, platform, browsers]
+      properties:
+        state: {type: string, enum: [not_installed, installed, update_available, not_ours, unavailable]}
+        path: {type: string}
+        bundled_version: {type: [string, 'null']}
+        installed_version: {type: [string, 'null'], description: 'Version in our marker; `null` without our folder.'}
+        platform: {$ref: '#/components/schemas/ExtensionSetupPlatform'}
+        browsers:
+          type: array
+          items: {$ref: '#/components/schemas/ExtensionBrowser'}
+        wsl:
+          description: 'Only when Hermes runs inside WSL (then `platform` is `windows` and `path` is a Windows path); absent or `null` otherwise. `interop`: Hermes can start Windows programs; `windows_folder`: the folder is in the Windows user folder (else on the WSL disk).'
+          anyOf:
+            - {$ref: '#/components/schemas/ExtensionSetupWsl'}
+            - type: 'null'
+    ExtensionSetupWsl:
+      description: Hermes inside WSL on Windows. `distro` is the WSL distribution name when known.
+      type: object
+      required: [distro, interop, windows_folder]
+      properties:
+        distro: {type: [string, 'null']}
+        interop: {type: boolean}
+        windows_folder: {type: boolean}
+    ExtensionSetupRequest:
+      description: 'Optional. At most one field, `browser`: a key of the closed list (never a path or a command). Any other field or value is refused with `invalid`.'
+      type: object
+      additionalProperties: false
+      properties:
+        browser:
+          anyOf:
+            - $ref: '#/components/schemas/ExtensionBrowserKey'
+            - type: 'null'
+    ExtensionSetupResult:
+      description: |
+        After the click. `action`: `installed` (folder created) · `updated` (our files rewritten in place: press "reload"
+        on the extension's card in the browser) · `unchanged` (already up to date: only the pages were opened again).
+        `opened` says what Hermes managed to open on its own computer; `open_problem` explains a page that did not open:
+        `no_browser` (the chosen browser, or any Chromium browser, was not found) · `no_display` (no screen, e.g. a
+        server) · `failed` · `unsupported` (an operating system Hermes cannot open things on) · `disabled` (test mode).
+        `browser`: the browser used (or that would have been used); `null` when none.
+      type: object
+      required: [state, action, path, version, opened, open_problem, platform, browser]
+      properties:
+        state: {type: string, enum: [installed]}
+        action: {type: string, enum: [installed, updated, unchanged]}
+        path: {type: string}
+        version: {type: string}
+        opened:
+          type: object
+          required: [extensions_page, folder]
+          properties:
+            extensions_page: {type: boolean}
+            folder: {type: boolean}
+        open_problem:
+          anyOf:
+            - $ref: '#/components/schemas/ExtensionSetupOpenProblem'
+            - type: 'null'
+        platform: {$ref: '#/components/schemas/ExtensionSetupPlatform'}
+        browser:
+          anyOf:
+            - $ref: '#/components/schemas/ExtensionBrowser'
+            - type: 'null'
+        wsl:
+          description: 'Only when Hermes runs inside WSL (then `platform` is `windows` and `path` is a Windows path); absent or `null` otherwise. `interop`: Hermes can start Windows programs; `windows_folder`: the folder is in the Windows user folder (else on the WSL disk).'
+          anyOf:
+            - {$ref: '#/components/schemas/ExtensionSetupWsl'}
+            - type: 'null'
+    ExtensionSetupOpenProblem:
+      description: Why the browser's Extensions page did not open on the computer where Hermes runs.
+      type: string
+      enum: [no_browser, no_display, failed, unsupported, disabled]
+
+    # ------------------------------------------------------------------ data
+    ImportBody:
+      description: 'Exactly one: `data` (JSON already read) or `path` (file on the **backend**, chosen through `ctx.os.pickOpenPath`).'
+      type: object
+      minProperties: 1
+      maxProperties: 1
+      properties:
+        data: {type: object}
+        path: {type: string, minLength: 1}
+    ExportData:
+      description: 'Output of `DataOps.export_json`: channels, folders, tags, tabs, themes, video state. Never contains `EXPORT_EXCLUDED_TABLES`.'
+      type: object
+      required: [schema_version]
+      properties:
+        schema_version: {type: integer}
+      additionalProperties: true
+
+    # ------------------------------------------------------------------ cleanup
+    CleanupView:
+      type: object
+      required: [scan, channels]
+      properties:
+        scan:
+          anyOf:
+            - $ref: '../shared/domain.schema.json#/$defs/CleanupScan'
+            - type: 'null'
+        channels:
+          type: object
+          description: 'channel_id → channel, for each candidate.'
+          additionalProperties: {$ref: '../shared/domain.schema.json#/$defs/Channel'}
+    QueueView:
+      description: 'A `done` item''s `error` carries the note `not_subscribed` / `already_subscribed` (nothing was clicked), else `null`.'
+      type: object
+      required: [items, pending]
+      properties:
+        items:
+          type: array
+          items: {$ref: '../shared/domain.schema.json#/$defs/QueueItem'}
+        pending: {type: integer, minimum: 0, description: 'Items approved + running.'}
+
+    # ------------------------------------------------------------------ Extras
+    ExtrasPatch:
+      type: object
+      minProperties: 1
+      properties:
+        honest_thumbnails: {type: boolean}
+        hn_lens: {type: boolean}
+        hn_channels: {type: boolean}
+        import_lists: {type: boolean}
+    HnDownloadResult:
+      type: object
+      required: [status]
+      properties:
+        status:
+          enum: [started, running, ready]
+          description: 'Downloads and indexes the dataset in a thread (like `kick_if_due`); follow it in `GET /extras` (`hn_dataset_ready`).'
+    HnChannel:
+      type: object
+      required: [channel_id, title, video_count, top_video_ids, why]
+      properties:
+        channel_id: {type: string}
+        title: {type: string}
+        video_count: {type: integer, minimum: 1}
+        top_video_ids: {type: array, items: {type: string}}
+        why: {type: [string, 'null'], description: '"Why HN likes it" (summary from the dataset).'}
+
+    # ------------------------------------------------------------------ extension
+    HealthResponse:
+      type: object
+      required: [service, instance, pairing_open]
+      properties:
+        service: {type: string, description: 'Equal to PLUGIN_ID; the extension discards ports with any other value.'}
+        instance: {type: string, description: 'Random id of the server instance (checks the owner stored in meta).'}
+        pairing_open: {type: boolean, description: 'There is an active pairing code here: the extension only tries the code where this is true.'}
+        proof:
+          type: string
+          pattern: '^[0-9a-f]{64}$'
+          description: 'Server proof (additive): only with `?device=&nonce=` and a live (not revoked) device; otherwise absent. `HMAC-SHA256(key = hex sha256(token), "hermestube-server-v1|" + nonce + "|" + port)`, lowercase hex. The extension sends its token only to a port that proved it.'
+    PairCompleteBody:
+      type: object
+      required: [code, name]
+      properties:
+        code: {type: string, pattern: '^[0-9]{6}$'}
+        name: {type: string, minLength: 1, maxLength: 80, description: 'Device name (e.g. "Chrome — Mac").'}
+    PairPakeStartBody:
+      description: 'PAKE round 1 (additive; the code never travels): the client''s SPAKE2 element. Spends one attempt of the code, as a wrong code does.'
+      type: object
+      required: [name, pake]
+      properties:
+        name: {type: string, minLength: 1, maxLength: 80, description: 'Device name (e.g. "Chrome — Mac").'}
+        pake:
+          type: object
+          required: [x]
+          properties:
+            x: {type: string, pattern: '^[0-9a-f]{512}$', description: 'Group element, 512 lowercase hex digits (2048 bits, zero-padded).'}
+    PairPakeConfirmBody:
+      description: 'PAKE round 2 (additive): the client''s key confirmation for the round 1 session.'
+      type: object
+      required: [name, pake]
+      properties:
+        name: {type: string, minLength: 1, maxLength: 80, description: 'Device name (e.g. "Chrome — Mac").'}
+        pake:
+          type: object
+          required: [session, confirm]
+          properties:
+            session: {type: string, minLength: 1, description: '`pake.session` from the round 1 answer (single use, 60 s).'}
+            confirm: {type: string, description: '`HMAC-SHA256(session key, "hermestube-pair-v1|client")`, lowercase hex.'}
+    PairPakeChallenge:
+      description: 'Answer to PAKE round 1 (additive). Only a server that knows the code, on the port the extension dialled, can produce `confirm`.'
+      type: object
+      required: [pake]
+      properties:
+        pake:
+          type: object
+          required: [session, y, confirm, remaining]
+          properties:
+            session: {type: string, minLength: 1, description: 'Opaque id of the round 2 session (single use, 60 s).'}
+            y: {type: string, pattern: '^[0-9a-f]{512}$', description: 'Server group element, 512 lowercase hex digits.'}
+            confirm: {type: string, pattern: '^[0-9a-f]{64}$', description: '`HMAC-SHA256(session key, "hermestube-pair-v1|server")`, lowercase hex.'}
+            remaining: {type: integer, minimum: 0, description: 'Attempts left if the extension''s code turns out wrong (it cannot tell a typo apart from another program).'}
+    SubscriptionBatchBody:
+      description: '`SubscriptionBatch`: the **whole** list in one request. Only `complete` marks absent ones as `ex`.'
+      type: object
+      required: [channels, signal]
+      properties:
+        channels:
+          type: array
+          maxItems: 5000
+          items: {$ref: '../shared/domain.schema.json#/$defs/ChannelIn'}
+        signal: {$ref: '../shared/domain.schema.json#/$defs/SyncSignal'}
+    WatchBatchBody:
+      type: object
+      required: [events]
+      properties:
+        events:
+          type: array
+          minItems: 1
+          maxItems: 500
+          items: {$ref: '../shared/domain.schema.json#/$defs/WatchEvent'}
+    ExtQueueView:
+      type: object
+      required: [items, channels]
+      properties:
+        items:
+          type: array
+          description: 'Only `approved` items with `approved_via` (oldest first). The extension runs one at a time.'
+          items: {$ref: '../shared/domain.schema.json#/$defs/QueueItem'}
+        channels:
+          type: object
+          description: 'channel_id → channel (url/handle to open the page).'
+          additionalProperties: {$ref: '../shared/domain.schema.json#/$defs/Channel'}
+    QueueResultBody:
+      description: |
+        `error` with `done` is a note, not an error: `not_subscribed` / `already_subscribed` (the page was already in
+        the target state and nothing was clicked) are kept in the item's `error`; any other text sent with `done` is
+        dropped.
+      type: object
+      required: [status]
+      properties:
+        status: {enum: [running, done, failed]}
+        error: {type: [string, 'null']}
+    SearchResultBody:
+      description: 'Exactly one: `payload` (the search page''s `ytInitialData`, object or text) or `error`.'
+      type: object
+      minProperties: 1
+      maxProperties: 1
+      properties:
+        payload: {type: [object, string]}
+        error: {type: string}
+
+    # ------------------------------------------------------------------ local playlists
+    Playlist:
+      description: 'A local playlist: kept only in the plugin database, never written to the YouTube account.'
+      type: object
+      required: [id, name, count, first_video_id, created_at, updated_at]
+      properties:
+        id: {type: string}
+        name: {type: string, minLength: 1, maxLength: 80}
+        count: {type: integer, minimum: 0, maximum: 5000}
+        first_video_id: {type: [string, 'null'], description: 'First video in play order (the thumbnail); null = empty.'}
+        created_at: {$ref: '../shared/domain.schema.json#/$defs/Timestamp'}
+        updated_at: {$ref: '../shared/domain.schema.json#/$defs/Timestamp'}
+    PlaylistCreate:
+      type: object
+      required: [name]
+      properties:
+        name: {type: string, minLength: 1, maxLength: 80, description: 'Trimmed; unique ignoring case and accents.'}
+        video_ids:
+          type: array
+          maxItems: 200
+          items: {type: string, minLength: 11, maxLength: 11}
+          description: 'Optional first videos (known to the library).'
+    PlaylistPatch:
+      type: object
+      required: [name]
+      properties:
+        name: {type: string, minLength: 1, maxLength: 80}
+    PlaylistVideos:
+      type: object
+      required: [video_ids]
+      properties:
+        video_ids:
+          type: array
+          minItems: 1
+          maxItems: 200
+          items: {type: string, minLength: 11, maxLength: 11}
+    PlaylistItemsResult:
+      type: object
+      required: [playlist, changed]
+      properties:
+        playlist: {$ref: '#/components/schemas/Playlist'}
+        changed: {type: integer, minimum: 0, description: 'Videos added (already there = not counted) or removed.'}
+
+paths:
+  # ==================================================================== state and refresh
+  /status:
+    get:
+      operationId: getStatus
+      summary: Counters for the chip, panel and mascot; turns on the extension server and starts an overdue RSS run
+      description: |
+        Calls `Refresher.kick_if_due()` (non-blocking) and `ensure_server` (starts the extension server on
+        demand; `ext_endpoint_up` = real health through `/health` + `instance`). Read-only otherwise.
+        The Desktop polls every ≤ 5 s while the window is visible; no event is needed.
+        `channels_total`/`subscribed_total` (`Refresher.channel_totals`) for the welcome screen and the extension banner
+        without `GET /channels`; optional (absent while not known).
+      x-module: plugin/api/status.py
+      x-unit: area-status
+      x-data: {$ref: '#/components/schemas/StatusResponse'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  new_total: 12
+                  new_by_tab:
+                    - {tab_id: all-new, name: Tudo novo, count: 12, icon: null}
+                    - {tab_id: favorites, name: Favoritos, count: 3, icon: '⭐'}
+                  fav_new:
+                    - {channel_id: UCBJycsmduvYEL83R_U4JriQ, title: Marques Brownlee, count: 1, latest_video_id: dQw4w9WgXcQ, latest_title: The best phone of 2026}
+                  ext_endpoint_up: true
+                  last_rss_at: 1762700000
+                  refresh_running: false
+                  queue_pending: 0
+                  search_pending: 0
+                  devices_online: 1
+                  ext_port: 47615
+                  rss_down_since: null
+                  rss_fallback_channels: 0
+                  channels_total: 52
+                  subscribed_total: 47
+                  details_pending: 0
+                  ext_last_sync_at: 1762699950
+
+  /refresh:
+    post:
+      operationId: postRefresh
+      summary: Refresh everything now (RSS)
+      description: '`Refresher.kick_if_due(force)`; returns right away. End of the cycle: `last_rss_at` changes in `GET /status`.'
+      x-module: plugin/api/refresh.py
+      x-unit: area-status
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                force: {type: boolean, default: true, description: 'true skips the `rss_interval_min` grace period.'}
+            example: {force: true}
+      x-data: {$ref: '#/components/schemas/KickResult'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {result: started}}
+
+  /refresh/{channel_id}:
+    post:
+      operationId: postRefreshChannel
+      summary: Refresh one channel now
+      description: '`Refresher.kick_channel(channel_id)` (thread).'
+      x-module: plugin/api/refresh.py
+      x-unit: area-status
+      parameters:
+        - {name: channel_id, in: path, required: true, schema: {type: string, pattern: '^UC[A-Za-z0-9_-]{22}$'}, example: UCBJycsmduvYEL83R_U4JriQ}
+      x-data: {$ref: '#/components/schemas/KickResult'}
+      x-errors: [not_found, invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {result: running}}
+
+  /read:
+    post:
+      operationId: postRead
+      summary: Mark as read (channel, recursive folder, tab or everything)
+      description: |
+        `Refresher.mark_read_changes(ReadScope)`; writes `mark_read` to the history (undoable). With `?change_ids=true`
+        it also returns the ids written (`change_ids`) so undo can use the exact id; without the parameter the response is
+        the earlier one (`{changed}`). `{kind: tab, id}` marks exactly the channels the tab shows
+        (rules resolved on the server by the feed engine, `FeedEngine.tab_channels`); missing tab → `not_found`;
+        a theme tab, a themes/lenses-only tab or "Watch later" (`later`/`:later`) → `invalid` with a message.
+      x-module: plugin/api/refresh.py
+      x-unit: area-status
+      parameters:
+        - {name: change_ids, in: query, required: false, description: '`true` adds `change_ids` to the response.', schema: {type: boolean, default: false}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '../shared/domain.schema.json#/$defs/ReadScope'}
+            example: {kind: folder, id: f_tech}
+      x-data: {$ref: '#/components/schemas/ReadResult'}
+      x-errors: [not_found, invalid]
+      responses:
+        '200':
+          description: Envelope; `data.changed` = channels whose watermark moved forward; `data.change_ids` = history entries
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {changed: 7, change_ids: [42]}}
+
+  # ==================================================================== feed and video state
+  /state:
+    get:
+      operationId: getState
+      summary: New counts per tab, folder (recursive) and channel + state of the requested videos
+      x-module: plugin/api/state.py
+      x-unit: area-feed
+      parameters:
+        - {name: ids, in: query, required: false, description: 'comma-separated video_ids (≤ 200)', schema: {type: string}, example: 'dQw4w9WgXcQ,9bZkp7q19f0'}
+      x-data: {$ref: '#/components/schemas/StateResponse'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  counts:
+                    total: 12
+                    by_tab: {all-new: 12, favorites: 3}
+                    by_folder: {f_tech: 9, '': 3}
+                    by_channel: {UCBJycsmduvYEL83R_U4JriQ: 1}
+                  videos:
+                    dQw4w9WgXcQ: {video_id: dQw4w9WgXcQ, state: later, reaction: up, updated_at: 1762700100}
+
+  /feed:
+    get:
+      operationId: getFeed
+      summary: Paged feed of a tab, folder, channel or "Watch later" (with "why it is here")
+      description: |
+        Exactly one of `tab`, `folder`, `channel`, `state`. `tab` → `FeedEngine.page`; `folder`/`channel` → `FeedEngine.preview`
+        with `include.folders`/`include.channels` (recursive folder). Same tab = same feed in the Desktop, the extension and the agent.
+        `state=later` → `FeedEngine.later_page` ("Watch later" as a source: from the last marked to the oldest, no date
+        window, `why` = the video's origin — channel folder › channel › theme; its own cursor). `q` searches inside the source (video
+        title and channel name, every word, accent- and case-insensitive like `GET /channels?q`), after all the filters;
+        it combines with `cursor`, and `counts` only count what matched.
+      x-module: plugin/api/feed.py
+      x-unit: area-feed
+      parameters:
+        - {name: tab, in: query, required: false, schema: {type: string}, example: all-new}
+        - {name: folder, in: query, required: false, schema: {type: string}}
+        - {name: channel, in: query, required: false, schema: {type: string}}
+        - {name: state, in: query, required: false, description: '"Watch later" as a source (no tab).', schema: {type: string, enum: [later]}}
+        - {name: q, in: query, required: false, description: 'Search in the title and the channel name (normalised; up to 200 characters; empty = no search).', schema: {type: string, maxLength: 200}}
+        - {name: limit, in: query, required: false, schema: {type: integer, minimum: 1, maximum: 100, default: 30}}
+        - {name: cursor, in: query, required: false, schema: {type: string}, description: '`next_cursor` of the previous page (opaque; only valid for the same source, mode, `q`, `sort` and `group`).'}
+        - {name: sort, in: query, required: false, description: 'Item order (inside the group, if any). `longest`/`shortest`: videos with no known duration go last. `views`: most viewed first; those with no count go last.', schema: {type: string, enum: [newest, oldest, longest, shortest, views], default: newest}}
+        - {name: group, in: query, required: false, description: 'Groups — the server only SORTS by the group (a group''s items come together, across pages); the screen draws the header when the key changes. `channel`: by channel (name); `folder`: by the channel''s folder (folder order; no folder last); `day`: by publication day (most recent first; uses `tz_offset_min`); `kind`: videos, then Shorts, then unknown.', schema: {type: string, enum: [none, channel, folder, day, kind], default: none}}
+        - {name: tz_offset_min, in: query, required: false, description: 'Minutes to add to UTC to find the local day (e.g. -180 in Brasília); only for `group=day`.', schema: {type: integer, minimum: -840, maximum: 840, default: 0}}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/FeedPage'}
+      x-errors: [not_found, invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  items:
+                    - video: {id: dQw4w9WgXcQ, channel_id: UCBJycsmduvYEL83R_U4JriQ, title: The best phone of 2026, published_at: 1762690000, description: Review completo., channel_title: Marques Brownlee, duration_s: 1260, is_short: false, views: 1200000, first_seen_at: 1762690500, origin: rss}
+                      channel: {id: UCBJycsmduvYEL83R_U4JriQ, title: Marques Brownlee, relation: subscribed, source: extension, added_at: 1762000000, handle: '@mkbhd', thumb: 'https://yt3.ggpht.com/x.jpg', url: 'https://www.youtube.com/@mkbhd', folder_id: f_tech, favorite: true, muted: false, unsubscribed_at: null, last_video_at: 1762690000, videos_per_week: 2.5, shorts_ratio: 0.1, ai_note: null, tag_ids: [t_review]}
+                      state: new
+                      reaction: null
+                      is_new: true
+                      why: {via: folder, label: Tech, detail: null}
+                      badges: []
+                  next_cursor: 'c2:1762690000:dQw4w9WgXcQ'
+                  counts: {total: 48, new: 12}
+
+  /feed/preview:
+    post:
+      operationId: postFeedPreview
+      summary: Preview of unsaved rules (tab editor)
+      x-module: plugin/api/feed.py
+      x-unit: area-feed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/FeedPreviewRequest'}
+            example:
+              rules:
+                include: {folders: [f_tech]}
+                exclude: {shorts: true}
+                filters: {only_new: false, min_s: 1200}
+                mode: long
+              limit: 30
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/FeedPage'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {items: [], next_cursor: null, counts: {total: 0, new: 0}}}
+
+  /videos:
+    get:
+      operationId: getVideos
+      summary: 'Videos by id (`::tube-video` card in the chat)'
+      description: '`FeedItem` of each known id (`why: null`); unknown ids are left out (the card falls back to thumbnail + link).'
+      x-module: plugin/api/feed.py
+      x-unit: area-feed
+      parameters:
+        - {name: ids, in: query, required: true, description: 'comma-separated video_ids (≤ 50)', schema: {type: string}, example: dQw4w9WgXcQ}
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/FeedItem'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  items:
+                    - video: {id: dQw4w9WgXcQ, channel_id: UCBJycsmduvYEL83R_U4JriQ, title: The best phone of 2026, published_at: 1762690000, description: null, channel_title: Marques Brownlee, duration_s: null, is_short: null, views: null, first_seen_at: 1762690500, origin: rss}
+                      channel: null
+                      state: seen
+                      reaction: null
+                      is_new: false
+                      why: null
+                      badges: []
+
+  /videos/state:
+    get:
+      operationId: getVideosByState
+      summary: 'List by state (e.g. "Later")'
+      x-module: plugin/api/state.py
+      x-unit: area-feed
+      parameters:
+        - {name: state, in: query, required: true, schema: {$ref: '../shared/domain.schema.json#/$defs/VideoState'}, example: later}
+        - {name: limit, in: query, required: false, schema: {type: integer, minimum: 1, maximum: 500, default: 100}}
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/VideoStateRow'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {items: [{video_id: dQw4w9WgXcQ, state: later, reaction: null, updated_at: 1762700100}]}}
+    post:
+      operationId: postVideosState
+      summary: Seen, later, archive, 👍/👎
+      description: '`VideoStateService.set_state` / `set_reaction` (`actor=user`, undoable).'
+      x-module: plugin/api/state.py
+      x-unit: area-feed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/VideoStateChange'}
+            example: {video_ids: [dQw4w9WgXcQ], reaction: down}
+      x-data: {$ref: '#/components/schemas/ChangedResult'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {changed: 1}}
+
+  # ==================================================================== channels and history
+  /channels:
+    get:
+      operationId: getChannels
+      summary: Channels with filters (Manage, panel, Former subscriptions)
+      x-module: plugin/api/channels.py
+      x-unit: area-channels
+      parameters:
+        - {name: relation, in: query, required: false, description: 'Comma-separated relations (empty = all); `ex` = Former subscriptions.', schema: {type: string}, example: 'subscribed,followed'}
+        - {name: folder, in: query, required: false, description: 'folder_id; `none` = no folder.', schema: {type: string}}
+        - {name: recursive, in: query, required: false, schema: {type: boolean, default: true}}
+        - {name: tag, in: query, required: false, schema: {type: string}}
+        - {name: favorite, in: query, required: false, schema: {type: boolean}}
+        - {name: muted, in: query, required: false, schema: {type: boolean}}
+        - {name: source, in: query, required: false, schema: {$ref: '../shared/domain.schema.json#/$defs/ChannelSource'}}
+        - {name: q, in: query, required: false, description: 'Search by title/handle (normalised).', schema: {type: string}}
+        - {name: ids, in: query, required: false, description: 'Comma-separated channel_ids.', schema: {type: string}}
+        - {name: limit, in: query, required: false, schema: {type: integer, minimum: 1, maximum: 2000}}
+        - {name: offset, in: query, required: false, schema: {type: integer, minimum: 0, default: 0}}
+      x-data:
+        type: object
+        required: [items, total]
+        properties:
+          items:
+            type: array
+            items: {$ref: '#/components/schemas/ChannelRow'}
+          total: {type: integer, minimum: 0, description: 'Total with the filter, ignoring limit/offset.'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  items:
+                    - channel: {id: UCBJycsmduvYEL83R_U4JriQ, title: Marques Brownlee, relation: subscribed, source: extension, added_at: 1762000000, handle: '@mkbhd', thumb: null, url: 'https://www.youtube.com/@mkbhd', folder_id: f_tech, favorite: true, muted: false, unsubscribed_at: null, last_video_at: 1762690000, videos_per_week: 2.5, shorts_ratio: 0.1, ai_note: Reviews de tecnologia, tag_ids: []}
+                      new_count: 1
+                      watched_90d: 4
+                  total: 1
+
+  /channels/{id}:
+    get:
+      operationId: getChannel
+      summary: One channel
+      x-module: plugin/api/channels.py
+      x-unit: area-channels
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}, example: UCBJycsmduvYEL83R_U4JriQ}
+      x-data: {$ref: '#/components/schemas/ChannelRow'}
+      x-errors: [not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: false, error: {code: not_found, message: Canal não encontrado}}
+    patch:
+      operationId: patchChannel
+      summary: Edit a channel (⭐, mute, folder, tags, note, follow/ignore)
+      description: '`ChannelService.update` / `set_tags` / `set_relation`, in one transaction; invalid transition → `conflict`.'
+      x-module: plugin/api/channels.py
+      x-unit: area-channels
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ChannelPatchBody'}
+            example: {favorite: true, folder_id: f_tech}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/Channel'}
+      x-errors: [not_found, invalid, conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data: {id: UCBJycsmduvYEL83R_U4JriQ, title: Marques Brownlee, relation: subscribed, source: extension, added_at: 1762000000, handle: '@mkbhd', thumb: null, url: null, folder_id: f_tech, favorite: true, muted: false, unsubscribed_at: null, last_video_at: null, videos_per_week: null, shorts_ratio: null, ai_note: null, tag_ids: []}
+
+  /channels/batch:
+    post:
+      operationId: postChannelsBatch
+      summary: Manage screen batch (atomic; "unsubscribe" only proposes to the cleanup)
+      x-module: plugin/api/channels.py
+      x-unit: area-channels
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ChannelBatchBody'}
+            example: {op: move, channel_ids: [UCBJycsmduvYEL83R_U4JriQ], value: f_tech}
+      x-data: {$ref: '#/components/schemas/ChannelBatchResult'}
+      x-errors: [not_found, invalid, conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {batch: {changed: [UCBJycsmduvYEL83R_U4JriQ], skipped: [], change_id: 41}, proposed: []}}
+
+  /channels/add:
+    post:
+      operationId: postChannelsAdd
+      summary: Follow by link/@handle (without subscribing)
+      description: 'Resolves through `YouTubeClient.resolve_channel` (1 short request to YouTube, no retry, to fit in 2 s). Already exists → `conflict` with the existing channel in `details.channel` (the screen shows "already in your list"). After creating it, starts `kick_channel`. Never creates `subscribed`.'
+      x-module: plugin/api/channels.py
+      x-unit: area-channels
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ChannelAddBody'}
+            example: {url_or_handle: '@mkbhd'}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/Channel'}
+      x-errors: [invalid, youtube_error, conflict, timeout]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data: {id: UCBJycsmduvYEL83R_U4JriQ, title: Marques Brownlee, relation: followed, source: link, added_at: 1762700000, handle: '@mkbhd', thumb: 'https://yt3.ggpht.com/x.jpg', url: 'https://www.youtube.com/@mkbhd', folder_id: null, favorite: false, muted: false, unsubscribed_at: null, last_video_at: null, videos_per_week: null, shorts_ratio: null, ai_note: null, tag_ids: []}
+
+  /changes:
+    get:
+      operationId: getChanges
+      summary: History (most recent first)
+      x-module: plugin/api/changes.py
+      x-unit: area-channels
+      parameters:
+        - {name: limit, in: query, required: false, schema: {type: integer, minimum: 1, maximum: 200, default: 50}}
+        - {name: before_id, in: query, required: false, schema: {type: integer}}
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/ChangeRecord'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  items:
+                    - {id: 41, ts: 1762700000, actor: user, action: channel_batch, payload: {label: Mover 1 canal para Tech, count: 1}, undo: {before: {UCBJycsmduvYEL83R_U4JriQ: {folder_id: null}}}, group_id: null, undone_at: null}
+
+  /changes/{id}/undo:
+    post:
+      operationId: postChangeUndo
+      summary: Undo (one entry or a whole group)
+      description: |
+        `ChangeLog.undo(id, targets=…)`. An unsubscribe that already ran (queue `running|done|failed`) → `undo_refused` with
+        `reason: already_executed` and nothing changes; the interface shows "already executed — use Resubscribe in Cleanup →
+        Former subscriptions". Undo never creates a queue item.
+      x-module: plugin/api/changes.py
+      x-unit: area-channels
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: integer}, example: 41}
+      x-data:
+        type: object
+        required: [undone]
+        properties:
+          undone:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/ChangeRecord'}
+      x-errors: [not_found, undo_refused]
+      x-example-error: {ok: false, error: {code: undo_refused, reason: already_executed, message: Cancelamento já executado}}
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  undone:
+                    - {id: 41, ts: 1762700000, actor: user, action: channel_batch, payload: {label: Mover 1 canal para Tech}, undo: {before: {}}, group_id: null, undone_at: 1762700300}
+
+  # ==================================================================== folders, tags and tabs
+  /folders:
+    get:
+      operationId: getFolders
+      summary: All folders (counters in GET /state)
+      x-module: plugin/api/taxonomy.py
+      x-unit: area-taxonomy
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/Folder'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {items: [{id: f_tech, name: Tech, parent_id: null, color: null, sort: 0}, {id: f_ai, name: IA, parent_id: f_tech, color: '#7c3aed', sort: 0}]}}
+    post:
+      operationId: postFolder
+      summary: Create a folder
+      x-module: plugin/api/taxonomy.py
+      x-unit: area-taxonomy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/FolderCreate'}
+            example: {name: IA, parent_id: f_tech}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/Folder'}
+      x-errors: [invalid, conflict, not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: f_ai, name: IA, parent_id: f_tech, color: null, sort: 1}}
+
+  /folders/{id}:
+    patch:
+      operationId: patchFolder
+      summary: Rename, recolour or move a folder
+      x-module: plugin/api/taxonomy.py
+      x-unit: area-taxonomy
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/FolderPatch'}
+            example: {parent_id: null}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/Folder'}
+      x-errors: [not_found, invalid, conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: f_ai, name: IA, parent_id: null, color: null, sort: 2}}
+    delete:
+      operationId: deleteFolder
+      summary: Delete a folder (channels → no folder; subfolders move up)
+      x-module: plugin/api/taxonomy.py
+      x-unit: area-taxonomy
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      x-data: {$ref: '#/components/schemas/Deleted'}
+      x-errors: [not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: f_ai}}
+
+  /folders/reorder:
+    post:
+      operationId: postFoldersReorder
+      summary: Reorder sibling folders
+      x-module: plugin/api/taxonomy.py
+      x-unit: area-taxonomy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/IdList'}
+            example: {ids: [f_ai, f_tech]}
+      x-data: {$ref: '#/components/schemas/CountResult'}
+      x-errors: [not_found, invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {count: 2}}
+
+  /tags:
+    get:
+      operationId: getTags
+      summary: All tags
+      x-module: plugin/api/taxonomy.py
+      x-unit: area-taxonomy
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/Tag'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {items: [{id: t_review, name: review, color: null}]}}
+    post:
+      operationId: postTag
+      summary: Create a tag
+      x-module: plugin/api/taxonomy.py
+      x-unit: area-taxonomy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TagCreate'}
+            example: {name: review}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/Tag'}
+      x-errors: [invalid, conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: t_review, name: review, color: null}}
+
+  /tags/{id}:
+    patch:
+      operationId: patchTag
+      summary: Rename/recolour a tag
+      x-module: plugin/api/taxonomy.py
+      x-unit: area-taxonomy
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TagPatch'}
+            example: {color: '#16a34a'}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/Tag'}
+      x-errors: [not_found, invalid, conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: t_review, name: review, color: '#16a34a'}}
+    delete:
+      operationId: deleteTag
+      summary: Delete a tag
+      x-module: plugin/api/taxonomy.py
+      x-unit: area-taxonomy
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      x-data: {$ref: '#/components/schemas/Deleted'}
+      x-errors: [not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: t_review}}
+
+  /tabs:
+    get:
+      operationId: getTabs
+      summary: 'Tabs (by `sort`; the default `all-new` and `favorites` always exist)'
+      x-module: plugin/api/tabs.py
+      x-unit: area-taxonomy
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/Tab'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  items:
+                    - id: all-new
+                      name: Tudo novo
+                      kind: category
+                      rules:
+                        include: {folders: [], tags: [], channels: [], themes: [], lenses: [], all: true, favorites: false}
+                        exclude: {folders: [], tags: [], channels: [], shorts: false}
+                        filters: {only_new: true, per_channel: null, min_s: null, max_s: null}
+                        mode: fresh
+                      icon: null
+                      filters: {}
+                      sort: 0
+                      builtin: true
+    post:
+      operationId: postTab
+      summary: Create a tab (category, channels, theme or mixed)
+      x-module: plugin/api/tabs.py
+      x-unit: area-taxonomy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TabCreate'}
+            example: {name: Longos de tech, kind: category, rules: {include: {folders: [f_tech]}, filters: {min_s: 1200}, mode: long}, icon: '🧠'}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/Tab'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  id: tab_7f3a
+                  name: Longos de tech
+                  kind: category
+                  rules:
+                    include: {folders: [f_tech], tags: [], channels: [], themes: [], lenses: [], all: false, favorites: false}
+                    exclude: {folders: [], tags: [], channels: [], shorts: false}
+                    filters: {only_new: false, per_channel: null, min_s: 1200, max_s: null}
+                    mode: long
+                  icon: '🧠'
+                  filters: {}
+                  sort: 3
+                  builtin: false
+
+  /tabs/{id}:
+    patch:
+      operationId: patchTab
+      summary: Edit a tab (includes changing the mode)
+      x-module: plugin/api/tabs.py
+      x-unit: area-taxonomy
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TabPatchBody'}
+            example: {name: Tech longo}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/Tab'}
+      x-errors: [not_found, invalid, conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: false, error: {code: not_found, message: Aba não encontrada}}
+    delete:
+      operationId: deleteTab
+      summary: Delete a tab (default tab → conflict)
+      x-module: plugin/api/tabs.py
+      x-unit: area-taxonomy
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      x-data: {$ref: '#/components/schemas/Deleted'}
+      x-errors: [not_found, conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: tab_7f3a}}
+
+  /tabs/reorder:
+    post:
+      operationId: postTabsReorder
+      summary: Reorder tabs
+      x-module: plugin/api/tabs.py
+      x-unit: area-taxonomy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/IdList'}
+            example: {ids: [all-new, tab_7f3a, favorites]}
+      x-data: {$ref: '#/components/schemas/CountResult'}
+      x-errors: [not_found, invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {count: 3}}
+
+  /tabs/from-channels:
+    post:
+      operationId: postTabFromChannels
+      summary: Create a tab from the Manage selection
+      x-module: plugin/api/tabs.py
+      x-unit: area-taxonomy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TabFromChannels'}
+            example: {name: Meus reviews, channel_ids: [UCBJycsmduvYEL83R_U4JriQ]}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/Tab'}
+      x-errors: [invalid, not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  id: tab_9c1d
+                  name: Meus reviews
+                  kind: channels
+                  rules:
+                    include: {folders: [], tags: [], channels: [UCBJycsmduvYEL83R_U4JriQ], themes: [], lenses: [], all: false, favorites: false}
+                    exclude: {folders: [], tags: [], channels: [], shorts: false}
+                    filters: {only_new: false, per_channel: null, min_s: null, max_s: null}
+                    mode: fresh
+                  icon: null
+                  filters: {}
+                  sort: 4
+                  builtin: false
+
+  # ==================================================================== pairing
+  /pair/start:
+    post:
+      operationId: postPairStart
+      summary: Pairing code (turns on the extension server if needed)
+      description: |
+        REST path of `pair.start` (RPC is preferred in the gateway; this one serves when there is no RPC). `ensure_server`
+        with the database/profile already resolved and `DeviceAuth.start_pairing()`. The user types only the code in the popup; the
+        extension finds the port through `/health` (`pairing_open`).
+      x-module: plugin/api/pair.py
+      x-unit: area-pair
+      x-data: {$ref: '#/components/schemas/PairStartResponse'}
+      x-errors: [ext_endpoint_down]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {code: '482913', expires_at: 1762700300, port: 47615}}
+
+  /devices:
+    get:
+      operationId: getDevices
+      summary: Paired devices (not revoked)
+      x-module: plugin/api/pair.py
+      x-unit: area-pair
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/Device'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {items: [{id: dev_1, name: Chrome — Mac, created_at: 1762600000, last_seen: 1762700000, revoked_at: null, origin: chrome-extension://abcdefghijklmnopabcdefghijklmnop}]}}
+
+  /devices/{id}/revoke:
+    post:
+      operationId: postDeviceRevoke
+      summary: Revoke a device from the Desktop
+      x-module: plugin/api/pair.py
+      x-unit: area-pair
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      x-data:
+        type: object
+        required: [revoked]
+        properties:
+          revoked: {type: boolean, description: 'false = it did not exist (idempotent).'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {revoked: true}}
+
+  # ==================================================================== extension setup
+  /extension/setup:
+    get:
+      operationId: getExtensionSetup
+      summary: Extension folder status and the browsers found (reads only)
+      description: |
+        Whether the extension shipped inside the plugin is already in the fixed folder of the home folder, needs an
+        update, or the folder belongs to somebody else; and which Chromium browsers are installed on the computer where
+        Hermes runs (fixed lists of places per system; nothing is run). Reads only: never writes and never opens
+        anything.
+      x-module: plugin/api/extension.py
+      x-unit: area-extension
+      x-data: {$ref: '#/components/schemas/ExtensionSetupStatus'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {state: not_installed, path: '/home-folder/HermesTube Extension', bundled_version: 0.1.0, installed_version: null, platform: macos, browsers: [{key: chrome, name: Google Chrome, extensions_url: 'chrome://extensions/', sandbox: null, app_id: null, folder_visible: true}]}}
+    post:
+      operationId: postExtensionSetup
+      summary: Set up (or update) the extension folder and open the browser
+      description: |
+        Only on a click in the Desktop. Copies the extension shipped in the plugin to `<home>/HermesTube Extension`
+        (fixed: no path is read from the body or the query) with a marker file, then opens the chosen browser's own
+        Extensions page and shows the folder in the file manager — on the computer where Hermes runs, with fixed argument
+        lists, no shell and time limits. The body may name **one** browser from the closed list (`browser`); without it
+        the first browser found is used. Any other field, or a value outside the list, is refused (`invalid`) before
+        anything is written. A folder with that name without our marker is refused (`conflict`, `reason: not_ours`) and
+        left as it is; an update rewrites only our files. The browser still needs two gestures from the person (Developer
+        mode, then drag the folder or "Load unpacked"). Errors are generic; details go to the log.
+      x-module: plugin/api/extension.py
+      x-unit: area-extension
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ExtensionSetupRequest'}
+            example: {browser: chrome}
+      x-data: {$ref: '#/components/schemas/ExtensionSetupResult'}
+      x-errors: [conflict, invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {state: installed, action: installed, path: '/home-folder/HermesTube Extension', version: 0.1.0, opened: {extensions_page: true, folder: true}, open_problem: null, platform: macos, browser: {key: chrome, name: Google Chrome, extensions_url: 'chrome://extensions/', sandbox: null, app_id: null, folder_visible: true}}}
+
+  # ==================================================================== data
+  /demo:
+    get:
+      operationId: getDemo
+      summary: Is demo mode loaded?
+      x-module: plugin/api/data.py
+      x-unit: area-data
+      x-data:
+        type: object
+        required: [loaded]
+        properties:
+          loaded: {type: boolean}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {loaded: false}}
+
+  /demo/load:
+    post:
+      operationId: postDemoLoad
+      summary: Load the demo (~40 public channels, 6 folders, ⭐, a theme tab)
+      description: 'No network (committed JSON); idempotent. The channels'' RSS comes later through `kick_if_due`. Folder and tab names in the resolved language (explicit `language`; with `auto`, the screen''s `ui_locale`; then Hermes'' `display.language`; otherwise English). Demo already loaded in another language → only renames what the demo created.'
+      x-module: plugin/api/data.py
+      x-unit: area-data
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ui_locale: {type: string, enum: [en, pt-BR], description: 'Language the Desktop app is in right now (additive; absent = the server decides by the rule).'}
+            example: {ui_locale: en}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/DataReport'}
+      x-errors: [conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {channels: 40, folders: 6, tags: 0, tabs: 1, videos: 0, skipped: 0, warnings: []}}
+
+  /demo/clear:
+    post:
+      operationId: postDemoClear
+      summary: Clear the demo (only `source=demo`)
+      x-module: plugin/api/data.py
+      x-unit: area-data
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/DataReport'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {channels: 40, folders: 6, tags: 0, tabs: 1, videos: 0, skipped: 2, warnings: [2 canais da demo já eram reais e ficaram]}}
+
+  /import/mytube:
+    post:
+      operationId: postImportMytube
+      summary: Import a MyTube backup
+      x-module: plugin/api/data.py
+      x-unit: area-data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ImportBody'}
+            example: {path: ~/Downloads/mytube-backup.json}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/DataReport'}
+      x-errors: [invalid, not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {channels: 212, folders: 9, tags: 4, tabs: 0, videos: 0, skipped: 3, warnings: [3 canais sem id UC…]}}
+
+  /export:
+    get:
+      operationId: getExport
+      summary: Export JSON (no queue, jobs, searches, devices)
+      x-module: plugin/api/data.py
+      x-unit: area-data
+      x-data: {$ref: '#/components/schemas/ExportData'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {schema_version: 1, channels: [], folders: [], tags: [], tabs: [], themes: [], video_state: []}}
+
+  /import:
+    post:
+      operationId: postImport
+      summary: Import exported JSON (merged with dedup; never creates a queue item)
+      x-module: plugin/api/data.py
+      x-unit: area-data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ImportBody'}
+            example: {data: {schema_version: 1, channels: []}}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/DataReport'}
+      x-errors: [invalid, not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {channels: 0, folders: 0, tags: 0, tabs: 0, videos: 0, skipped: 0, warnings: []}}
+
+  # ==================================================================== jobs
+  /jobs/{id}:
+    get:
+      operationId: getJob
+      summary: State of an AI job (poll every 2 s while queued/running)
+      description: |
+        Read from SQLite (`jobs`); the job is born in the gateway (RPC) and seen here in the plugin host.
+        A job cancelled by `job.cancel` = `status: error` with `error.code: cancelled` (terminal; an old client shows the
+        message as an error). `progress.step` `{name, done, total}` (optional) carries the step numbers in theme
+        jobs; absent in the others.
+      x-module: plugin/api/jobs.py
+      x-unit: area-jobs
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}, example: job_5e2b}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/Job'}
+      x-errors: [not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data (`result` as in the RPC method's `job_result` in rpc.yaml)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: job_5e2b, kind: theme, status: running, created_at: 1762700000, updated_at: 1762700012, progress: {stage: search, done: 16, total: 16, message: 212 vídeos encontrados, step: {name: search, done: 212, total: 212}}, result: null, error: null}}
+
+  /jobs:
+    get:
+      operationId: getJobs
+      summary: Active jobs (resume progress after reloading the page)
+      x-module: plugin/api/jobs.py
+      x-unit: area-jobs
+      parameters:
+        - {name: kind, in: query, required: false, schema: {$ref: '../shared/domain.schema.json#/$defs/JobKind'}}
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/Job'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data (`JobRunner.list_active`)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {items: []}}
+
+  # ==================================================================== AI
+  /ai/status:
+    get:
+      operationId: getAiStatus
+      summary: Is an AI model configured? (no network; to warn before the click)
+      description: |
+        `core.ai.status_of(LLM)`: only reads the Hermes configuration through the adapter (the plugin's task, otherwise the main
+        model) — no model call, no network. In the plugin host (no `ctx`) it answers for what the gateway will
+        do with the same configuration. `available: true` does not guarantee a valid credential: the `llm_unavailable` of
+        `organize.run`/`theme.create` is still the final word. `reason`: `no_model` (nothing configured) ·
+        `provider_unavailable` (configured, but Hermes in this process does not call it now, or the provider refused the
+        sign-in / said "no provider" less than 60 s ago — the screen opens with "couldn't reach your model"). `provider`/`model`
+        = the configured route (the failed one while `provider_unavailable`); `null` = unknown or `auto`.
+      x-module: plugin/api/ai.py
+      x-unit: area-ai
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/AiStatus'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {available: true, model: claude-haiku-5-5, reason: null, provider: anthropic}}
+
+  # ==================================================================== organise
+  /suggestions:
+    get:
+      operationId: getSuggestions
+      summary: 'Pending "Organize with Hermes" suggestions (the interface groups them by `payload.folder`)'
+      x-module: plugin/api/organize.py
+      x-unit: area-organize
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/Suggestion'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data (`Organizer.pending`)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  items:
+                    - {id: sg_1, kind: organize, status: pending, payload: {channel_id: UCBJycsmduvYEL83R_U4JriQ, folder: Tech, new_folder: false, tags: [review], confidence: 0.92, why: Reviews de celulares}, created_at: 1762700000, channel_id: UCBJycsmduvYEL83R_U4JriQ, model: claude-haiku-5-5, decided_at: null}
+
+  # ==================================================================== cleanup and queue — reads and safe rollbacks
+  /cleanup:
+    get:
+      operationId: getCleanup
+      summary: Last scan with pending candidates (3 groups + manual) and the channels
+      description: 'Approval does **not** exist in REST: only the RPC `cleanup.approve` (desktop_rpc) and `/tube cleanup` (ask_choice).'
+      x-module: plugin/api/cleanup.py
+      x-unit: area-cleanup
+      x-data: {$ref: '#/components/schemas/CleanupView'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  scan:
+                    scan_id: scan_3
+                    created_at: 1762700000
+                    model: claude-haiku-5-5
+                    candidates:
+                      - {id: cc_1, channel_id: UCBJycsmduvYEL83R_U4JriQ, group: stale, why: Sem vídeo novo há 240 dias, status: pending, scan_id: scan_3, created_at: 1762700000}
+                  channels:
+                    UCBJycsmduvYEL83R_U4JriQ: {id: UCBJycsmduvYEL83R_U4JriQ, title: Marques Brownlee, relation: subscribed, source: extension, added_at: 1762000000, handle: '@mkbhd', thumb: null, url: null, folder_id: null, favorite: false, muted: false, unsubscribed_at: null, last_video_at: 1741000000, videos_per_week: 0.0, shorts_ratio: null, ai_note: null, tag_ids: []}
+
+  /cleanup/dismiss:
+    post:
+      operationId: postCleanupDismiss
+      summary: Take candidates off the list (approves nothing)
+      x-module: plugin/api/cleanup.py
+      x-unit: area-cleanup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/IdList'}
+            example: {ids: [cc_1]}
+      x-data: {$ref: '#/components/schemas/CountResult'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {count: 1}}
+
+  /queue:
+    get:
+      operationId: getQueue
+      summary: Unsubscribe/resubscribe queue (progress)
+      x-module: plugin/api/cleanup.py
+      x-unit: area-cleanup
+      parameters:
+        - {name: status, in: query, required: false, description: 'Comma-separated QueueStatus values.', schema: {type: string}, example: 'approved,running,failed'}
+        - {name: limit, in: query, required: false, schema: {type: integer, minimum: 1, maximum: 500, default: 200}}
+      x-data: {$ref: '#/components/schemas/QueueView'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  items:
+                    - {id: q_1, channel_id: UCBJycsmduvYEL83R_U4JriQ, action: unsubscribe, status: approved, approved_at: 1762700000, approved_via: desktop_rpc, created_at: 1762700000, updated_at: 1762700000, reason: Parado há 240 dias, error: null, device_id: null}
+                  pending: 1
+
+  /queue/undo:
+    post:
+      operationId: postQueueUndo
+      summary: Undo an approval that has not run yet (approved → undone)
+      description: '`Cleanup.undo_approval`: all or nothing; a running/done/failed item → `undo_refused` (`already_executed`). Never creates an item.'
+      x-module: plugin/api/cleanup.py
+      x-unit: area-cleanup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/IdList'}
+            example: {ids: [q_1]}
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/QueueItem'}
+      x-errors: [not_found, undo_refused]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: false, error: {code: undo_refused, reason: already_executed, message: 'Já executado — use Reinscrever em Faxina → Ex-inscrições'}}
+
+  # ==================================================================== themes — reads
+  /themes:
+    get:
+      operationId: getThemes
+      summary: Themes (newest first)
+      x-module: plugin/api/themes.py
+      x-unit: area-themes
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/Theme'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  items:
+                    - {id: th_1, query: agentes de IA, status: preview, created_at: 1762700000, name: Agentes de IA, icon: '🤖', tab_id: null, searches: [AI agents tutorial, agentes de IA], seeds: [UCBJycsmduvYEL83R_U4JriQ], include_terms: [agent], exclude_terms: [crypto], last_search_at: 1762700040, cadence_days: 7, error: null}
+
+  /themes/{id}:
+    get:
+      operationId: getTheme
+      summary: Saved theme preview (kept videos, seeds)
+      x-module: plugin/api/themes.py
+      x-unit: area-themes
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}, example: th_1}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/ThemePreview'}
+      x-errors: [not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  theme: {id: th_1, query: agentes de IA, status: preview, created_at: 1762700000, name: Agentes de IA, icon: '🤖', tab_id: null, searches: [AI agents tutorial], seeds: [], include_terms: [], exclude_terms: [], last_search_at: 1762700040, cadence_days: 7, error: null}
+                  items:
+                    - {theme_id: th_1, video_id: dQw4w9WgXcQ, verdict: keep, source: search, score: 0.91, reason: Tutorial prático}
+                  videos:
+                    dQw4w9WgXcQ: {id: dQw4w9WgXcQ, channel_id: UCBJycsmduvYEL83R_U4JriQ, title: Building AI agents, published_at: 1762000000, description: null, channel_title: Marques Brownlee, duration_s: 1500, is_short: false, views: 50000, first_seen_at: 1762700030, origin: search}
+                  seeds: [{channel_id: UCBJycsmduvYEL83R_U4JriQ, title: Marques Brownlee, kept_videos: 3}]
+                  channel_count: 1
+
+  # ==================================================================== Extras
+  /extras:
+    get:
+      operationId: getExtras
+      summary: State of the Extras (feeds the Desktop's `extras` atom)
+      x-module: plugin/api/extras.py
+      x-unit: area-extras
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/ExtrasState'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {honest_thumbnails: false, hn_lens: true, hn_channels: false, import_lists: false, hn_dataset_ready: true, hn_video_count: 12873, hn_credit: 'HackerTube (hackertube.org), ODC-By'}}
+    post:
+      operationId: postExtras
+      summary: Turns Extras on/off (stored in Settings; off = no request and no badge)
+      x-module: plugin/api/extras.py
+      x-unit: area-extras
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ExtrasPatch'}
+            example: {hn_lens: true}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/ExtrasState'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {honest_thumbnails: false, hn_lens: true, hn_channels: false, import_lists: false, hn_dataset_ready: false, hn_video_count: 0, hn_credit: 'HackerTube (hackertube.org), ODC-By'}}
+
+  /extras/hn/download:
+    post:
+      operationId: postExtrasHnDownload
+      summary: Download and index the HackerTube dataset (in a thread; non-blocking)
+      x-module: plugin/api/extras.py
+      x-unit: area-extras
+      x-data: {$ref: '#/components/schemas/HnDownloadResult'}
+      x-errors: [conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {status: started}}
+
+  /extras/hn/channels:
+    get:
+      operationId: getExtrasHnChannels
+      summary: Channels HN recommends that you do not follow
+      x-module: plugin/api/extras.py
+      x-unit: area-extras
+      parameters:
+        - {name: limit, in: query, required: false, schema: {type: integer, minimum: 1, maximum: 200, default: 50}}
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '#/components/schemas/HnChannel'}
+      x-errors: [conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data (Extra off → conflict)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {items: [{channel_id: UCBJycsmduvYEL83R_U4JriQ, title: Marques Brownlee, video_count: 14, top_video_ids: [dQw4w9WgXcQ], why: Reviews detalhados citados em discussões de hardware}]}}
+
+  # ==================================================================== local playlists
+  # Kept only in the plugin database ("Add to playlist" and the Playlists tab); nothing here writes
+  # to the YouTube account. Limits: name up to 80 characters, 200 playlists, 5000 videos each.
+  /playlists:
+    get:
+      operationId: getPlaylists
+      summary: Every playlist (most recently changed first); with `video_id`, the ones that hold it
+      x-module: plugin/api/playlists.py
+      x-unit: area-playlists
+      parameters:
+        - {name: video_id, in: query, required: false, schema: {type: string, minLength: 11, maxLength: 11}}
+      x-data:
+        type: object
+        required: [items, member_of]
+        properties:
+          items:
+            type: array
+            items: {$ref: '#/components/schemas/Playlist'}
+          member_of:
+            type: array
+            description: 'Ids of the playlists that hold `video_id` (empty without it).'
+            items: {type: string}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {items: [{id: pl_3f9a1c2b7d4e, name: Physics, count: 2, first_video_id: dQw4w9WgXcQ, created_at: 1762700000, updated_at: 1762710000}], member_of: []}}
+    post:
+      operationId: postPlaylist
+      summary: Create a playlist (optionally with its first videos)
+      x-module: plugin/api/playlists.py
+      x-unit: area-playlists
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/PlaylistCreate'}
+            example: {name: Physics}
+      x-data: {$ref: '#/components/schemas/Playlist'}
+      x-errors: [invalid, conflict, not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data (duplicate name or 200 playlists = conflict)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: pl_3f9a1c2b7d4e, name: Physics, count: 0, first_video_id: null, created_at: 1762700000, updated_at: 1762700000}}
+
+  /playlists/{id}:
+    get:
+      operationId: getPlaylist
+      summary: A playlist and its videos in play order
+      x-module: plugin/api/playlists.py
+      x-unit: area-playlists
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      x-data:
+        type: object
+        required: [playlist, items]
+        properties:
+          playlist: {$ref: '#/components/schemas/Playlist'}
+          items:
+            type: array
+            description: 'Videos still in the library, in play order (`why: null`).'
+            items: {$ref: '../shared/domain.schema.json#/$defs/FeedItem'}
+      x-errors: [not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {playlist: {id: pl_3f9a1c2b7d4e, name: Physics, count: 0, first_video_id: null, created_at: 1762700000, updated_at: 1762700000}, items: []}}
+    patch:
+      operationId: patchPlaylist
+      summary: Rename a playlist
+      x-module: plugin/api/playlists.py
+      x-unit: area-playlists
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/PlaylistPatch'}
+            example: {name: Physics lectures}
+      x-data: {$ref: '#/components/schemas/Playlist'}
+      x-errors: [not_found, invalid, conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: pl_3f9a1c2b7d4e, name: Physics lectures, count: 0, first_video_id: null, created_at: 1762700000, updated_at: 1762710000}}
+    delete:
+      operationId: deletePlaylist
+      summary: Delete a playlist (its videos stay in the library)
+      x-module: plugin/api/playlists.py
+      x-unit: area-playlists
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      x-data: {$ref: '#/components/schemas/Deleted'}
+      x-errors: [not_found]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: pl_3f9a1c2b7d4e}}
+
+  /playlists/{id}/items:
+    post:
+      operationId: postPlaylistItems
+      summary: Add videos at the end (a video already there is left as is)
+      x-module: plugin/api/playlists.py
+      x-unit: area-playlists
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/PlaylistVideos'}
+            example: {video_ids: [dQw4w9WgXcQ]}
+      x-data: {$ref: '#/components/schemas/PlaylistItemsResult'}
+      x-errors: [not_found, invalid, conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data (5000 videos = conflict; no known video = not_found)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {playlist: {id: pl_3f9a1c2b7d4e, name: Physics, count: 1, first_video_id: dQw4w9WgXcQ, created_at: 1762700000, updated_at: 1762710000}, changed: 1}}
+
+  /playlists/{id}/items/remove:
+    post:
+      operationId: postPlaylistItemsRemove
+      summary: Take videos out of the playlist (never out of the library)
+      x-module: plugin/api/playlists.py
+      x-unit: area-playlists
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/PlaylistVideos'}
+            example: {video_ids: [dQw4w9WgXcQ]}
+      x-data: {$ref: '#/components/schemas/PlaylistItemsResult'}
+      x-errors: [not_found, invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {playlist: {id: pl_3f9a1c2b7d4e, name: Physics, count: 0, first_video_id: null, created_at: 1762700000, updated_at: 1762710000}, changed: 1}}
+
+  /playlists/{id}/reorder:
+    post:
+      operationId: postPlaylistReorder
+      summary: Reorder (the given videos first, in that order; the rest after, as they were)
+      x-module: plugin/api/playlists.py
+      x-unit: area-playlists
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/IdList'}
+            example: {ids: [dQw4w9WgXcQ]}
+      x-data: {$ref: '#/components/schemas/CountResult'}
+      x-errors: [not_found, invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {count: 1}}
+
+  # ==================================================================== the extension's own server
+  /health:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615', enum: ['47615', '47616', '47617', '47618', '47619', '47620', '47621', '47622', '47623', '47624']}
+    get:
+      operationId: extHealth
+      summary: Discovery and health (no auth; the extension scans the 10 ports in parallel)
+      x-module: plugin/ext/_server.py
+      x-unit: area-mount
+      security: []
+      parameters:
+        - {name: device, in: query, required: false, description: 'Additive: id of the paired device asking for the server proof (with `nonce`).', schema: {type: string, minLength: 1, maxLength: 64}}
+        - {name: nonce, in: query, required: false, description: 'Additive: fresh random hex chosen by the extension; with `device` the answer carries `proof`.', schema: {type: string, pattern: '^[0-9a-f]{32,128}$'}}
+      x-data: {$ref: '#/components/schemas/HealthResponse'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {service: PLUGIN_ID, instance: 9f2c4e71b0a3, pairing_open: true}}
+
+  /pair/complete:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    post:
+      operationId: extPairComplete
+      summary: Exchanges the 6-digit code for a token (single use)
+      description: 'Pins the request''s `chrome-extension://…` origin on the device. Errors only after the COMMIT (the attempt count must not be lost).'
+      x-module: plugin/ext/pair.py
+      x-unit: area-pair
+      x-handler: pair_complete
+      x-deps: [devices]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - {$ref: '#/components/schemas/PairCompleteBody'}
+                - {$ref: '#/components/schemas/PairPakeStartBody'}
+                - {$ref: '#/components/schemas/PairPakeConfirmBody'}
+            example: {code: '482913', name: Chrome — Mac}
+      x-data:
+        description: '`PairedDevice` for `{code, name}` and for PAKE round 2; `PairPakeChallenge` for PAKE round 1.'
+        anyOf:
+          - {$ref: '../shared/domain.schema.json#/$defs/PairedDevice'}
+          - {$ref: '#/components/schemas/PairPakeChallenge'}
+      x-errors: [no_active_code, invalid_code, expired, used, locked, origin_required, invalid]
+      x-example-error: {ok: false, error: {code: invalid_code, message: Código errado (4 tentativas restantes), details: {remaining: 4}}}
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data. Errors carry the HTTP status from x-error-codes.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {device: {id: dev_1, name: Chrome — Mac, created_at: 1762700000, last_seen: null, revoked_at: null, origin: chrome-extension://abcdefghijklmnopabcdefghijklmnop}, token: tok_Zx8kq3mR0vH2bN5yT1wC7pL4sD9fG6jA}}
+
+  /ext/unpair:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    post:
+      operationId: extUnpair
+      summary: Unpair from the device itself (revokes this device's token)
+      x-module: plugin/ext/pair.py
+      x-unit: area-pair
+      x-handler: unpair
+      x-deps: [devices]
+      security: [{deviceToken: []}]
+      x-data:
+        type: object
+        required: [revoked]
+        properties:
+          revoked: {type: boolean}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {revoked: true}}
+
+  /ext/state:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    get:
+      operationId: extGetState
+      summary: State for the extension (chrome.alarms every 30 s while paired)
+      description: '`SyncIngest.ext_state(device_id)`: calls `Refresher.kick_if_due` and answers right away. `search_pending > 0` turns on polling `/ext/search-jobs` every 3 s.'
+      x-module: plugin/ext/state.py
+      x-unit: area-state
+      x-handler: get_state
+      x-deps: [sync]
+      security: [{deviceToken: []}]
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/ExtState'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  new_total: 12
+                  tabs: [{tab_id: all-new, name: Tudo novo, count: 12, icon: null}]
+                  folders: [{folder_id: f_tech, name: Tech, count: 9, parent_id: null}]
+                  search_pending: 0
+                  queue_pending: 1
+                  home_on_youtube: true
+                  extras_honest_thumbnails: false
+                  extras_hn_lens: false
+                  extras_hn_channels: false
+                  extras_import_lists: false
+                  refresh_running: false
+                  last_rss_at: 1762700000
+                  language: auto
+                  device_id: dev_1
+                  server_time: 1762700100
+
+  /ext/sync/subscriptions:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    post:
+      operationId: extSyncSubscriptions
+      summary: Subscriptions read from /feed/channels (the whole list, signal complete|partial)
+      x-module: plugin/ext/sync.py
+      x-unit: area-state
+      x-handler: sync_subscriptions
+      x-deps: [sync]
+      security: [{deviceToken: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/SubscriptionBatchBody'}
+            example:
+              signal: complete
+              channels:
+                - {title: Marques Brownlee, channel_id: UCBJycsmduvYEL83R_U4JriQ, handle: '@mkbhd', url: 'https://www.youtube.com/@mkbhd', thumb: 'https://yt3.ggpht.com/x.jpg'}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/SyncReport'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data (`marked_ex` always empty on partial)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {signal: complete, added: [], updated: [UCBJycsmduvYEL83R_U4JriQ], marked_ex: []}}
+
+  /ext/sync/watch:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    post:
+      operationId: extSyncWatch
+      summary: Batched history (watched > 60% or > 4 min)
+      x-module: plugin/ext/sync.py
+      x-unit: area-state
+      x-handler: sync_watch
+      x-deps: [sync]
+      security: [{deviceToken: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/WatchBatchBody'}
+            example: {events: [{video_id: dQw4w9WgXcQ, watched_at: 1762700000, channel_id: UCBJycsmduvYEL83R_U4JriQ}]}
+      x-data: {$ref: '#/components/schemas/CountResult'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data.count` = new events (resending is idempotent)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {count: 1}}
+
+  /ext/feed:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    get:
+      operationId: extGetFeed
+      summary: Feed for the Home and the sidebar on youtube.com (same engine as the Desktop)
+      x-module: plugin/ext/feed.py
+      x-unit: area-feed
+      x-handler: get_feed
+      x-deps: [feed]
+      security: [{deviceToken: []}]
+      parameters:
+        - {name: tab, in: query, required: false, schema: {type: string}, example: all-new}
+        - {name: folder, in: query, required: false, schema: {type: string}}
+        - {name: channel, in: query, required: false, schema: {type: string}}
+        - {name: limit, in: query, required: false, schema: {type: integer, minimum: 1, maximum: 100, default: 30}}
+        - {name: cursor, in: query, required: false, schema: {type: string}}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/FeedPage'}
+      x-errors: [not_found, invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {items: [], next_cursor: null, counts: {total: 0, new: 0}}}
+
+  /ext/videos/state:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    post:
+      operationId: extPostVideosState
+      summary: Quick actions of the Home on youtube.com (seen, later, archive, 👍/👎)
+      x-module: plugin/ext/feed.py
+      x-unit: area-feed
+      x-handler: post_videos_state
+      x-deps: [video_state]
+      security: [{deviceToken: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/VideoStateChange'}
+            example: {video_ids: [dQw4w9WgXcQ], state: later}
+      x-data: {$ref: '#/components/schemas/ChangedResult'}
+      x-errors: [invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {changed: 1}}
+
+  /ext/read:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    post:
+      operationId: extPostRead
+      summary: Mark as read from the sidebar/Home on youtube.com
+      x-module: plugin/ext/feed.py
+      x-unit: area-feed
+      x-handler: post_read
+      x-deps: [refresher]
+      security: [{deviceToken: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '../shared/domain.schema.json#/$defs/ReadScope'}
+            example: {kind: all}
+      x-data: {$ref: '#/components/schemas/ChangedResult'}
+      x-errors: [not_found, invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {changed: 40}}
+
+  /ext/queue:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    get:
+      operationId: extGetQueue
+      summary: Approved items to run (only approved with approved_via)
+      x-module: plugin/ext/queue.py
+      x-unit: area-cleanup
+      x-handler: get_queue
+      x-deps: [cleanup, channels]
+      security: [{deviceToken: []}]
+      parameters:
+        - {name: peek, in: query, required: false, description: 'Additive: `1` lists every approved item with a human `approved_via` (oldest first, at most 100) with their channels and lends none; without it, one item is lent to the calling device.', schema: {type: string, enum: ['1']}}
+      x-data: {$ref: '#/components/schemas/ExtQueueView'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example:
+                ok: true
+                data:
+                  items:
+                    - {id: q_1, channel_id: UCBJycsmduvYEL83R_U4JriQ, action: unsubscribe, status: approved, approved_at: 1762700000, approved_via: desktop_rpc, created_at: 1762700000, updated_at: 1762700000, reason: null, error: null, device_id: null}
+                  channels:
+                    UCBJycsmduvYEL83R_U4JriQ: {id: UCBJycsmduvYEL83R_U4JriQ, title: Marques Brownlee, relation: subscribed, source: extension, added_at: 1762000000, handle: '@mkbhd', thumb: null, url: 'https://www.youtube.com/@mkbhd', folder_id: null, favorite: false, muted: false, unsubscribed_at: null, last_video_at: null, videos_per_week: null, shorts_ratio: null, ai_note: null, tag_ids: []}
+
+  /ext/queue/{id}/result:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    post:
+      operationId: extPostQueueResult
+      summary: Execution result (running → done|failed); done of an unsubscribe → the channel becomes ex
+      x-module: plugin/ext/queue.py
+      x-unit: area-cleanup
+      x-handler: post_queue_result
+      x-deps: [cleanup]
+      security: [{deviceToken: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}, example: q_1}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/QueueResultBody'}
+            example: {status: done}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/QueueItem'}
+      x-errors: [not_found, invalid, conflict]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data (repeated = idempotent; undone item → conflict)
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {id: q_1, channel_id: UCBJycsmduvYEL83R_U4JriQ, action: unsubscribe, status: done, approved_at: 1762700000, approved_via: desktop_rpc, created_at: 1762700000, updated_at: 1762700060, reason: null, error: null, device_id: dev_1}}
+
+  /ext/search-jobs:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    get:
+      operationId: extGetSearchJobs
+      summary: Delegated searches (pending → claimed); poll every 3 s only with search_pending > 0
+      x-module: plugin/ext/search.py
+      x-unit: area-search
+      x-handler: get_search_jobs
+      x-deps: [searcher]
+      security: [{deviceToken: []}]
+      parameters:
+        - {name: limit, in: query, required: false, schema: {type: integer, minimum: 1, maximum: 8, default: 4}}
+      x-data:
+        type: object
+        required: [items]
+        properties:
+          items:
+            type: array
+            items: {$ref: '../shared/domain.schema.json#/$defs/SearchJob'}
+      x-errors: []
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data. A job whose `expires_at` has passed must not be run.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: true, data: {items: [{id: sj_1, batch_id: sb_1, query: AI agents tutorial, order: relevance, status: claimed, created_at: 1762700000, expires_at: 1762700015, theme_id: th_1, device_id: dev_1, payload: null}]}}
+
+  /ext/search-jobs/{id}/result:
+    x-transport: ext
+    servers:
+      - url: 'http://127.0.0.1:{port}'
+        variables:
+          port: {default: '47615'}
+    post:
+      operationId: extPostSearchResult
+      summary: Returns the search's ytInitialData (expired → conflict; the host already covered it)
+      x-module: plugin/ext/search.py
+      x-unit: area-search
+      x-handler: post_search_result
+      x-deps: [searcher]
+      security: [{deviceToken: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}, example: sj_1}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/SearchResultBody'}
+            example: {payload: {contents: {twoColumnSearchResultsRenderer: {}}}}
+      x-data: {$ref: '../shared/domain.schema.json#/$defs/SearchJob'}
+      x-errors: [not_found, conflict, invalid]
+      responses:
+        '200':
+          description: Envelope; `data` follows x-data
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AnyEnvelope'}
+              example: {ok: false, error: {code: conflict, message: Busca vencida; o host já completou}}

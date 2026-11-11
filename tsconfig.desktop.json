@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": [],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "paths": {
+      "@hermes/plugin-sdk": ["./desktop-src/types/hermes-plugin-sdk.d.ts"],
+      "@shared/*": ["./shared/*"]
+    }
+  },
+  "include": ["desktop-src/**/*.ts", "desktop-src/**/*.tsx", "shared/**/*.ts"],
+  "exclude": ["node_modules", "desktop-src/**/*.mjs"]
+}

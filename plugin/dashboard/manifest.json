@@ -1,0 +1,8 @@
+{
+  "name": "hermes-tube",
+  "label": "HermesTube",
+  "description": "Backend routes of the HermesTube plugin (used by its Desktop page and panel).",
+  "icon": "FolderOpen",
+  "version": "0.1.0",
+  "api": "plugin_api.py"
+}

@@ -1,0 +1,22 @@
+{
+  "running": "Sincronizando inscrições…",
+  "done_complete": "Inscrições sincronizadas ({count} canais)",
+  "done_partial": "Sincronização parcial ({count} canais); nenhuma inscrição foi marcada como cancelada",
+  "error_invalid": "O Hermes recusou a lista (bug da extensão); ela não será reenviada",
+  "error_unauthorized": "O Hermes não aceitou este navegador. Pareie de novo.",
+  "error_ext_endpoint_down": "Abra o Hermes para sincronizar; a lista vai quando ele voltar",
+  "error_timeout": "O Hermes demorou demais; a lista será reenviada",
+  "error_tab_closed": "A aba de inscrições foi fechada antes do fim",
+  "error_tab_timeout": "O YouTube demorou demais para carregar suas inscrições",
+  "error_scrape_failed": "Não deu para ler suas inscrições no YouTube",
+  "error_nothing_to_send": "Nenhuma inscrição encontrada. Você está logado no YouTube?",
+  "error_logged_out": "Entre no YouTube neste navegador para sincronizar suas inscrições",
+  "error_other": "A sincronização falhou",
+  "done_partial_needs_visible": "Sincronização parcial ({count} canais): em segundo plano o YouTube não carregou a lista inteira. Use \"Sincronizar agora\" para ler tudo",
+  "error_cancelled": "Sincronização cancelada; nada foi enviado",
+  "overlay_title": "Hermes está lendo suas inscrições",
+  "overlay_count": "Canais lidos: {count}",
+  "overlay_safe": "Só leitura: nada é alterado na sua conta do YouTube.",
+  "overlay_keep": "Deixe esta aba à vista; ela fecha sozinha ao terminar.",
+  "overlay_cancel": "Cancelar"
+}

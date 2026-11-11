@@ -1,0 +1,36 @@
+{
+  "name": "tube-plugin-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build:desktop": "node desktop-src/esbuild.config.mjs",
+    "build:ext": "test -f extension/manifest.json || { echo 'SKIP build:ext (extension/manifest.json missing)'; exit 0; }; for m in background content main-world popup; do if [ \"$m\" = main-world ] && [ ! -f extension/src/content/main-world.ts ]; then continue; fi; vite build -c extension/vite.config.ts --mode \"$m\" || exit 1; done",
+    "build:ext:plugin": "EXT_DIST_DIR=plugin/extension npm run -s build:ext",
+    "typecheck": "tsc -p tsconfig.desktop.json && tsc -p tsconfig.ext.json && tsc -p tsconfig.node.json",
+    "test:js": "vitest run",
+    "e2e": "playwright test -c extension/e2e/playwright.config.ts --pass-with-no-tests",
+    "gen:sdk-dts": "node scripts/gen-sdk-dts.mjs",
+    "check": "scripts/check"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@preact/preset-vite": "2.10.6",
+    "@types/chrome": "0.1.42",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "esbuild": "0.28.2",
+    "jsdom": "29.1.1",
+    "preact": "10.29.8",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "typescript": "6.0.3",
+    "vite": "8.3.4",
+    "vitest": "4.1.12"
+  }
+}

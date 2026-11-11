@@ -1,0 +1,34 @@
+{
+  "card": {
+    "label": "Vídeo: {title}",
+    "loading": "Carregando os detalhes do vídeo",
+    "unknown_title": "Ver no YouTube",
+    "unknown_note": "Ainda não está na sua biblioteca",
+    "error": "Não deu para carregar os detalhes",
+    "retry": "Tentar de novo"
+  },
+  "actions": {
+    "label": "Ações do vídeo",
+    "later": "Depois",
+    "watched": "Visto",
+    "open": "Abrir no YouTube"
+  },
+  "toast": {
+    "later": "Guardado para depois",
+    "unlater": "Tirado de Depois",
+    "watched": "Marcado como visto",
+    "unwatched": "Marcado como não visto",
+    "undo": "Desfazer",
+    "failed": "Não deu para salvar: {error}",
+    "undo_failed": "Não deu para desfazer: {error}"
+  },
+  "mascot": {
+    "published": "⭐ {channel}: {title}",
+    "published_untitled": "⭐ {channel} acabou de postar um vídeo",
+    "more": "⭐ Mais {count} favoritos postaram vídeos novos",
+    "setting": {
+      "title": "Mascote avisa dos favoritos",
+      "description": "Um recado curto do mascote quando um canal ⭐ posta, no máximo uma vez por canal por dia."
+    }
+  }
+}

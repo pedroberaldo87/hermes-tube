@@ -1,0 +1,13 @@
+{
+  "reconnect_open_hermes": "Abra o Hermes para reconectar",
+  "unpaired": "Ainda não conectado ao Hermes",
+  "unauthorized": "O Hermes não aceitou este navegador. Pareie de novo.",
+  "connected": "Conectado ao Hermes",
+  "connected_port": "Conectado ao Hermes (porta {port})",
+  "timeout": "O Hermes demorou demais para responder",
+  "error": "Algo deu errado na conversa com o Hermes",
+  "invalid_response": "Resposta inesperada do Hermes",
+  "server_unverified": "O programa que respondeu nesta porta não provou que é o seu Hermes, então a extensão não enviou nada. Abra o Hermes ou pareie de novo.",
+  "server_outdated": "O Hermes precisa de uma versão mais nova do plugin HermesTube para parear com esta extensão.",
+  "code_mismatch": "O código não bateu com o que o Hermes está mostrando."
+}

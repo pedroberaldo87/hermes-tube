@@ -1,0 +1,42 @@
+# environment
+/.venv/
+node_modules/
+.env
+.envrc
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+# temporary builds and reports
+/.tmp/
+/build-tmp/
+extension/dist/
+extension/e2e/test-results/
+extension/e2e/playwright-report/
+coverage/
+
+# local data
+*.db
+*.db-wal
+*.db-shm
+
+# coding-agent artifacts and local notes
+.unit-env
+.claude/
+.cursor/
+.aider*
+.codex/
+.hermes/
+CLAUDE.local.md
+AGENTS.local.md
+
+# OS
+.DS_Store
+
+# private terms for the public-cut scanner (account ids, machine names): never tracked
+/scripts/public_scan.private

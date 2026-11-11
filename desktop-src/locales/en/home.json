@@ -1,0 +1,238 @@
+{
+  "title": "Subscriptions",
+  "subtitle": {
+    "new": "{count} new",
+    "updated": "updated {when}",
+    "never": "not refreshed yet",
+    "refreshing": "refreshing…",
+    "status_error": "Couldn't read the latest status"
+  },
+  "actions": {
+    "extras": "Extras",
+    "refresh": "Refresh",
+    "new_tab": "New tab",
+    "mark_read": "Mark as read"
+  },
+  "new_tab": {
+    "category": "Category",
+    "category_desc": "Folders and tags you already use",
+    "channels": "Channels",
+    "channels_desc": "Hand-pick the channels",
+    "theme": "Topic",
+    "theme_desc": "Hermes searches YouTube for a topic",
+    "mixed": "Mixed",
+    "mixed_desc": "Combine folders, tags, channels and topics"
+  },
+  "theme_build": {
+    "button": "New topic tab",
+    "button_tip": "Hermes searches YouTube and curates a tab about any topic",
+    "no_ai": "Topic tabs need an AI model to plan the searches and curate. Pick one in Settings → Models first.",
+    "building": "Building “{name}”…",
+    "building_unnamed": "Building a topic tab…",
+    "building_tip": "Hermes is still working on it. Click to see the progress.",
+    "ready": "Topic tab “{name}” is ready",
+    "ready_unnamed": "Your topic tab is ready",
+    "open_preview": "Open preview",
+    "failed": "Couldn't build “{name}”: {error}",
+    "failed_unnamed": "Couldn't build the topic tab: {error}",
+    "retry": "Try again"
+  },
+  "tabs": {
+    "label": "Feed tabs",
+    "all-new": "All new",
+    "favorites": "Favorites",
+    "later": "Watch later",
+    "playlists": "Playlists"
+  },
+  "filters": {
+    "search": "Search this tab",
+    "new_only": "New only",
+    "no_shorts": "Hide Shorts",
+    "show_seen": "Show watched"
+  },
+  "sections": {
+    "featured": "Featured"
+  },
+  "feed": {
+    "label": "{tab} videos",
+    "count": "{count} videos",
+    "loading": "Loading videos",
+    "loading_more": "Loading more videos",
+    "searching": "Searching…",
+    "load_more": "Load more",
+    "more_error": "Couldn't load more videos",
+    "reordering": "Sorting…",
+    "group_label": "{tab} videos — {group}"
+  },
+  "toast": {
+    "watched": "Marked as watched",
+    "unwatched": "Marked as not watched",
+    "later": "Saved to Watch later",
+    "unlater": "Removed from Watch later",
+    "archived": "Archived",
+    "up": "Liked",
+    "down": "Marked as not for me",
+    "reaction_cleared": "Reaction removed",
+    "undo": "Undo",
+    "failed": "Couldn't save that: {error}",
+    "undo_failed": "Couldn't undo: {error}",
+    "read": "{tab} marked as read",
+    "read_nothing": "Nothing new to mark as read",
+    "refresh_skipped": "Already up to date",
+    "refresh_failed": "Couldn't start the refresh: {error}",
+    "unarchived": "Back in the list",
+    "tab_deleted": "“{name}” tab deleted",
+    "reorder_failed": "Couldn't save the tab order: {error}"
+  },
+  "banner": {
+    "demo_arriving": "Loading the demo: {count} videos from {channels} channels so far…",
+    "channel_arriving": "Fetching the latest videos from {title}…",
+    "rss_down": "YouTube's feed has been unstable since {time}. Your videos keep arriving another way.",
+    "rss_down_stale": "YouTube's feed has been unstable since {time}. Showing what we already have.",
+    "rss_fallback": "{count} channels updated from the channel page",
+    "retry": "Try again",
+    "ext_disconnected": "Browser extension disconnected — new subscriptions and watch history won't sync.",
+    "reconnect": "Reconnect",
+    "ext_not_paired": "Connect the browser extension to bring in your subscriptions",
+    "connect": "Connect"
+  },
+  "empty": {
+    "tab_title": "You're all caught up",
+    "tab_desc": "Nothing new in {tab}. New videos show up here as soon as the channels post.",
+    "refreshing_title": "Looking for new videos…",
+    "see_all": "See all tabs",
+    "show_seen": "Show watched",
+    "search_title": "Nothing found for “{query}”",
+    "search_desc": "Search looks at video titles and channel names across this whole tab.",
+    "search_loaded_desc": "Nothing among the loaded videos matches “{query}”.",
+    "filter_title": "No matches",
+    "filter_desc": "No loaded video passes these filters.",
+    "clear": "Clear search and filters",
+    "clear_search": "Clear search",
+    "clear_filters": "Clear filters",
+    "later_title": "Nothing saved for later",
+    "later_desc": "Press L on any video (or the clock button) to keep it here."
+  },
+  "welcome": {
+    "lead": "Pick a way to start. You can add the others later.",
+    "group": "How to start",
+    "pair_title": "Connect the browser extension",
+    "pair_desc": "Brings in all your subscriptions and watch history from your browser — no password, nothing leaves your machine.",
+    "pair_action": "Pair now",
+    "pair_hint": "About 1 min",
+    "link_title": "Paste a channel",
+    "link_desc": "Paste a channel link or an @handle to follow it here without subscribing on YouTube.",
+    "link_action": "Paste a link",
+    "demo_title": "Try the demo",
+    "demo_desc": "40 real public channels in 6 folders, to explore before connecting anything.",
+    "demo_action": "Load the demo",
+    "demo_hint": "Removable any time",
+    "demo_loading": "Loading…",
+    "demo_failed": "Couldn't load the demo: {error}",
+    "link_label": "Channel link or @handle",
+    "link_placeholder": "youtube.com/@channel or @handle",
+    "link_hint": "Channel or video link, @handle or channel id (UC…). Press Enter to follow.",
+    "link_submit": "Follow",
+    "link_added": "Now following {title}",
+    "errors": {
+      "empty": "Paste a channel link or @handle first.",
+      "invalid": "That doesn't look like a YouTube channel link or @handle.",
+      "conflict": "{title} is already in your list.",
+      "conflict_generic": "That channel is already in your list.",
+      "youtube_error": "YouTube couldn't find that channel. Check the link and try again.",
+      "timeout": "YouTube took too long to answer. Try again in a moment."
+    }
+  },
+  "pane_filter": {
+    "label": "Filtering by: {name}",
+    "clear": "Stop filtering",
+    "create_tab": "Create a tab with this"
+  },
+  "gone": {
+    "archived": "Archived",
+    "undo": "Undo"
+  },
+  "tab_menu": {
+    "edit": "Edit…",
+    "move_left": "Move left",
+    "move_right": "Move right",
+    "delete": "Delete…",
+    "delete_title": "Delete the “{name}” tab?",
+    "delete_desc": "Its channels, folders and videos stay as they are — only the tab goes away.",
+    "delete_confirm": "Delete tab",
+    "delete_cancel": "Not now",
+    "delete_failed": "Couldn't delete the tab: {error}"
+  },
+  "view": {
+    "label": "View",
+    "menu_label": "View: {sort}, {group}",
+    "sort_title": "Sort",
+    "group_title": "Group",
+    "sort_label": "Sort: {value}",
+    "group_label": "Group: {value}",
+    "sort": {
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "longest": "Longest",
+      "shortest": "Shortest",
+      "views": "Most viewed"
+    },
+    "group": {
+      "none": "None",
+      "channel": "Channel",
+      "folder": "Folder",
+      "day": "Day",
+      "kind": "Type"
+    },
+    "group_trigger": {
+      "none": "Not grouped",
+      "channel": "By channel",
+      "folder": "By folder",
+      "day": "By day",
+      "kind": "By type"
+    }
+  },
+  "group": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "no_date": "No date",
+    "no_folder": "No folder",
+    "no_channel": "Unknown channel",
+    "kind": {
+      "video": "Videos",
+      "short": "Shorts",
+      "unknown": "Type not known yet"
+    },
+    "count_more": "{count}+",
+    "count_hint": "{count} loaded so far"
+  },
+  "playlists": {
+    "label": "Your playlists",
+    "count": "{count} videos",
+    "count_one": "1 video",
+    "open": "Open {name}",
+    "empty_title": "No playlists yet",
+    "empty_desc": "Use Add to playlist on any video to start one.",
+    "empty_action": "See all tabs",
+    "back": "All playlists",
+    "play_all": "Play all",
+    "rename": "Rename",
+    "rename_label": "New name",
+    "rename_save": "Save",
+    "rename_cancel": "Cancel",
+    "delete": "Delete",
+    "delete_title": "Delete “{name}”?",
+    "delete_desc": "Only the playlist goes away. Its videos stay in your subscriptions and in any other playlist.",
+    "delete_confirm": "Delete playlist",
+    "delete_cancel": "Keep",
+    "deleted": "Deleted {name}",
+    "renamed": "Renamed to {name}",
+    "failed": "Couldn't change the playlist: {error}",
+    "remove": "Remove from playlist",
+    "removed": "Removed from {name}",
+    "items_label": "Videos in {name}",
+    "playlist_empty_title": "This playlist is empty",
+    "playlist_empty_desc": "Use Add to playlist on any video to put it here.",
+    "local_note": "Kept in HermesTube on this computer, not on your YouTube account."
+  }
+}

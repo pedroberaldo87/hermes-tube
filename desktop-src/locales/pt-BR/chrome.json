@@ -1,0 +1,69 @@
+{
+  "locale": "pt-BR",
+  "chip": {
+    "new_one": "novo",
+    "new_other": "novos",
+    "none": "Nada novo",
+    "refreshing": "atualizando…",
+    "loading": "Inscrições",
+    "unavailable_label": "Inscrições indisponíveis",
+    "title_new": "{count} vídeos novos — abrir suas inscrições",
+    "title_none": "Você está em dia — abrir suas inscrições",
+    "title_refreshing": "Procurando vídeos novos… — abrir suas inscrições",
+    "title_loading": "Lendo suas inscrições…",
+    "reason_unavailable": "O HermesTube não está ligado no perfil “{profile}”. Volte ao perfil onde instalou, ou ligue em Capabilities → Plugins.",
+    "reason_offline": "Sem conexão com o Hermes agora. Ele tenta de novo sozinho.",
+    "reason_error": "Não deu para ler os vídeos novos: {error}",
+    "updated": "atualizado {when}",
+    "pet": "O Hermes diz: {text}"
+  },
+  "palette": {
+    "open-home": {
+      "label": "Inscrições: abrir",
+      "keywords": "youtube inscrições início feed vídeos novos"
+    },
+    "refresh-now": {
+      "label": "Inscrições: atualizar agora",
+      "keywords": "youtube inscrições atualizar buscar rss recarregar"
+    },
+    "new-theme-tab": {
+      "label": "Inscrições: nova aba por assunto",
+      "keywords": "youtube inscrições tema aba assunto nova criar"
+    },
+    "organize": {
+      "label": "Inscrições: organizar com o Hermes",
+      "keywords": "youtube inscrições organizar pastas ordenar ia"
+    },
+    "cleanup": {
+      "label": "Inscrições: faxina",
+      "keywords": "youtube inscrições faxina cancelar limpar inativos"
+    },
+    "open-extras": {
+      "label": "Inscrições: extras",
+      "keywords": "youtube inscrições extras hackertube hn miniaturas listas"
+    },
+    "connect": {
+      "label": "HermesTube: Conectar um navegador ou adicionar um canal",
+      "keywords": "youtube inscrições extensão navegador conectar parear código canal adicionar link boas-vindas configurar"
+    }
+  },
+  "refresh": {
+    "started": "Procurando vídeos novos…",
+    "running": "Já estou procurando vídeos novos",
+    "skipped": "Suas inscrições já estão em dia",
+    "failed": "Não deu para atualizar: {error}"
+  },
+  "detail": {
+    "refreshing": "atualizando…",
+    "new_one": "{count} novo",
+    "new_other": "{count} novos",
+    "none": "nada novo",
+    "updated": "atualizado {when}"
+  },
+  "gate": {
+    "title": "O plugin não está ligado em “{profile}”",
+    "hint": "Você está no perfil “{profile}”. Volte ao perfil onde instalou o plugin, ou ligue aqui: Capabilities → Plugins → HermesTube.",
+    "remote": "Você está conectado a {name}, não a este computador. Troque para {local} para usar o HermesTube com o Hermes deste computador.",
+    "local_default": "This device"
+  }
+}

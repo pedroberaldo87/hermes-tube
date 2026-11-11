@@ -1,0 +1,91 @@
+{
+  "tree": {
+    "label": "Subscriptions",
+    "all": "All",
+    "later": "Watch later",
+    "unfiled": "No folder"
+  },
+  "row": {
+    "menu": "More actions for {name}",
+    "favorite": "Favorite",
+    "muted": "Muted"
+  },
+  "search": {
+    "placeholder": "Find a channel or folder",
+    "empty_title": "Nothing matches “{query}”",
+    "empty_desc": "Try part of a channel name, a @handle or a folder.",
+    "clear": "Clear search"
+  },
+  "empty": {
+    "title": "No subscriptions yet",
+    "description": "Connect the browser extension, paste a channel link or try the demo — it takes a minute.",
+    "action": "Get started"
+  },
+  "error": {
+    "title": "Couldn't load your subscriptions",
+    "unavailable": "The plugin isn't on in “{profile}”",
+    "offline": "Can't reach Hermes right now",
+    "unavailable_hint": "You're in the “{profile}” profile. Go back to the profile where you installed it, or turn it on here: Capabilities → Plugins → HermesTube.",
+    "offline_hint": "Check that Hermes is running, then try again."
+  },
+  "banner": {
+    "counts_failed": "Couldn't read the new-video counts.",
+    "retry": "Try again",
+    "ext_disconnected": "Browser extension disconnected.",
+    "reconnect": "Reconnect",
+    "rss_down": "YouTube's feed is down — showing what we already have."
+  },
+  "menu": {
+    "open_home": "Open in Subscriptions",
+    "mark_read": "Mark as read",
+    "mark_all_read": "Mark all as read",
+    "favorite": "Add to favorites",
+    "unfavorite": "Remove from favorites",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "move": "Move to…",
+    "new_tab": "New tab with this folder",
+    "open_youtube": "Open on YouTube"
+  },
+  "move": {
+    "title": "Move “{name}” to…",
+    "description_channel": "Pick the folder for this channel.",
+    "description_folder": "Pick where this folder goes.",
+    "no_folder": "No folder",
+    "top_level": "Top level",
+    "cancel": "Cancel"
+  },
+  "nav": {
+    "no_tab": "Subscriptions has no tab for {name} yet.",
+    "create_tab": "Create tab"
+  },
+  "toast": {
+    "moved_channel": "Moved {name} to {folder}",
+    "moved_channel_none": "Took {name} out of its folder",
+    "moved_folder": "Moved {name} into {folder}",
+    "moved_folder_root": "Moved {name} to the top level",
+    "favorite_on": "Added {name} to favorites",
+    "favorite_off": "Removed {name} from favorites",
+    "muted_on": "Muted {name}",
+    "muted_off": "Unmuted {name}",
+    "read": "Marked {name} as read",
+    "read_all": "Marked everything as read",
+    "read_nothing": "Nothing new in {name}",
+    "read_nothing_all": "Nothing new to mark",
+    "cycle": "A folder can't go inside itself",
+    "undo": "Undo",
+    "failed": "Couldn't save: {error}",
+    "undo_failed": "Couldn't undo: {error}"
+  },
+  "palette": {
+    "show": {
+      "label": "HermesTube: Show channels panel",
+      "keywords": "youtube subscriptions channels panel sidebar show open tab"
+    }
+  },
+  "toggle": {
+    "show": "Show channels panel",
+    "hide": "Hide channels panel",
+    "elsewhere": "The channels panel isn't in the right sidebar. To hide it, right-click its tab and choose Hide."
+  }
+}

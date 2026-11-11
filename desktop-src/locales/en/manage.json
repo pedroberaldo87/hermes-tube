@@ -1,0 +1,154 @@
+{
+  "title": "Manage",
+  "subtitle": "{subscribed} subscribed · {followed} following",
+  "count": "{shown} of {total} channels",
+  "table_label": "Channels",
+  "loading": "Loading channels",
+  "select_all": "Select all {count} filtered channels",
+  "select_row": "Select {name}",
+  "sort_by": "Sort by {name}",
+  "columns": {
+    "select": "Selection",
+    "name": "Channel",
+    "folder": "Folder",
+    "tags": "Tags",
+    "last": "Last video",
+    "rhythm": "Pace",
+    "shorts": "Shorts",
+    "watched": "Watched",
+    "relation": "Relation"
+  },
+  "column_hints": {
+    "last": "When the latest video came out",
+    "rhythm": "Videos per week",
+    "shorts": "Share of Shorts among recent videos",
+    "watched": "Videos you watched in the last 90 days"
+  },
+  "rhythm_value": "{n}/wk",
+  "no_folder": "No folder",
+  "add_tags": "Add tags",
+  "edit_folder": "Change folder of {name}",
+  "edit_tags": "Change tags of {name}",
+  "favorite": "Favorite",
+  "muted": "Muted",
+  "relation": {
+    "active": "Subscribed + following",
+    "subscribed": "Subscribed",
+    "followed": "Following",
+    "ex": "Former subscription",
+    "ignored": "Ignored"
+  },
+  "filters": {
+    "search": "Search name or @handle",
+    "folder": "Folder",
+    "folder_all": "All folders",
+    "tag": "Tag",
+    "tag_all": "Any tag",
+    "relation": "Relation",
+    "favorite": "Favorites",
+    "muted": "Muted",
+    "stale": "Inactive",
+    "stale_any": "Any time",
+    "stale_option": "No video in {count} months"
+  },
+  "chips": {
+    "folder": "Folder: {name}",
+    "tag": "#{name}",
+    "stale": "No video in {count}+ months",
+    "remove": "Remove filter: {name}"
+  },
+  "rail": {
+    "label": "Folders",
+    "all": "All channels",
+    "none": "No folder",
+    "new": "New folder",
+    "placeholder": "Folder name",
+    "rename": "Rename {name}",
+    "drop": "Drop to move here"
+  },
+  "picker": {
+    "filter": "Type to filter",
+    "create_folder": "New folder “{name}”",
+    "create_tag": "New tag “{name}”",
+    "apply": "Apply",
+    "empty": "Nothing matches",
+    "move": "Move to folder",
+    "tag": "Add tag",
+    "untag": "Remove tag"
+  },
+  "batch": {
+    "label": "Selection actions",
+    "selected_one": "{count} selected",
+    "selected_other": "{count} selected",
+    "hidden_one": "{count} hidden by filters",
+    "hidden_other": "{count} hidden by filters",
+    "move": "Move to…",
+    "tag": "Add tag",
+    "untag": "Remove tag",
+    "favorite": "Favorite",
+    "unfavorite": "Unfavorite",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "read": "Mark as read",
+    "organize": "Organize with Hermes",
+    "clear": "Clear selection"
+  },
+  "toast": {
+    "move_one": "{name} moved to {folder}",
+    "move_other": "{count} channels moved to {folder}",
+    "move_none_one": "{name} taken out of its folder",
+    "move_none_other": "{count} channels taken out of their folders",
+    "tag_one": "#{tag} added to {name}",
+    "tag_other": "#{tag} added to {count} channels",
+    "untag_one": "#{tag} removed from {name}",
+    "untag_other": "#{tag} removed from {count} channels",
+    "favorite_one": "{name} added to favorites",
+    "favorite_other": "{count} channels added to favorites",
+    "unfavorite_one": "{name} removed from favorites",
+    "unfavorite_other": "{count} channels removed from favorites",
+    "mute_one": "{name} muted",
+    "mute_other": "{count} channels muted",
+    "unmute_one": "{name} unmuted",
+    "unmute_other": "{count} channels unmuted",
+    "read_one": "{name} marked as read",
+    "read_other": "{count} channels marked as read",
+    "read_nothing": "Nothing new to mark as read",
+    "read_partial": "{count} channels couldn't be marked: {error}",
+    "tags_set": "Tags of {name} updated",
+    "nothing": "Nothing changed",
+    "folder_created": "Folder “{name}” created",
+    "folder_renamed": "Folder renamed to “{name}”",
+    "undo": "Undo",
+    "undone": "Undone",
+    "undo_failed": "Couldn't undo: {error}",
+    "failed": "Couldn't save: {error}"
+  },
+  "row_error": "Not saved: {error}",
+  "banner": {
+    "ext_disconnected": "Browser extension disconnected — new subscriptions won't sync.",
+    "reconnect": "Reconnect",
+    "ext_not_paired": "Connect the browser extension to bring in your subscriptions",
+    "connect": "Connect"
+  },
+  "empty": {
+    "title": "No channels yet",
+    "description": "Connect the browser extension, paste a channel link or load the demo.",
+    "action": "Get started"
+  },
+  "no_results": {
+    "title": "No channel matches these filters",
+    "description": "Loosen a filter or clear them all.",
+    "action": "Clear filters"
+  },
+  "error": {
+    "title": "Couldn't load your channels"
+  },
+  "actions": {
+    "organize": "Organize with Hermes",
+    "cleanup": "Cleanup",
+    "connect": "Connect a browser",
+    "connect_hint": "Connect a browser or add a channel",
+    "connected": "Browser connected",
+    "connected_hint": "See connected browsers or add a channel"
+  }
+}

@@ -1,0 +1,117 @@
+/* Preview theme: what the app applies through JS (themes/context.tsx → applyTheme) for the default theme
+   "Nous" (THEME_PRESET_PALETTES.nous), light and dark. Preview only: in the app the host paints. */
+:root {
+  --theme-foreground: #1f2328;
+  --theme-primary: #0053fd;
+  --theme-secondary: #deeaff;
+  --theme-accent-soft: #e3edff;
+  --theme-midground: #0053fd;
+  --theme-warm: #0053fd;
+  --theme-background-seed: #ffffff;
+  --theme-sidebar-seed: #f6f8fa;
+  --theme-card-seed: #f6f8fa;
+  --theme-elevated-seed: #ffffff;
+  --theme-bubble-seed: #dae7fd;
+  --dt-primary-foreground: #ffffff;
+  --dt-destructive: #cf222e;
+}
+
+:root.dark {
+  color-scheme: dark;
+  --theme-foreground: #e6edf3;
+  --theme-primary: #4a84fe;
+  --theme-secondary: #1d2e4f;
+  --theme-accent-soft: #17243a;
+  --theme-midground: #4a84fe;
+  --theme-warm: #4a84fe;
+  --theme-background-seed: #0d1117;
+  --theme-sidebar-seed: #010409;
+  --theme-card-seed: #010409;
+  --theme-elevated-seed: #161b22;
+  --theme-bubble-seed: #07162c;
+  --dt-primary-foreground: #161616;
+  --dt-destructive: #f85149;
+}
+
+/* font size: the app's (html = --dt-base-size, body = .8125rem), coming from host-compiled.css.
+   The app locks the window (html/body overflow hidden; each pane scrolls) — the preview is a document. */
+html,
+body {
+  height: auto;
+  overflow: visible;
+  background: var(--ui-editor-surface-background);
+  color: var(--ui-text-primary);
+}
+
+/* preview bar (not in screenshots) */
+[data-preview-bar] {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  align-items: baseline;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--ui-stroke-secondary);
+  background: var(--ui-bg-chrome);
+  font-size: 12px;
+}
+
+[data-preview-note] {
+  flex: 1 1 420px;
+  color: var(--ui-text-tertiary);
+}
+
+[data-preview-links] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+
+[data-preview-links] a {
+  color: var(--ui-text-secondary);
+  text-decoration: none;
+}
+
+[data-preview-links] a[aria-current='page'] {
+  color: var(--ui-text-primary);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* frames: full page; pane (260–380 px, like the app's left pane); chat column */
+[data-preview-frame='page'] [data-preview-surface] {
+  min-height: 100vh;
+}
+
+html[data-preview-shot='false'] [data-preview-frame='page'] [data-preview-surface] {
+  height: calc(100vh - 80px);
+  min-height: 0;
+}
+
+[data-preview-frame='pane'] {
+  display: flex;
+  min-height: 100vh;
+}
+
+[data-preview-frame='pane'] [data-preview-surface] {
+  width: clamp(260px, 28vw, 380px);
+  padding: 8px 4px;
+  border-right: 1px solid var(--ui-stroke-secondary);
+  background: var(--ui-sidebar-surface-background);
+}
+
+@media (max-width: 520px) {
+  [data-preview-frame='pane'] [data-preview-surface] {
+    width: 100%;
+    border-right: 0;
+  }
+}
+
+[data-preview-frame='chat'] [data-preview-surface] {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  background: var(--ui-chat-surface-background);
+}

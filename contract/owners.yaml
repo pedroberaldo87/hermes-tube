@@ -1,0 +1,116 @@
+# Owner of each module named in the contract. Owner = the only unit of work that edits the file (these
+# ids are build-time labels). `scripts/gen_types.py --check` fails if an `x-module` of api.yaml/rpc.yaml is
+# missing here or if its owner differs from the route's/method's `x-unit`.
+
+units: [
+  area-34, area-35, area-36, area-37, area-38, area-39, area-40, area-bootstrap, area-prompts, area-41, area-common, area-mount, area-db, area-42, area-43,
+  area-youtube, area-status, area-feed, area-channels, area-taxonomy, area-pair, area-state, area-data, area-ai,
+  area-jobs, area-organize, area-cleanup, area-themes, area-search, area-47, area-commands, area-blueprints, area-maintenance,
+  area-home, area-manage, area-history, area-pane-subscriptions, area-tab-editor, area-onboarding, area-organize-2, area-cleanup-2, area-theme, area-chat-video-card,
+  area-24, area-26, area-28, area-29, area-30, area-31,
+  area-extras, area-lists, area-extras-2, area-49, area-50, area-51, area-59, area-62, area-63, area-64, area-65, area-66, area-67,
+  area-32, area-extension,
+  area-playlists,
+]
+
+modules:
+  # ---------------------------------------------------------------- REST (plugin_api, prefix /api/plugins/<id>)
+  plugin/api/_common.py: area-common
+  plugin/api/status.py: area-status
+  plugin/api/refresh.py: area-status
+  plugin/api/feed.py: area-feed
+  plugin/api/state.py: area-feed
+  plugin/api/channels.py: area-channels
+  plugin/api/changes.py: area-channels
+  plugin/api/taxonomy.py: area-taxonomy
+  plugin/api/tabs.py: area-taxonomy
+  plugin/api/pair.py: area-pair          # POST /pair/start, GET /devices, revoke
+  plugin/api/data.py: area-data
+  plugin/api/jobs.py: area-jobs
+  plugin/api/ai.py: area-ai           # GET /ai/status
+  plugin/api/organize.py: area-organize
+  plugin/api/cleanup.py: area-cleanup
+  plugin/api/themes.py: area-themes
+  plugin/api/extras.py: area-extras
+  plugin/api/extension.py: area-extension   # GET/POST /extension/setup ("Set up the extension")
+  plugin/api/playlists.py: area-playlists    # local playlists ("Add to playlist", the Playlists tab)
+  # ---------------------------------------------------------------- RPC (plugin.<id>.<group>.<verb>, gateway only)
+  plugin/rpc/organize.py: area-organize
+  plugin/rpc/cleanup.py: area-cleanup
+  plugin/rpc/themes.py: area-themes
+  plugin/rpc/lists.py: area-lists
+  plugin/rpc/pair.py: area-pair          # pair.start
+  plugin/rpc/jobs.py: area-ai          # job.cancel
+  # ---------------------------------------------------------------- extension (own server)
+  plugin/ext/_mount.py: area-mount
+  plugin/ext/_server.py: area-mount      # GET /health and transport headers/CORS/Host/auth
+  plugin/ext/pair.py: area-pair
+  plugin/ext/auth.py: area-pair
+  plugin/ext/state.py: area-state
+  plugin/ext/sync.py: area-state
+  plugin/ext/feed.py: area-feed
+  plugin/ext/queue.py: area-cleanup
+  plugin/ext/search.py: area-search
+  # ---------------------------------------------------------------- other plugin modules (for gen_stubs)
+  plugin/_bootstrap.py: area-bootstrap
+  plugin/_id.py: area-bootstrap
+  plugin/core/types.py: area-bootstrap
+  plugin/core/dedup.py: area-bootstrap
+  plugin/core/prompts.py: area-prompts
+  plugin/core/db.py: area-db
+  plugin/core/http.py: area-db
+  plugin/adapters/storage.py: area-db
+  plugin/plugin.yaml: area-common
+  plugin/__init__.py: area-common
+  plugin/wiring.py: area-common
+  plugin/adapters/settings.py: area-common
+  plugin/routines/_header.py: area-mount
+  plugin/core/youtube.py: area-youtube
+  plugin/core/refresh.py: area-status
+  plugin/core/feed.py: area-feed
+  plugin/core/video_state.py: area-feed
+  plugin/core/channels.py: area-channels
+  plugin/core/changes.py: area-channels
+  plugin/core/taxonomy.py: area-taxonomy
+  plugin/core/tabs.py: area-taxonomy
+  plugin/core/devices.py: area-pair
+  plugin/core/sync.py: area-state
+  plugin/core/demo.py: area-data
+  plugin/core/importers.py: area-data
+  plugin/adapters/hermes_llm.py: area-jobs
+  plugin/core/ai.py: area-jobs
+  plugin/core/jobs.py: area-jobs
+  plugin/core/organize.py: area-organize
+  plugin/core/cleanup.py: area-cleanup
+  plugin/core/themes.py: area-themes
+  plugin/core/search_jobs.py: area-search
+  plugin/commands.py: area-commands
+  plugin/blueprints.py: area-blueprints
+  plugin/routines/installer.py: area-blueprints
+  plugin/core/maintenance.py: area-maintenance
+  plugin/core/extras_hn.py: area-extras
+  plugin/core/lists.py: area-lists
+
+# Desktop routes (ROUTES_AREA): key → unit that owns the page. Paths in shared/ids.ts (DESKTOP_ROUTES).
+desktop_routes:
+  home: area-home        # /<id>
+  manage: area-manage     # /<id>/manage
+  cleanup: area-cleanup-2     # /<id>/cleanup
+  extras: area-extras-2      # /<id>/extras
+
+# Desktop dialogs: short id → owning unit. Full ids in shared/ids.ts (DIALOG_IDS / dialogId()).
+dialogs:
+  onboarding: area-onboarding
+  tab-editor: area-tab-editor
+  organize: area-organize-2
+  theme: area-theme
+  list-import: area-extras-2
+  history: area-history
+  create-tab: area-history
+
+# Other Desktop contributions (ids in shared/ids.ts; not checked by --check)
+surfaces:
+  pane-subscriptions: area-pane-subscriptions
+  status-chip: area-pane-subscriptions
+  palette: area-pane-subscriptions
+  chat-video-card: area-chat-video-card

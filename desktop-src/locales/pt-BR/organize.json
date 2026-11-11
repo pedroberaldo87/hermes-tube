@@ -1,0 +1,125 @@
+{
+  "title": "Organizar com Hermes",
+  "intro": {
+    "lead": "O Hermes lê o nome e os vídeos recentes de cada canal e sugere uma pasta.",
+    "count_none": "Canais sem pasta",
+    "count_selection": "Canais selecionados",
+    "model_exact": "Usa {model}",
+    "model_last": "Últimas sugestões por {model}",
+    "model_main": "Usa o modelo do Hermes ({model}), ou o que você escolher para esta tarefa",
+    "model_unknown": "Usa o modelo configurado no Hermes",
+    "choose_model": "Escolher modelo",
+    "start": "Sugerir pastas",
+    "not_now": "Agora não",
+    "steps_label": "O que vai acontecer"
+  },
+  "steps": {
+    "read": "O Hermes lê os nomes e os vídeos recentes",
+    "suggest": "Sugere uma pasta (e tags) para cada canal",
+    "review": "Você revisa: nada muda até você aceitar"
+  },
+  "progress": {
+    "label": "Organizando",
+    "channels": "{done} de {total} canais",
+    "percent": "{percent}%",
+    "preparing": "Começando…",
+    "arriving": "Mais sugestões a caminho",
+    "accept_ready_one": "Aceitar {count} pronta",
+    "accept_ready_other": "Aceitar {count} prontas",
+    "cancel": "Cancelar",
+    "background": "Continuar em segundo plano"
+  },
+  "review": {
+    "suggestions_one": "{count} sugestão",
+    "suggestions_other": "{count} sugestões",
+    "folders_one": "{count} pasta",
+    "folders_other": "{count} pastas",
+    "new_folders_one": "{count} nova",
+    "new_folders_other": "{count} novas",
+    "by_model": "por {model}",
+    "nothing_changes": "Nada muda até você aceitar.",
+    "accept_all": "Aceitar tudo ({count})",
+    "shortcut_mac": "⌘↵ aceita tudo",
+    "shortcut_other": "Ctrl+Enter aceita tudo",
+    "done": "Concluir",
+    "close": "Fechar",
+    "suggest_again": "Sugerir de novo",
+    "list_label": "Pastas sugeridas"
+  },
+  "group": {
+    "new": "pasta nova",
+    "tags_only": "Tags novas (a pasta continua a mesma)"
+  },
+  "row": {
+    "change_folder": "Trocar a pasta de {channel}",
+    "folder_input": "Pasta de {channel}",
+    "folder_hint": "Enter confirma · Esc desiste",
+    "edited": "trocada por você",
+    "from": "hoje em {folder}",
+    "add_tags_one": "adicionar tag {tags}",
+    "add_tags_other": "adicionar tags {tags}"
+  },
+  "undo": {
+    "organized_one": "{count} canal organizado",
+    "organized_other": "{count} canais organizados",
+    "action": "Desfazer organização",
+    "undoing": "Desfazendo…"
+  },
+  "reject": {
+    "pending_one": "{count} sugestão recusada",
+    "pending_other": "{count} sugestões recusadas",
+    "undo": "Desfazer"
+  },
+  "partial": {
+    "title_one": "{count} canal ficou sem sugestão",
+    "title_other": "{count} canais ficaram sem sugestão",
+    "timeout": "O tempo acabou antes do fim.",
+    "batch": "Um lote não voltou do modelo, ou o Hermes não teve certeza.",
+    "retry": "Tentar esses de novo"
+  },
+  "uncovered": {
+    "title_one": "{count} canal sem pasta não está nestas sugestões",
+    "title_other": "{count} canais sem pasta não estão nestas sugestões",
+    "desc": "Eles chegaram depois que estas sugestões foram feitas, ou a última rodada não chegou até eles.",
+    "action": "Sugerir para eles"
+  },
+  "notice": {
+    "busy": "Já havia uma organização em andamento; você está acompanhando ela.",
+    "cancelled": "Cancelado. Nada foi aplicado; as sugestões que já chegaram ficam aqui para você revisar.",
+    "cancel_failed": "Não deu para cancelar; o trabalho termina sozinho. Nada muda até você aceitar."
+  },
+  "nothing": {
+    "title": "Todos os canais já estão em pastas",
+    "desc": "Inscrições novas sem pasta vão aparecer aqui.",
+    "action": "Ver canais"
+  },
+  "empty": {
+    "title": "Nenhuma sugestão desta vez",
+    "desc": "O Hermes não achou uma boa pasta para esses canais.",
+    "retry": "Tentar de novo"
+  },
+  "no_model": {
+    "title": "Escolha um modelo para o Hermes organizar",
+    "desc": "O Hermes precisa de um modelo de IA para esta tarefa. Escolha um e entre na conta em Ajustes → Modelos e depois tente de novo.",
+    "action": "Escolher modelo",
+    "retry": "Tentar de novo"
+  },
+  "provider_unavailable": {
+    "title": "O Hermes não conseguiu acessar seu modelo de IA",
+    "action": "Abrir ajustes do modelo",
+    "retry": "Tentar de novo"
+  },
+  "error": {
+    "title": "Não deu para sugerir pastas",
+    "accept": "Não deu para aplicar",
+    "reject": "Não deu para recusar",
+    "undo": "Não deu para desfazer",
+    "retry": "Tentar de novo"
+  },
+  "ai": {
+    "no_model_title": "Nenhum modelo de IA disponível",
+    "no_model_desc": "O Hermes precisa de um modelo de IA para sugerir pastas. Escolha um e entre na conta em Ajustes → Modelos antes.",
+    "choose_model": "Escolher modelo",
+    "provider_unavailable_title": "O Hermes não conseguiu acessar seu modelo de IA"
+  }
+}

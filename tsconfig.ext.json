@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["chrome"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "paths": {
+      "react": ["./node_modules/preact/compat/"],
+      "react-dom": ["./node_modules/preact/compat/"],
+      "react/jsx-runtime": ["./node_modules/preact/jsx-runtime"],
+      "@shared/*": ["./shared/*"]
+    }
+  },
+  "include": ["extension/src/**/*.ts", "extension/src/**/*.tsx", "extension/test/**/*.ts", "extension/test/**/*.tsx", "shared/**/*.ts"],
+  "exclude": ["node_modules", "extension/dist"]
+}

@@ -1,0 +1,160 @@
+<!doctype html>
+<!-- SINTÉTICO — estrutura DOM que o MyTube v0.9.0 procura para ler o estado de inscrição e cancelar.
+     Ver tests/fixtures/README.md. A página real com botão "Inscrito"/"Subscribed" exige login e NÃO foi
+     baixada; sem login o YouTube serve um buttonRenderer "Subscribe" que abre o modal "Sign in to subscribe"
+     (ver youtube/channel/handle.Fireship.html).
+
+     Seletores reproduzidos (ref/mytube/src):
+       content/unsubscribe.ts:103-106  container  'ytd-subscribe-button-renderer, yt-subscribe-button-view-model'
+       content/unsubscribe.ts:112      botão      container.querySelector('button')
+       content/unsubscribe.ts:118-122  inscrito?  button[subscribed] | aria-label contém "unsubscribe"/"inscrit"
+                                                  | container[subscribed] | container [subscribed]
+       content/unsubscribe.ts:131-134  diálogo    'tp-yt-paper-dialog:not([aria-hidden="true"]), yt-confirm-dialog-renderer,
+                                                   ytd-popup-container tp-yt-paper-dialog'
+       content/unsubscribe.ts:137-139  confirmar  '#confirm-button button, #confirm-button yt-button-renderer button,
+                                                   [slot="primaryAction"] button'
+       content/unsubscribe.ts:149-163  menu       'tp-yt-paper-item, ytd-menu-service-item-renderer,
+                                                   tp-yt-paper-listbox tp-yt-paper-item' com texto "unsubscribe" /
+                                                   "cancelar inscri" / "desinscrever"
+       content/unsubscribe.ts:165-168  confirmar  'tp-yt-paper-dialog:not([aria-hidden="true"]) #confirm-button button'
+       shared/selectors.ts:9           channelSubscribeButton '#subscribe-button, ytd-subscribe-button-renderer'
+       content/injector.ts:588-593     âncora     closest('#inner-header-container' | '#channel-header-container' |
+                                                   '.page-header-view-model-wiz__page-header-headline')
+
+     Uso: cada estado fica numa <section data-fixture-state="…">. O MyTube consulta `document`; o teste
+     deve escopar a consulta à seção (section.querySelector(...)) ou copiar a seção para um documento novo.
+       not-subscribed           layout clássico, não inscrito → executor deve pular (unsubscribe.ts:124-127)
+       subscribed-classic       ytd-subscribe-button-renderer[subscribed] + button[subscribed]
+       subscribed-view-model    layout novo (yt-subscribe-button-view-model, aria-label "Unsubscribe from …")
+       subscribed-pt-br         layout novo em PT-BR (aria-label com "inscrit")
+       menu-open                menu "Subscribed ▾" aberto (caminho via menu, unsubscribe.ts:149-163)
+       confirm-dialog           diálogo de confirmação aberto (popup container)
+       confirm-dialog-hidden    diálogo presente mas aria-hidden="true" (estado antes do clique)
+-->
+<html lang="en"><head><meta charset="utf-8"><title>Fireship - YouTube</title>
+<link rel="canonical" href="https://www.youtube.com/@Fireship">
+</head><body>
+<ytd-app><ytd-page-manager id="page-manager"><ytd-browse page-subtype="channels">
+
+<section data-fixture-state="not-subscribed">
+  <div id="channel-header-container">
+    <div id="inner-header-container">
+      <ytd-channel-name id="channel-name"><yt-formatted-string id="text">Fireship</yt-formatted-string></ytd-channel-name>
+      <div id="subscribe-button">
+        <ytd-subscribe-button-renderer class="style-scope ytd-c4-tabbed-header-renderer">
+          <yt-button-shape><button class="yt-spec-button-shape-next yt-spec-button-shape-next--filled" aria-label="Subscribe to Fireship.">
+            <div class="yt-spec-button-shape-next__button-text-content"><span>Subscribe</span></div>
+          </button></yt-button-shape>
+        </ytd-subscribe-button-renderer>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-fixture-state="subscribed-classic">
+  <div id="channel-header-container">
+    <div id="inner-header-container">
+      <ytd-channel-name id="channel-name"><yt-formatted-string id="text">Fireship</yt-formatted-string></ytd-channel-name>
+      <div id="subscribe-button">
+        <ytd-subscribe-button-renderer class="style-scope ytd-c4-tabbed-header-renderer" subscribed>
+          <yt-button-shape><button class="yt-spec-button-shape-next yt-spec-button-shape-next--tonal" subscribed aria-label="Subscribed">
+            <div class="yt-spec-button-shape-next__button-text-content"><span>Subscribed</span></div>
+          </button></yt-button-shape>
+        </ytd-subscribe-button-renderer>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-fixture-state="subscribed-view-model">
+  <yt-page-header-renderer>
+    <div class="page-header-view-model-wiz__page-header-headline">
+      <h1 class="dynamic-text-view-model-wiz__h1"><span>Fireship</span></h1>
+      <yt-flexible-actions-view-model>
+        <yt-subscribe-button-view-model>
+          <div class="yt-subscribe-button-view-model-wiz__container">
+            <button class="yt-spec-button-shape-next yt-spec-button-shape-next--tonal" aria-label="Unsubscribe from Fireship">
+              <div class="yt-spec-button-shape-next__button-text-content"><span>Subscribed</span></div>
+            </button>
+          </div>
+        </yt-subscribe-button-view-model>
+      </yt-flexible-actions-view-model>
+    </div>
+  </yt-page-header-renderer>
+</section>
+
+<section data-fixture-state="subscribed-pt-br">
+  <yt-page-header-renderer>
+    <div class="page-header-view-model-wiz__page-header-headline">
+      <h1 class="dynamic-text-view-model-wiz__h1"><span>Manual do Mundo</span></h1>
+      <yt-flexible-actions-view-model>
+        <yt-subscribe-button-view-model>
+          <div class="yt-subscribe-button-view-model-wiz__container">
+            <button class="yt-spec-button-shape-next yt-spec-button-shape-next--tonal" aria-label="Cancelar inscrição em Manual do Mundo. Você está inscrito.">
+              <div class="yt-spec-button-shape-next__button-text-content"><span>Inscrito</span></div>
+            </button>
+          </div>
+        </yt-subscribe-button-view-model>
+      </yt-flexible-actions-view-model>
+    </div>
+  </yt-page-header-renderer>
+</section>
+
+<section data-fixture-state="menu-open">
+  <ytd-popup-container>
+    <tp-yt-iron-dropdown>
+      <ytd-menu-popup-renderer>
+        <tp-yt-paper-listbox id="items" role="menu">
+          <ytd-menu-service-item-renderer role="menuitem"><tp-yt-paper-item role="option">
+            <yt-formatted-string>All</yt-formatted-string></tp-yt-paper-item></ytd-menu-service-item-renderer>
+          <ytd-menu-service-item-renderer role="menuitem"><tp-yt-paper-item role="option">
+            <yt-formatted-string>Personalized</yt-formatted-string></tp-yt-paper-item></ytd-menu-service-item-renderer>
+          <ytd-menu-service-item-renderer role="menuitem"><tp-yt-paper-item role="option">
+            <yt-formatted-string>None</yt-formatted-string></tp-yt-paper-item></ytd-menu-service-item-renderer>
+          <ytd-menu-service-item-renderer role="menuitem"><tp-yt-paper-item role="option">
+            <yt-formatted-string>Unsubscribe</yt-formatted-string></tp-yt-paper-item></ytd-menu-service-item-renderer>
+        </tp-yt-paper-listbox>
+      </ytd-menu-popup-renderer>
+    </tp-yt-iron-dropdown>
+  </ytd-popup-container>
+</section>
+
+<section data-fixture-state="confirm-dialog">
+  <ytd-popup-container>
+    <tp-yt-paper-dialog role="dialog" aria-modal="true">
+      <yt-confirm-dialog-renderer>
+        <div id="main">
+          <yt-formatted-string id="title"></yt-formatted-string>
+          <yt-formatted-string id="text">Unsubscribe from Fireship?</yt-formatted-string>
+          <div id="buttons">
+            <yt-button-renderer id="cancel-button"><yt-button-shape><button aria-label="Cancel">
+              <span>Cancel</span></button></yt-button-shape></yt-button-renderer>
+            <yt-button-renderer id="confirm-button"><yt-button-shape><button aria-label="Unsubscribe">
+              <span>Unsubscribe</span></button></yt-button-shape></yt-button-renderer>
+          </div>
+        </div>
+      </yt-confirm-dialog-renderer>
+    </tp-yt-paper-dialog>
+  </ytd-popup-container>
+</section>
+
+<section data-fixture-state="confirm-dialog-hidden">
+  <ytd-popup-container>
+    <tp-yt-paper-dialog role="dialog" aria-hidden="true" style="display: none;">
+      <yt-confirm-dialog-renderer>
+        <div id="main">
+          <yt-formatted-string id="text">Unsubscribe from Fireship?</yt-formatted-string>
+          <div id="buttons">
+            <yt-button-renderer id="cancel-button"><yt-button-shape><button aria-label="Cancel">
+              <span>Cancel</span></button></yt-button-shape></yt-button-renderer>
+            <yt-button-renderer id="confirm-button"><yt-button-shape><button aria-label="Unsubscribe">
+              <span>Unsubscribe</span></button></yt-button-shape></yt-button-renderer>
+          </div>
+        </div>
+      </yt-confirm-dialog-renderer>
+    </tp-yt-paper-dialog>
+  </ytd-popup-container>
+</section>
+
+</ytd-browse></ytd-page-manager></ytd-app>
+</body></html>

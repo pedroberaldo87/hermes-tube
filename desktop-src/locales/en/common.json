@@ -1,0 +1,266 @@
+{
+  "plugin_name": "HermesTube",
+  "loading": "Loading…",
+  "empty": "Nothing here yet",
+  "retry": "Try again",
+  "close": "Close",
+  "error_title": "Something went wrong",
+  "open_desktop_backend": "This needs Hermes' AI. Open it from the Hermes Desktop app with its local backend (or use /tube in the chat).",
+  "reconnect_open_hermes": "Open Hermes to reconnect the browser extension.",
+  "already_executed": "Already executed — use Resubscribe in Cleanup → Ex-subscriptions.",
+  "no_model": "No AI model is available. Pick one and sign in under Settings → Models.",
+  "provider_unavailable": "Hermes couldn't reach your AI model ({route}). Sign in to it again, or pick another model for “YouTube curator” in Settings → Model → Auxiliary models.",
+  "provider_unavailable_plain": "Hermes couldn't reach your AI model. Sign in to it again, or pick another model for “YouTube curator” in Settings → Model → Auxiliary models.",
+  "nav": {
+    "home": "Subscriptions",
+    "manage": "Manage subscriptions",
+    "cleanup": "Cleanup",
+    "extras": "Extras"
+  },
+  "routes": {
+    "home": "Subscriptions",
+    "manage": "Manage",
+    "cleanup": "Cleanup",
+    "extras": "Extras",
+    "watch": "Watch"
+  },
+  "pane": {
+    "title": "Subscriptions",
+    "open_page": "Open HermesTube",
+    "open_page_short": "Open",
+    "open_page_tip": "Open HermesTube in the center"
+  },
+  "chip": {
+    "new": "▶ {count} new",
+    "title": "Open Subscriptions",
+    "refreshing": "refreshing…"
+  },
+  "palette": {
+    "open-home": "Subscriptions: open",
+    "organize": "Subscriptions: organize with Hermes",
+    "cleanup": "Subscriptions: cleanup",
+    "new-theme-tab": "Subscriptions: new topic tab",
+    "refresh-now": "Subscriptions: refresh now",
+    "open-extras": "Subscriptions: extras"
+  },
+  "refresh": {
+    "started": "Refreshing subscriptions…",
+    "running": "A refresh is already running",
+    "skipped": "Subscriptions are up to date"
+  },
+  "dialogs": {
+    "onboarding": "Welcome",
+    "tab-editor": "Tab",
+    "organize": "Organize with Hermes",
+    "theme": "New topic tab",
+    "list-import": "Import a list",
+    "history": "History",
+    "create-tab": "Create a tab from the selection"
+  },
+  "placeholder": {
+    "title": "Coming soon",
+    "description": "This screen is still being built."
+  },
+  "video": {
+    "new": "New",
+    "open": "Open on YouTube",
+    "short": "Short",
+    "live": "Live",
+    "premiere": "Premiere",
+    "kind": {
+      "video": "Video"
+    },
+    "duration": {
+      "h": "{count} h",
+      "m": "{count} min",
+      "s": "{count} s"
+    },
+    "views": "{count} views",
+    "why": {
+      "folder": "Folder",
+      "tag": "Tag",
+      "channel": "Channel",
+      "theme": "Topic",
+      "hn": "Hacker News",
+      "list": "List"
+    },
+    "badge": {
+      "hn": "HN recommends"
+    }
+  },
+  "errors": {
+    "not_found": "Not found.",
+    "conflict": "That conflicts with something that already exists.",
+    "invalid": "Some of the information is invalid.",
+    "unauthorized": "Not authorized.",
+    "undo_refused": "This change can't be undone.",
+    "approval_refused": "This approval was refused.",
+    "timeout": "It took too long. Try again.",
+    "busy": "Hermes is busy with another task. Try again in a moment.",
+    "llm_unavailable": "No AI model is available. Pick one and sign in under Settings → Models.",
+    "llm_invalid": "The AI answered in an unexpected format. Try again.",
+    "youtube_error": "YouTube didn't answer as expected.",
+    "http_error": "A network request failed.",
+    "origin_forbidden": "This origin is not allowed.",
+    "origin_required": "The request is missing its origin.",
+    "origin_mismatch": "The request came from a different origin.",
+    "host_forbidden": "This host is not allowed.",
+    "plugin_disabled": "The plugin is off in this profile. Turn it on in Capabilities → Plugins.",
+    "no_active_code": "There is no active pairing code.",
+    "invalid_code": "Wrong pairing code.",
+    "expired": "The pairing code expired.",
+    "used": "The pairing code was already used.",
+    "locked": "Too many attempts. Generate a new code.",
+    "ext_endpoint_down": "The extension endpoint is down. Open Hermes to reconnect.",
+    "internal": "Unexpected error."
+  },
+  "kit": {
+    "shortcut_label": "{label} ({key})",
+    "actions": {
+      "label": "Quick actions",
+      "watched": "Watched",
+      "later": "Later",
+      "archive": "Archive",
+      "up": "Like",
+      "down": "Not for me",
+      "open": "Open",
+      "watched_do": "Mark as watched",
+      "watched_undo": "Undo watched",
+      "later_do": "Save to Watch later",
+      "later_undo": "Remove from Watch later",
+      "archive_do": "Archive",
+      "archive_undo": "Unarchive",
+      "up_do": "Like",
+      "up_undo": "Remove like",
+      "down_do": "Not for me",
+      "down_undo": "Undo not for me"
+    },
+    "density": {
+      "label": "Density",
+      "comfortable": "Comfortable",
+      "compact": "Compact",
+      "list": "List"
+    },
+    "tabs": {
+      "label": "Tabs",
+      "add": "New tab",
+      "new_count": "{count} new",
+      "menu": "Options for the {name} tab"
+    },
+    "filter": {
+      "search": "Search",
+      "clear": "Clear filters",
+      "results": "{count} results"
+    },
+    "thumb": {
+      "watched": "Watched",
+      "new": "New",
+      "progress": "Watched {percent}%",
+      "unavailable": "Thumbnail unavailable"
+    },
+    "why": {
+      "label": "Why it's here"
+    },
+    "channel": {
+      "favorite": "Favorite",
+      "no_folder": "No folder",
+      "no_videos": "No videos yet",
+      "select": "Select {name}",
+      "columns": {
+        "channel": "Channel",
+        "folder": "Folder",
+        "tags": "Tags",
+        "new": "New",
+        "last": "Last video",
+        "actions": "Actions"
+      }
+    },
+    "tree": {
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "drop": "Drop here to move",
+      "new_count": "{count} new"
+    },
+    "steps": {
+      "waiting": "Waiting",
+      "running": "In progress",
+      "done": "Done",
+      "failed": "Failed"
+    },
+    "suggest": {
+      "accept": "Accept",
+      "reject": "Reject",
+      "accept_all": "Accept group",
+      "reject_all": "Reject group",
+      "by_model": "by {model}",
+      "confidence": "{percent}% sure",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "count": "{count} suggestions",
+      "count_one": "{count} suggestion"
+    },
+    "approval": {
+      "what": "What will happen",
+      "cancel": "Cancel",
+      "not_now": "Not now"
+    },
+    "pairing": {
+      "label": "Pairing code",
+      "expires": "Expires in {time}",
+      "expired": "Code expired",
+      "regenerate": "New code",
+      "copy": "Copy code",
+      "steps_label": "How to pair",
+      "step_open": "Open the extension",
+      "step_open_hint": "Click its icon in your browser's toolbar.",
+      "step_code": "Type this code",
+      "step_done": "Done",
+      "waiting": "Waiting for the extension…",
+      "paired": "Connected. Bringing in your subscriptions.",
+      "done_hint": "Your subscriptions show up here as soon as it connects."
+    },
+    "banner": {
+      "dismiss": "Dismiss"
+    },
+    "chip": {
+      "remove": "Remove {name}"
+    },
+    "path": {
+      "recommended": "Recommended"
+    },
+    "welcome": {
+      "title": "Welcome",
+      "tagline": "Your subscriptions. Your way."
+    },
+    "dialog": {
+      "more_above": "More above",
+      "more_below": "More below"
+    }
+  },
+  "sections": {
+    "label": "HermesTube sections",
+    "menu": "Section: {section}",
+    "back": "Back",
+    "close_video": "Close video"
+  },
+  "playlists": {
+    "add": "Add to playlist",
+    "count": "{count} videos",
+    "count_one": "1 video",
+    "saved": "Saved to {name}",
+    "removed": "Removed from {name}",
+    "failed": "Couldn't save the playlist: {error}",
+    "picker": {
+      "title": "Add to playlist",
+      "description": "Your playlists stay in HermesTube, on this computer. Nothing changes on YouTube.",
+      "loading": "Loading your playlists…",
+      "empty": "No playlists yet. Create the first one below.",
+      "new": "New playlist…",
+      "name_label": "Playlist name",
+      "name_placeholder": "e.g. Physics",
+      "create": "Create",
+      "cancel": "Cancel",
+      "done": "Done"
+    }
+  }
+}

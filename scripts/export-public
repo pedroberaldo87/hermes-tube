@@ -1,0 +1,378 @@
+#!/usr/bin/env python3
+"""Exports the public cut of the repository to a new folder (publishes nothing).
+
+    scripts/export-public [--no-third-party-pages] <destination>
+
+- Copies only files tracked in HEAD (`git ls-tree -r HEAD`), with the committed content (not the
+  working tree's) and the executable bit; never an untracked file.
+- Only what is in the include list below; `EXCLUDE` always wins, even inside an included folder.
+- Writes the cut's own `.gitignore`. Does not initialize git.
+- Deterministic: two runs on the same HEAD give identical trees (content, mode and date, which is
+  the commit's).
+- `<destination>` must be outside the repository and either not exist or be empty.
+- `--no-third-party-pages` leaves out the real third-party pages saved as fixtures (YouTube,
+  Hacker News, the HackerTube sample) and writes `tests/fixtures/THIRD_PARTY_OMITTED.txt` with the
+  list; with that file present, the tests that depend on them are skipped with a reason
+  (tests/conftest.py).
+- Swaps the build labels (the id of the unit of work that wrote a file: `x-unit` in the contract,
+  `contract/owners.yaml`, the owners in `BuildSpec`/`StubFile`, a few tests and fixture notes) for
+  neutral area names (`area-status`, `area-tab-editor`…), the same in every file, so the contract
+  checks and the tests that filter by owner keep working. Only the files in `LABEL_FILES`, only
+  where each one keeps its labels; the repository itself keeps the labels.
+- At the end runs `scripts/public_scan.py <destination>`; exits non-zero on any finding.
+
+Standard library only.
+"""
+
+from __future__ import annotations
+
+import argparse
+import fnmatch
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+
+INCLUDE_FILES = (
+    "LICENSE",
+    "README.md",
+    "README.pt-BR.md",
+    "THIRD_PARTY_NOTICES.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md",
+    "assets/" + "hermes" + "-tube.jpg",  # the catalog cover
+    "package.json",
+    "package-lock.json",
+    "pyproject.toml",
+    "vitest.config.ts",
+    "Makefile",
+    "scripts/check",
+    "scripts/check_id_literal.py",
+    "scripts/gen_types.py",
+    "scripts/gen_stubs.py",
+    "scripts/gen-sdk-dts.mjs",
+    "scripts/export-public",
+    "scripts/public_scan.py",
+    "scripts/docs-screenshots.mjs",
+    "scripts/docs-sidebar.config.ts",
+    "scripts/docs-sidebar.spec.ts",
+)
+INCLUDE_GLOBS = ("tsconfig*.json",)  # top level only
+INCLUDE_DIRS = (
+    "plugin/",
+    "desktop-src/",
+    "extension/",
+    "shared/",
+    "contract/",
+    "tests/",
+    "docs/user/",
+    "docs/screenshots/",
+    "docs/sample-data/",  # invented channels, videos and thumbnails the screenshot generator reads
+)
+# always out (even if a rule above comes to cover it)
+EXCLUDE = (
+    "units/",
+    "handoff/",
+    "spikes/",
+    "forms/",
+    "ref/",
+    "tools/",
+    "scripts/dev/",
+    "docs/design/shots/",
+    "docs/catalog/",
+)
+
+# real third-party pages and data among the fixtures (left out with --no-third-party-pages)
+THIRD_PARTY = (
+    "tests/fixtures/youtube/",
+    "tests/fixtures/lists/",
+    "tests/fixtures/hackertube/",
+    "tests/fixtures/mytube/youtube-channel-videos.html",
+)
+SYNTHETIC_MARK = ".synthetic."  # hand-written or script-generated fixture: always kept
+OMITTED_FILE = "tests/fixtures/THIRD_PARTY_OMITTED.txt"
+
+GITIGNORE = """\
+# environment
+/.venv/
+node_modules/
+.env
+.envrc
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+# temporary builds and reports
+/.tmp/
+/build-tmp/
+extension/dist/
+extension/e2e/test-results/
+extension/e2e/playwright-report/
+coverage/
+
+# local data
+*.db
+*.db-wal
+*.db-shm
+
+# coding-agent artifacts and local notes
+.unit-env
+.claude/
+.cursor/
+.aider*
+.codex/
+.hermes/
+CLAUDE.local.md
+AGENTS.local.md
+
+# OS
+.DS_Store
+
+# private terms for the public-cut scanner (account ids, machine names): never tracked
+/scripts/public_scan.private
+"""
+
+
+# Build labels: where they live in the cut and how each file holds them.
+#   "tokens" — every label in the file (bookkeeping files and notes);
+#   "x-unit" — only on lines that mention `x-unit` (the contract, tests that filter by owner);
+#   "quoted" — only a label that is a whole string literal ("…" or '…').
+OWNERS_FILE = "contract/owners.yaml"
+LABEL_FILES = {
+    OWNERS_FILE: "tokens",
+    "contract/api.yaml": "x-unit",
+    "contract/rpc.yaml": "x-unit",
+    "plugin/core/types.py": "quoted",
+    "scripts/gen_stubs.py": "tokens",
+    "tests/test_sync.py": "x-unit",
+    "tests/test_taxonomy.py": "x-unit",
+    "tests/test_tools.py": "tokens",
+    "tests/test_f02.py": "tokens",
+    "tests/test_public_docs.py": "tokens",
+    "tests/test_youtube.py": "tokens",
+    "tests/fixtures/README.md": "tokens",
+    "tests/fixtures/verify_fixtures.py": "tokens",
+    "tests/fixtures/youtube/channel_videos.legacy.synthetic.html": "tokens",
+}
+LABEL_SHAPE = re.compile(r"[A-Z][A-Z0-9]*[0-9][A-Za-z0-9]*")
+"""A build label: capitals, then digits, then letters or digits. Area names are lower case, so
+the cut's own export finds no label to swap."""
+LABEL_DIRS = ("units/", "handoff/")
+"""Briefs and handoffs are named after their unit: the full list of labels (not exported)."""
+_OWNER_LINE = re.compile(r"^\s+([^\s:#][^:#]*?):\s+([A-Za-z0-9_-]+)\s*(?:#.*)?$")
+
+
+def _area_slug(key: str) -> str:
+    name = key.rstrip("/").rsplit("/", 1)[-1].split(".", 1)[0]
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-") or "x"
+
+
+def label_map(paths: list[str], owners_text: str | None) -> dict[str, str]:
+    """Build label → area name. The area comes from the first thing the label owns in
+    ``contract/owners.yaml`` (module → file name, route/dialog → its key); labels that own
+    nothing there get a numbered area. Without that file there is nothing to swap."""
+    if owners_text is None:
+        return {}
+    labels: set[str] = set()
+    m = re.search(r"^units:\s*\[(.*?)\]", owners_text, re.MULTILINE | re.DOTALL)
+    if m:
+        labels.update(u.strip() for u in m.group(1).replace("\n", " ").split(","))
+    for path in paths:
+        for d in LABEL_DIRS:
+            if path.startswith(d) and "/" not in path[len(d) :]:
+                labels.add(re.sub(r"-r\d+$", "", path[len(d) :].split(".", 1)[0]))
+    labels = {u for u in labels if LABEL_SHAPE.fullmatch(u)}
+    names: dict[str, str] = {}
+    taken: set[str] = set()
+
+    def give(label: str, base: str) -> None:
+        name, n = f"area-{base}", 2
+        while name in taken:
+            name, n = f"area-{base}-{n}", n + 1
+        names[label] = name
+        taken.add(name)
+
+    for line in owners_text.splitlines():
+        hit = _OWNER_LINE.match(line)
+        if hit and hit.group(2) in labels and hit.group(2) not in names:
+            give(hit.group(2), _area_slug(hit.group(1).strip()))
+    for i, label in enumerate(sorted(labels - set(names)), start=1):
+        give(label, str(i))
+    return names
+
+
+def swap_labels(text: str, mode: str, names: dict[str, str]) -> str:
+    if not names:
+        return text
+    alt = "|".join(map(re.escape, sorted(names, key=len, reverse=True)))
+    if mode == "quoted":
+        rx = re.compile(rf"""(["'])({alt})\1""")
+        return rx.sub(lambda m: m.group(1) + names[m.group(2)] + m.group(1), text)
+    rx = re.compile(rf"(?<![A-Za-z0-9_-])({alt})(?![A-Za-z0-9_])")
+    if mode == "x-unit":
+        return "".join(
+            rx.sub(lambda m: names[m.group(1)], line) if "x-unit" in line else line
+            for line in text.splitlines(keepends=True)
+        )
+    return rx.sub(lambda m: names[m.group(1)], text)
+
+
+def is_included(path: str) -> bool:
+    if any(path.startswith(p) for p in EXCLUDE):
+        return False
+    if path in INCLUDE_FILES:
+        return True
+    if "/" not in path and any(fnmatch.fnmatchcase(path, g) for g in INCLUDE_GLOBS):
+        return True
+    return any(path.startswith(d) for d in INCLUDE_DIRS)
+
+
+def is_third_party(path: str) -> bool:
+    if SYNTHETIC_MARK in path.rsplit("/", 1)[-1]:
+        return False
+    return any(path == p or (p.endswith("/") and path.startswith(p)) for p in THIRD_PARTY)
+
+
+def _git(repo: Path, *args: str) -> bytes:
+    return subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True).stdout
+
+
+def head_entries(repo: Path) -> list[tuple[str, str, str]]:
+    """(mode, sha, path) of every file in HEAD, in path order."""
+    out = _git(repo, "ls-tree", "-r", "-z", "--full-tree", "HEAD")
+    entries = []
+    for rec in out.split(b"\0"):
+        if not rec:
+            continue
+        meta, path = rec.split(b"\t", 1)
+        mode, kind, sha = meta.decode().split()
+        if kind != "blob":
+            continue  # submodule: left out
+        entries.append((mode, sha, path.decode("utf-8")))
+    return sorted(entries, key=lambda e: e[2])
+
+
+def read_blobs(repo: Path, shas: list[str]) -> dict[str, bytes]:
+    if not shas:
+        return {}
+    proc = subprocess.run(
+        ["git", "-C", str(repo), "cat-file", "--batch"],
+        input=("\n".join(shas) + "\n").encode(),
+        check=True,
+        capture_output=True,
+    )
+    data, out, pos = proc.stdout, {}, 0
+    for sha in shas:
+        nl = data.index(b"\n", pos)
+        header = data[pos:nl].split()
+        size = int(header[2])
+        out[sha] = data[nl + 1 : nl + 1 + size]
+        pos = nl + 1 + size + 1
+    return out
+
+
+def check_dest(repo: Path, dest: Path) -> str | None:
+    d = dest.resolve()
+    r = repo.resolve()
+    if d == r or r in d.parents:
+        return f"the destination must be outside the repository: {d}"
+    if d.exists():
+        if not d.is_dir():
+            return f"the destination exists and is not a folder: {d}"
+        if any(d.iterdir()):
+            return f"the destination exists and is not empty (needs a new or empty folder): {d}"
+    return None
+
+
+def export(repo: Path, dest: Path, third_party: bool) -> int:
+    err = check_dest(repo, dest)
+    if err:
+        print(f"export-public: {err}", file=sys.stderr)
+        return 2
+    commit_time = int(_git(repo, "log", "-1", "--format=%ct", "HEAD").decode().strip())
+    head = _git(repo, "rev-parse", "HEAD").decode().strip()
+
+    chosen, omitted = [], []
+    entries = head_entries(repo)
+    for mode, sha, path in entries:
+        if path == ".gitignore" or not is_included(path):
+            continue
+        if not third_party and is_third_party(path):
+            omitted.append(path)
+            continue
+        chosen.append((mode, sha, path))
+    blobs = read_blobs(repo, sorted({sha for _m, sha, _p in chosen}))
+    owners_sha = next((sha for _m, sha, p in chosen if p == OWNERS_FILE), None)
+    names = label_map(
+        [p for _m, _s, p in entries],
+        blobs[owners_sha].decode("utf-8") if owners_sha else None,
+    )
+
+    files: list[tuple[str, bytes, int]] = []
+    for mode, sha, path in chosen:
+        if mode == "120000":
+            print(f"export-public: symbolic link in HEAD is not exported: {path}", file=sys.stderr)
+            return 2
+        data = blobs[sha]
+        if path in LABEL_FILES and names:
+            data = swap_labels(data.decode("utf-8"), LABEL_FILES[path], names).encode("utf-8")
+        files.append((path, data, 0o755 if mode == "100755" else 0o644))
+    files.append((".gitignore", GITIGNORE.encode(), 0o644))
+    if omitted:
+        note = (
+            "Real third-party pages left out of this cut (--no-third-party-pages).\n"
+            "The tests that depend on them are skipped with a reason (tests/conftest.py).\n\n"
+            + "".join(p + "\n" for p in omitted)
+        )
+        files.append((OMITTED_FILE, note.encode(), 0o644))
+
+    dest.mkdir(parents=True, exist_ok=True)
+    dirs: set[Path] = set()
+    for path, data, perm in sorted(files):
+        target = dest / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        dirs.update(p for p in target.relative_to(dest).parents if str(p) != ".")
+        target.write_bytes(data)
+        os.chmod(target, perm)
+        os.utime(target, (commit_time, commit_time))
+    for d in sorted(dirs, key=lambda p: len(p.parts), reverse=True):
+        os.utime(dest / d, (commit_time, commit_time))
+
+    total = sum(len(d) for _p, d, _m in files)
+    print(
+        f"export-public: {len(files)} file(s), {total} bytes, HEAD {head[:12]}"
+        + (f"; {len(omitted)} third-party page(s) left out" if omitted else ""),
+        flush=True,
+    )
+    scanner = repo / "scripts" / "public_scan.py"
+    rc = subprocess.run([sys.executable, "-I", str(scanner), str(dest)]).returncode
+    if rc != 0:
+        print("export-public: the scanner found something; the cut is NOT ready", file=sys.stderr)
+        return 1
+    return 0
+
+
+def main(argv: list[str]) -> int:
+    ap = argparse.ArgumentParser(prog="export-public", description=__doc__.split("\n")[0])
+    ap.add_argument("dest", help="new folder, outside the repository")
+    ap.add_argument(
+        "--no-third-party-pages",
+        action="store_true",
+        help="leave out the real third-party pages (YouTube, Hacker News, HackerTube)",
+    )
+    ap.add_argument("--repo", default=str(ROOT), help=argparse.SUPPRESS)
+    a = ap.parse_args(argv)
+    return export(Path(a.repo), Path(a.dest), third_party=not a.no_third_party_pages)
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

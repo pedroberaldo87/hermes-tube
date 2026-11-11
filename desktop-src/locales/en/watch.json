@@ -1,0 +1,86 @@
+{
+  "tab": {
+    "title": "Watching"
+  },
+  "label": "Watching: {title}",
+  "player": {
+    "label": "Hermes player",
+    "note": "Some channels only allow playing on YouTube. If the player says so, use Open on YouTube.",
+    "larger": "Larger player",
+    "larger_hint": "Scale the player up (less sharp). The app gives it up to 640 × 360.",
+    "larger_off_hint": "Back to the player at its own size (sharper)"
+  },
+  "tip": {
+    "always_allow": "Tip: click the ▾ next to \"Load YouTube\" and pick \"Always allow YouTube\". From then on videos open straight in the player.",
+    "dismiss": "Got it"
+  },
+  "meta": {
+    "published": "Published {date}",
+    "views": "{count} views",
+    "duration": "Duration {duration}"
+  },
+  "description": {
+    "label": "Description",
+    "more": "Show more",
+    "less": "Show less"
+  },
+  "actions": {
+    "label": "Video actions",
+    "mark_watched": "Mark as watched",
+    "watched": "Watched",
+    "open": "Open on YouTube"
+  },
+  "next": {
+    "title": "Up next",
+    "from": "Up next · {source}",
+    "label": "Queue: up next in this list",
+    "list": "Queue",
+    "previous": "Previous",
+    "next": "Next",
+    "position": "{index} of {total}",
+    "end": "That's the end of the queue.",
+    "keys": "N / P to move · the next video doesn't start by itself",
+    "edit_keys": "Drag by the handle or use Alt+↑ / Alt+↓ to reorder · Delete removes from the queue",
+    "now_playing": "Now playing",
+    "remove": "Remove from queue",
+    "play_next": "Play next",
+    "drag": "Drag to reorder",
+    "removed": "Removed from the queue: {title}",
+    "restored": "Back in the queue: {title}",
+    "moved": "{title}: position {index} of {total}",
+    "queued_next": "{title} plays next",
+    "empty": "The queue is empty.",
+    "empty_hint": "The video stays here. Open another one from Subscriptions to start a new queue."
+  },
+  "state": {
+    "loading": "Loading the video details…",
+    "unknown_title": "Not in your library",
+    "unknown_desc": "We don't have the details of this video. It can still play here, or you can open it on YouTube.",
+    "error": "Couldn't load the details: {error}",
+    "retry": "Try again",
+    "empty_title": "Nothing playing",
+    "empty_desc": "Click a video in Subscriptions to watch it here.",
+    "empty_action": "Go to Subscriptions"
+  },
+  "open_mode": {
+    "label": "Open videos",
+    "hermes": "In Hermes",
+    "youtube": "On YouTube",
+    "hermes_hint": "Videos play here in HermesTube, with the Hermes player",
+    "youtube_hint": "Videos open on YouTube, in your browser"
+  },
+  "toast": {
+    "watched": "Marked as watched",
+    "unwatched": "Marked as not watched",
+    "later": "Saved to Watch later",
+    "unlater": "Removed from Watch later",
+    "archived": "Archived",
+    "unarchived": "Back in the list",
+    "up": "Liked",
+    "down": "Marked as not for me",
+    "reaction_cleared": "Reaction removed",
+    "undo": "Undo",
+    "failed": "Couldn't save that: {error}",
+    "undo_failed": "Couldn't undo: {error}"
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "title": "Faxina",
+  "subtitle": {
+    "last_scan": "Última varredura {when}",
+    "by_model": "motivos por {model}",
+    "by_rule": "motivos por regra",
+    "never": "Ainda não varrida",
+    "scanning": "Procurando nas suas inscrições…",
+    "error": "Não deu para ler a última varredura"
+  },
+  "actions": {
+    "scan": "Procurar de novo",
+    "scan_first": "Procurar agora",
+    "home": "Ir para Inscrições",
+    "connect": "Conectar a extensão"
+  },
+  "groups": {
+    "label": "Canais: {group}",
+    "loading": "Carregando a faxina",
+    "select_all": "Selecionar os {count}",
+    "clear": "Desmarcar",
+    "stale": {
+      "title": "Parados",
+      "rule": "Sem vídeo novo há 180 dias ou mais."
+    },
+    "ignored": {
+      "title": "Você não assiste",
+      "rule": "8 ou mais vídeos nos últimos 90 dias e nenhum assistido.",
+      "needs_history": "Precisa do histórico da extensão do navegador para achar estes."
+    },
+    "off_profile": {
+      "title": "Fora do seu perfil",
+      "rule": "Longe das pastas e favoritos que você mais usa, segundo o Hermes."
+    },
+    "manual": {
+      "title": "Marcados por você",
+      "rule": "Você marcou estes para cancelar em Gerenciar."
+    }
+  },
+  "row": {
+    "select": "Selecionar {name}",
+    "keep": "Manter",
+    "keep_label": "Manter {name}",
+    "last_video": "último vídeo {when}",
+    "no_videos": "nenhum vídeo conhecido",
+    "watched": "{count} assistidos em 90 dias",
+    "per_week": "{count} por semana"
+  },
+  "selection": {
+    "label": "Seleção",
+    "none": "Escolha canais ou um grupo inteiro. Nada é cancelado até você confirmar.",
+    "count_one": "{count} canal selecionado",
+    "count_other": "{count} canais selecionados",
+    "clear": "Limpar",
+    "review_none": "Revisar cancelamento",
+    "review_one": "Revisar cancelamento ({count})",
+    "review_other": "Revisar cancelamento ({count})"
+  },
+  "approve": {
+    "title_one": "Cancelar {count} inscrição?",
+    "title_other": "Cancelar {count} inscrições?",
+    "description": "Nada acontece até você confirmar aqui.",
+    "effect_one": "A extensão vai cancelar {count} inscrição no YouTube, no seu navegador.",
+    "effect_other": "A extensão vai cancelar {count} inscrições no YouTube, no seu navegador, uma por vez.",
+    "effect_resubscribe": "Dá para reinscrever por {days} dias em Ex-inscrições.",
+    "effect_undo": "Enquanto não executar, dá para desfazer na fila.",
+    "effect_offline": "A extensão está desconectada: fica na fila até o navegador abrir.",
+    "confirm_one": "Cancelar {count} inscrição",
+    "confirm_other": "Cancelar {count} inscrições",
+    "more": "+{count}",
+    "refused": "Aprovação recusada: só um clique aqui, no Hermes Desktop, aprova um cancelamento.",
+    "failed": "Não deu para pôr na fila: {error}",
+    "show_all": "Ver todos os {count}",
+    "show_less": "Ver menos",
+    "list_label": "Canais a cancelar"
+  },
+  "resub": {
+    "title": "Reinscrever em {name}?",
+    "description": "Passa pela mesma fila dos cancelamentos.",
+    "effect": "A extensão vai se inscrever de novo em {name} no YouTube, no seu navegador.",
+    "effect_undo": "Enquanto não executar, dá para desfazer na fila.",
+    "confirm": "Reinscrever em {name}"
+  },
+  "queue": {
+    "title": "Fila",
+    "description": "A extensão executa um por vez, com uma pausa curta entre eles.",
+    "label": "Fila de cancelamento",
+    "unknown_channel": "Canal {id}",
+    "undo": "Desfazer",
+    "undo_label": "Desfazer {name}",
+    "undo_all_one": "Desfazer {count} pendente",
+    "undo_all_other": "Desfazer {count} pendentes",
+    "action": {
+      "unsubscribe": "cancelar inscrição",
+      "resubscribe": "reinscrever"
+    },
+    "status": {
+      "approved": "aprovado · esperando a extensão",
+      "approved_offline": "aprovado · espera o navegador abrir",
+      "running": "em andamento no seu navegador",
+      "done": "feito {when}",
+      "failed": "falhou: {reason}",
+      "failed_unknown": "falhou (a extensão não disse o motivo)"
+    },
+    "note": {
+      "not_subscribed": "Já não havia inscrição no YouTube; nada foi clicado.",
+      "already_subscribed": "A inscrição no YouTube já existia; nada foi clicado."
+    }
+  },
+  "ex": {
+    "title": "Ex-inscrições",
+    "description": "Canceladas pela fila. Dá para reinscrever por {days} dias.",
+    "label": "Ex-inscrições",
+    "cancelled": "cancelada {when}",
+    "until": "reinscrever até {date}",
+    "resubscribe": "Reinscrever",
+    "resubscribe_label": "Reinscrever em {name}",
+    "queued": "Na fila",
+    "empty": "Nenhuma ex-inscrição. Os canais que você cancelar aqui ficam {days} dias, prontos para voltar.",
+    "error": "Não deu para carregar as ex-inscrições"
+  },
+  "banner": {
+    "scanning": "Procurando nas suas inscrições…",
+    "scanning_progress": "Procurando nas suas inscrições… {done} de {total}",
+    "scan_failed": "A varredura não terminou: {error}",
+    "server_down": "Sem contato com o servidor do plugin — a fila espera até ele voltar.",
+    "ext_endpoint_down": "O servidor local da extensão está parado — a fila espera o Hermes ligá-lo de novo.",
+    "ext_disconnected": "Extensão desconectada — as aprovações ficam na fila até o navegador abrir.",
+    "no_model": "Sem modelo de IA: os motivos vêm das regras e o grupo Fora do seu perfil fica desligado. Escolha um modelo e entre na conta em Ajustes → Modelos.",
+    "provider_unavailable": "O Hermes não conseguiu acessar seu modelo de IA ({route}): os motivos vêm das regras e o grupo Fora do seu perfil fica desligado. Entre na conta de novo ou escolha outro modelo para “YouTube curator” em Settings → Model → Auxiliary models.",
+    "provider_unavailable_plain": "O Hermes não conseguiu acessar seu modelo de IA: os motivos vêm das regras e o grupo Fora do seu perfil fica desligado. Entre na conta de novo ou escolha outro modelo para “YouTube curator” em Settings → Model → Auxiliary models.",
+    "provider_unavailable_action": "Abrir ajustes do modelo",
+    "retry": "Tentar de novo",
+    "connect": "Conectar",
+    "ext_not_paired": "Conecte a extensão do navegador para trazer suas inscrições",
+    "reconnect": "Reconectar"
+  },
+  "empty": {
+    "never_title": "Vamos arrumar suas inscrições",
+    "never_desc": "O Hermes procura três tipos de canal. Nada é cancelado sem o seu clique.",
+    "clean_title": "Lista em dia",
+    "clean_desc": "Nenhum canal parado, ignorado ou fora do perfil na última varredura ({when}).",
+    "criteria": {
+      "label": "O que a varredura procura",
+      "stale": "Parados: sem vídeo novo há 180 dias",
+      "ignored": "Você não assiste: nenhum vídeo visto em 90 dias",
+      "off_profile": "Fora do seu perfil: longe das suas pastas e favoritos"
+    }
+  },
+  "toast": {
+    "queued_one": "{count} inscrição na fila para cancelar",
+    "queued_other": "{count} inscrições na fila para cancelar",
+    "resub_queued": "{name} na fila para reinscrever",
+    "undo": "Desfazer",
+    "undone_one": "Aprovação desfeita",
+    "undone_other": "{count} aprovações desfeitas",
+    "undo_failed": "Não deu para desfazer: {error}",
+    "kept": "{name} fica — saiu das sugestões",
+    "keep_failed": "Não deu para tirar a sugestão: {error}",
+    "scan_done": "Varredura concluída",
+    "scan_unavailable": "A varredura precisa da IA do Hermes pelo backend do Desktop."
+  }
+}

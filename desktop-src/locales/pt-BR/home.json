@@ -1,0 +1,238 @@
+{
+  "title": "Inscrições",
+  "subtitle": {
+    "new": "{count} novos",
+    "updated": "atualizado {when}",
+    "never": "ainda não atualizado",
+    "refreshing": "atualizando…",
+    "status_error": "Não deu para ler o estado mais recente"
+  },
+  "actions": {
+    "extras": "Extras",
+    "refresh": "Atualizar",
+    "new_tab": "Nova aba",
+    "mark_read": "Marcar como lido"
+  },
+  "new_tab": {
+    "category": "Categoria",
+    "category_desc": "Pastas e tags que você já usa",
+    "channels": "Canais",
+    "channels_desc": "Escolha os canais a dedo",
+    "theme": "Assunto",
+    "theme_desc": "O Hermes pesquisa um assunto no YouTube",
+    "mixed": "Mista",
+    "mixed_desc": "Combine pastas, tags, canais e assuntos"
+  },
+  "theme_build": {
+    "button": "Nova aba por assunto",
+    "button_tip": "O Hermes pesquisa no YouTube e monta uma aba sobre qualquer assunto",
+    "no_ai": "As abas por assunto precisam de um modelo para planejar as buscas e fazer a curadoria. Escolha um em Ajustes → Modelos antes.",
+    "building": "Montando “{name}”…",
+    "building_unnamed": "Montando uma aba por assunto…",
+    "building_tip": "O Hermes ainda está trabalhando nele. Clique para ver o andamento.",
+    "ready": "A aba “{name}” está pronta",
+    "ready_unnamed": "Sua aba por assunto está pronta",
+    "open_preview": "Abrir prévia",
+    "failed": "Não deu para montar “{name}”: {error}",
+    "failed_unnamed": "Não deu para montar a aba: {error}",
+    "retry": "Tentar de novo"
+  },
+  "tabs": {
+    "label": "Abas do feed",
+    "all-new": "Tudo novo",
+    "favorites": "Favoritos",
+    "later": "Ver depois",
+    "playlists": "Playlists"
+  },
+  "filters": {
+    "search": "Buscar nesta aba",
+    "new_only": "Só novos",
+    "no_shorts": "Sem Shorts",
+    "show_seen": "Mostrar vistos"
+  },
+  "sections": {
+    "featured": "Em destaque"
+  },
+  "feed": {
+    "label": "Vídeos de {tab}",
+    "count": "{count} vídeos",
+    "loading": "Carregando vídeos",
+    "loading_more": "Carregando mais vídeos",
+    "searching": "Buscando…",
+    "load_more": "Carregar mais",
+    "more_error": "Não deu para carregar mais vídeos",
+    "reordering": "Reordenando…",
+    "group_label": "Vídeos de {tab} — {group}"
+  },
+  "toast": {
+    "watched": "Marcado como visto",
+    "unwatched": "Marcado como não visto",
+    "later": "Guardado em Ver depois",
+    "unlater": "Tirado de Ver depois",
+    "archived": "Arquivado",
+    "up": "Curtido",
+    "down": "Marcado como não é pra mim",
+    "reaction_cleared": "Reação removida",
+    "undo": "Desfazer",
+    "failed": "Não deu para salvar: {error}",
+    "undo_failed": "Não deu para desfazer: {error}",
+    "read": "{tab} marcada como lida",
+    "read_nothing": "Nada novo para marcar como lido",
+    "refresh_skipped": "Já está tudo atualizado",
+    "refresh_failed": "Não deu para começar a atualização: {error}",
+    "unarchived": "De volta à lista",
+    "tab_deleted": "Aba “{name}” excluída",
+    "reorder_failed": "Não deu para salvar a ordem das abas: {error}"
+  },
+  "banner": {
+    "demo_arriving": "Carregando a demonstração: {count} vídeos de {channels} canais até agora…",
+    "channel_arriving": "Buscando os vídeos mais recentes de {title}…",
+    "rss_down": "O feed do YouTube está instável desde {time}. Seus vídeos continuam chegando por outro caminho.",
+    "rss_down_stale": "O feed do YouTube está instável desde {time}. Mostrando o que já chegou.",
+    "rss_fallback": "{count} canais atualizados pela página do canal",
+    "retry": "Tentar de novo",
+    "ext_disconnected": "Extensão do navegador desconectada — inscrições novas e histórico não sincronizam.",
+    "reconnect": "Reconectar",
+    "ext_not_paired": "Conecte a extensão do navegador para trazer suas inscrições",
+    "connect": "Conectar"
+  },
+  "empty": {
+    "tab_title": "Tudo em dia",
+    "tab_desc": "Nada novo em {tab}. Os vídeos novos aparecem aqui assim que os canais publicarem.",
+    "refreshing_title": "Procurando vídeos novos…",
+    "see_all": "Ver todas as abas",
+    "show_seen": "Mostrar vistos",
+    "search_title": "Nada encontrado para «{query}»",
+    "search_desc": "A busca olha o título e o nome do canal de todos os vídeos desta aba.",
+    "search_loaded_desc": "Nenhum dos vídeos carregados combina com «{query}».",
+    "filter_title": "Nenhum resultado",
+    "filter_desc": "Nenhum vídeo carregado passa por esses filtros.",
+    "clear": "Limpar busca e filtros",
+    "clear_search": "Limpar busca",
+    "clear_filters": "Limpar filtros",
+    "later_title": "Nada guardado para depois",
+    "later_desc": "Aperte L em qualquer vídeo (ou o botão do relógio) para guardar aqui."
+  },
+  "welcome": {
+    "lead": "Escolha um caminho para começar. Dá para somar os outros depois.",
+    "group": "Como começar",
+    "pair_title": "Conectar a extensão do navegador",
+    "pair_desc": "Traz todas as suas inscrições e o histórico do navegador — sem senha, nada sai da sua máquina.",
+    "pair_action": "Parear agora",
+    "pair_hint": "Cerca de 1 min",
+    "link_title": "Colar um canal",
+    "link_desc": "Cole o link de um canal ou um @handle para seguir aqui sem se inscrever no YouTube.",
+    "link_action": "Colar link",
+    "demo_title": "Experimentar a demonstração",
+    "demo_desc": "40 canais públicos reais em 6 pastas, para explorar antes de conectar qualquer coisa.",
+    "demo_action": "Carregar demo",
+    "demo_hint": "Dá para remover quando quiser",
+    "demo_loading": "Carregando…",
+    "demo_failed": "Não deu para carregar a demonstração: {error}",
+    "link_label": "Link do canal ou @handle",
+    "link_placeholder": "youtube.com/@canal ou @handle",
+    "link_hint": "Link do canal ou de um vídeo, @handle ou id do canal (UC…). Enter para seguir.",
+    "link_submit": "Seguir",
+    "link_added": "Agora você segue {title}",
+    "errors": {
+      "empty": "Cole primeiro o link de um canal ou um @handle.",
+      "invalid": "Isso não parece um link de canal do YouTube nem um @handle.",
+      "conflict": "{title} já está na sua lista.",
+      "conflict_generic": "Esse canal já está na sua lista.",
+      "youtube_error": "O YouTube não achou esse canal. Confira o link e tente de novo.",
+      "timeout": "O YouTube demorou demais para responder. Tente de novo daqui a pouco."
+    }
+  },
+  "pane_filter": {
+    "label": "Filtrando por: {name}",
+    "clear": "Parar de filtrar",
+    "create_tab": "Criar aba com isto"
+  },
+  "gone": {
+    "archived": "Arquivado",
+    "undo": "Desfazer"
+  },
+  "tab_menu": {
+    "edit": "Editar…",
+    "move_left": "Mover para a esquerda",
+    "move_right": "Mover para a direita",
+    "delete": "Excluir…",
+    "delete_title": "Excluir a aba “{name}”?",
+    "delete_desc": "Os canais, pastas e vídeos continuam como estão — só a aba sai.",
+    "delete_confirm": "Excluir aba",
+    "delete_cancel": "Agora não",
+    "delete_failed": "Não deu para excluir a aba: {error}"
+  },
+  "view": {
+    "label": "Exibir",
+    "menu_label": "Exibir: {sort}, {group}",
+    "sort_title": "Ordenar",
+    "group_title": "Agrupar",
+    "sort_label": "Ordenar: {value}",
+    "group_label": "Agrupar: {value}",
+    "sort": {
+      "newest": "Mais novos",
+      "oldest": "Mais antigos",
+      "longest": "Mais longos",
+      "shortest": "Mais curtos",
+      "views": "Mais vistos"
+    },
+    "group": {
+      "none": "Nenhum",
+      "channel": "Canal",
+      "folder": "Pasta",
+      "day": "Dia",
+      "kind": "Tipo"
+    },
+    "group_trigger": {
+      "none": "Sem grupos",
+      "channel": "Por canal",
+      "folder": "Por pasta",
+      "day": "Por dia",
+      "kind": "Por tipo"
+    }
+  },
+  "group": {
+    "today": "Hoje",
+    "yesterday": "Ontem",
+    "no_date": "Sem data",
+    "no_folder": "Sem pasta",
+    "no_channel": "Canal desconhecido",
+    "kind": {
+      "video": "Vídeos",
+      "short": "Shorts",
+      "unknown": "Tipo ainda desconhecido"
+    },
+    "count_more": "{count}+",
+    "count_hint": "{count} carregados até agora"
+  },
+  "playlists": {
+    "label": "Suas playlists",
+    "count": "{count} vídeos",
+    "count_one": "1 vídeo",
+    "open": "Abrir {name}",
+    "empty_title": "Nenhuma playlist ainda",
+    "empty_desc": "Use Adicionar à playlist em qualquer vídeo para começar uma.",
+    "empty_action": "Ver todas as abas",
+    "back": "Todas as playlists",
+    "play_all": "Tocar tudo",
+    "rename": "Renomear",
+    "rename_label": "Novo nome",
+    "rename_save": "Salvar",
+    "rename_cancel": "Cancelar",
+    "delete": "Apagar",
+    "delete_title": "Apagar “{name}”?",
+    "delete_desc": "Só a playlist some. Os vídeos continuam nas suas inscrições e em qualquer outra playlist.",
+    "delete_confirm": "Apagar playlist",
+    "delete_cancel": "Manter",
+    "deleted": "{name} apagada",
+    "renamed": "Renomeada para {name}",
+    "failed": "Não deu para mudar a playlist: {error}",
+    "remove": "Tirar da playlist",
+    "removed": "Removido de {name}",
+    "items_label": "Vídeos em {name}",
+    "playlist_empty_title": "Esta playlist está vazia",
+    "playlist_empty_desc": "Use Adicionar à playlist em qualquer vídeo para colocá-lo aqui.",
+    "local_note": "Guardada no HermesTube neste computador, não na sua conta do YouTube."
+  }
+}

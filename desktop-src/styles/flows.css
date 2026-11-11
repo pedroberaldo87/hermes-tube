@@ -1,0 +1,723 @@
+/* AI and welcome flows: StepProgress, SuggestionGroup/Row, ApprovalCard, PathCard, PairingCode. */
+
+/* --------------------------------------------------------------- StepProgress */
+
+.PFX_steps {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.PFX_step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  column-gap: 10px;
+  padding-bottom: 14px;
+}
+
+.PFX_step:last-child {
+  padding-bottom: 0;
+}
+
+.PFX_step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 9.5px;
+  top: 23px;
+  bottom: 3px;
+  width: 1px;
+  background: var(--ui-stroke-tertiary);
+}
+
+.PFX_step[data-status='done']:not(:last-child)::before {
+  background: var(--ui-text-quaternary);
+}
+
+.PFX_step-icon {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--ui-text-quaternary);
+}
+
+.PFX_step[data-status='running'] .PFX_step-icon {
+  color: var(--ui-text-primary);
+}
+
+.PFX_step[data-status='done'] .PFX_step-icon {
+  color: var(--ui-text-secondary);
+}
+
+.PFX_step[data-status='failed'] .PFX_step-icon {
+  color: var(--ui-red);
+}
+
+.PFX_step-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.PFX_step-label {
+  color: var(--PFX_fg3);
+}
+
+.PFX_step[data-status='running'] .PFX_step-label {
+  color: var(--ui-text-primary);
+  font-weight: 550;
+}
+
+.PFX_step[data-status='done'] .PFX_step-label {
+  color: var(--ui-text-secondary);
+}
+
+.PFX_step[data-status='failed'] .PFX_step-label {
+  color: var(--ui-text-primary);
+}
+
+.PFX_step-detail {
+  color: var(--PFX_fg3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------- SuggestionGroup / SuggestionRow */
+
+.PFX_sgroup {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--ui-stroke-tertiary);
+  border-radius: var(--PFX_r-card);
+  overflow: hidden;
+}
+
+.PFX_sgroup-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px var(--PFX_s2);
+  padding: 10px var(--PFX_s3);
+  border-bottom: 1px solid var(--ui-stroke-quaternary);
+  background: var(--ui-bg-quinary);
+}
+
+.PFX_sgroup-title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--PFX_s2);
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+}
+
+.PFX_sgroup-meta {
+  color: var(--PFX_fg3);
+  font-weight: 450;
+}
+
+.PFX_sgroup-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.PFX_srow {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 10px;
+  padding: 10px var(--PFX_s3);
+  transition:
+    background-color var(--PFX_dur) var(--PFX_ease),
+    opacity var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_srow + .PFX_srow {
+  border-top: 1px solid var(--ui-stroke-quaternary);
+}
+
+.PFX_srow:hover {
+  background: var(--ui-row-hover-background);
+}
+
+.PFX_srow[data-status='rejected'] {
+  opacity: 0.55;
+}
+
+.PFX_srow[data-status='rejected'] .PFX_srow-subject {
+  text-decoration: line-through;
+  text-decoration-color: var(--ui-text-quaternary);
+}
+
+.PFX_srow-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.PFX_srow-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: 22px;
+}
+
+.PFX_srow-subject {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 550;
+}
+
+.PFX_srow-arrow {
+  flex: none;
+  color: var(--ui-text-quaternary);
+}
+
+.PFX_srow-reason {
+  height: var(--PFX_lh-label);
+  color: var(--PFX_fg3);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.PFX_srow-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.PFX_srow-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--PFX_fg3);
+}
+
+/* Row with selection: checkbox · 28 avatar · title + reason. The checkbox, avatar and actions stay
+   centered on the height of the first two text lines (title 22 + reason 16); a reason that wraps
+   grows downward without moving anything. */
+.PFX_srow[data-selectable] {
+  grid-template-columns: 16px 28px minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.PFX_srow-lead {
+  display: grid;
+  place-items: center;
+  height: calc(22px + 1px + var(--PFX_lh-label));
+}
+
+.PFX_srow[data-selectable] > .PFX_srow-actions {
+  min-height: calc(22px + 1px + var(--PFX_lh-label));
+}
+
+/* Reason that justifies an action: wraps to up to 3 lines instead of cutting with "…". */
+.PFX_srow-reason-wrap {
+  display: -webkit-box;
+  height: auto;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* --------------------------------------------------------------- ApprovalCard */
+
+.PFX_approval {
+  display: flex;
+  flex-direction: column;
+  gap: var(--PFX_s3);
+  min-width: 0;
+  padding: var(--PFX_s4);
+  border: 1px solid var(--ui-stroke-secondary);
+  border-radius: var(--PFX_r-card);
+  background: var(--ui-bg-quinary);
+}
+
+.PFX_approval-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.PFX_approval-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--ui-bg-tertiary);
+  color: var(--ui-text-secondary);
+}
+
+.PFX_approval-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.PFX_approval-title {
+  margin: 0;
+}
+
+.PFX_approval-desc {
+  margin: 0;
+  color: var(--ui-text-secondary);
+}
+
+.PFX_approval-label {
+  margin: 0;
+  color: var(--PFX_fg3);
+  letter-spacing: 0.04em;
+}
+
+.PFX_approval-effects {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: PFX_effect;
+}
+
+.PFX_approval-effects > li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  counter-increment: PFX_effect;
+  color: var(--ui-text-primary);
+}
+
+.PFX_approval-effects > li::before {
+  content: counter(PFX_effect);
+  color: var(--ui-text-quaternary);
+  font-variant-numeric: tabular-nums;
+}
+
+.PFX_approval-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--PFX_s2);
+  padding-top: var(--PFX_s1);
+}
+
+/* --------------------------------------------------------------- Hero (welcome opening) */
+
+.PFX_hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--PFX_s2);
+  padding: var(--PFX_s4) 0 var(--PFX_s2);
+  text-align: center;
+}
+
+.PFX_hero-mark {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--PFX_s2);
+  border-radius: 14px;
+  background: var(--ui-bg-quinary);
+  box-shadow: inset 0 0 0 1px var(--ui-stroke-secondary);
+  color: var(--ui-text-primary);
+}
+
+.PFX_hero-title {
+  margin: 0;
+  color: var(--ui-text-primary);
+  text-wrap: balance;
+}
+
+.PFX_hero-tagline {
+  margin: 0;
+  color: var(--ui-text-secondary);
+  text-wrap: balance;
+}
+
+.PFX_hero-desc {
+  max-width: 52ch;
+  margin: var(--PFX_s1) 0 0;
+  color: var(--PFX_fg3);
+  text-wrap: pretty;
+}
+
+/* --------------------------------------------------------------- PathCard (the 3 paths of the empty state) */
+
+.PFX_paths {
+  display: grid;
+  /* 3 paths side by side or stacked: never 2 + 1 orphan */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: var(--PFX_s4);
+  min-width: 0;
+}
+
+.PFX_path {
+  display: flex;
+  flex-direction: column;
+  gap: var(--PFX_s3);
+  min-width: 0;
+  height: 100%;
+  padding: var(--PFX_s5) var(--PFX_s5) var(--PFX_s4);
+  border: 1px solid var(--ui-stroke-tertiary);
+  border-radius: var(--PFX_r-card);
+  transition:
+    transform var(--PFX_dur) var(--PFX_ease),
+    border-color var(--PFX_dur) var(--PFX_ease),
+    background-color var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_path:hover,
+.PFX_path:focus-within {
+  transform: translateY(-1px);
+  border-color: var(--ui-stroke-secondary);
+  background: var(--ui-bg-quinary);
+}
+
+/* the recommended one: stronger line, slightly raised surface and visible label */
+.PFX_path[data-primary='true'] {
+  border-color: color-mix(in srgb, var(--ui-accent) 36%, var(--ui-stroke-tertiary));
+  background: var(--ui-bg-quinary);
+}
+
+.PFX_path-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--PFX_s2);
+  min-height: 40px;
+}
+
+.PFX_path-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--ui-bg-quaternary);
+  color: var(--ui-text-secondary);
+}
+
+.PFX_path[data-primary='true'] .PFX_path-icon {
+  background: var(--PFX_accent-soft);
+  color: var(--ui-accent);
+}
+
+.PFX_path-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--ui-stroke-secondary);
+  background: var(--ui-bg-elevated);
+  color: var(--ui-text-primary);
+  white-space: nowrap;
+}
+
+.PFX_path-badge-icon {
+  color: var(--ui-text-secondary);
+}
+
+.PFX_path-title {
+  margin: var(--PFX_s1) 0 0;
+}
+
+.PFX_path-desc {
+  flex: 1 1 auto;
+  margin: 0;
+  min-height: calc(2 * var(--PFX_lh-body));
+  color: var(--ui-text-secondary);
+}
+
+.PFX_path-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--PFX_s2);
+  min-height: 28px;
+  flex-wrap: wrap;
+  row-gap: var(--PFX_s2);
+}
+
+.PFX_path-hint {
+  color: var(--PFX_fg3);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------- PairingCode */
+
+.PFX_pairing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--PFX_s3);
+  /* a size container has no width of its own: inside a centering parent, it would shrink
+     until the label broke word by word */
+  width: 100%;
+  align-self: stretch;
+  min-width: 0;
+  container-type: inline-size;
+  container-name: PFX_pairing;
+}
+
+.PFX_pairing-label {
+  margin: 0;
+  color: var(--PFX_fg3);
+  letter-spacing: 0.04em;
+}
+
+.PFX_code {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.PFX_code-digit {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 56px;
+  border: 1px solid var(--ui-stroke-secondary);
+  border-radius: 8px;
+  background: var(--ui-bg-quinary);
+  color: var(--ui-text-primary);
+  font-family: var(--dt-font-mono);
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition: opacity var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_code-sep {
+  width: 10px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ui-text-quaternary);
+}
+
+.PFX_pairing[data-expired='true'] .PFX_code-digit {
+  opacity: 0.35;
+}
+
+.PFX_pairing-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--PFX_s1) var(--PFX_s2);
+  max-width: 100%;
+  color: var(--PFX_fg3);
+  font-variant-numeric: tabular-nums;
+}
+
+.PFX_pstep .PFX_pairing-foot {
+  justify-content: flex-start;
+}
+
+.PFX_pairing-bar {
+  flex: 0 1 180px;
+  min-width: 64px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ui-stroke-tertiary);
+  overflow: hidden;
+}
+
+.PFX_pairing-bar-fill {
+  display: block;
+  height: 100%;
+  width: var(--PFX_left, 100%);
+  background: var(--ui-text-tertiary);
+  transition: width 1s linear;
+}
+
+/* --------------------------------------------------------------- PairingSteps (1 open · 2 code · 3 done) */
+
+.PFX_psteps {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  padding: var(--PFX_s5);
+  list-style: none;
+  border: 1px solid var(--ui-stroke-tertiary);
+  border-radius: var(--PFX_r-card);
+}
+
+.PFX_pstep {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  column-gap: var(--PFX_s4);
+  padding-bottom: var(--PFX_s5);
+}
+
+.PFX_pstep:last-child {
+  padding-bottom: 0;
+}
+
+/* track between the numbers */
+.PFX_pstep:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 13.5px;
+  top: 32px;
+  bottom: 4px;
+  width: 1px;
+  background: var(--ui-stroke-tertiary);
+}
+
+.PFX_pstep-num {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--ui-stroke-secondary);
+  color: var(--ui-text-secondary);
+  font-size: var(--PFX_fs-label);
+  line-height: 1;
+  font-weight: 600;
+  transition:
+    background-color var(--PFX_dur-slow) var(--PFX_ease),
+    color var(--PFX_dur-slow) var(--PFX_ease);
+}
+
+.PFX_pstep[data-state='current'] .PFX_pstep-num {
+  background: var(--ui-bg-quaternary);
+  color: var(--ui-text-primary);
+}
+
+.PFX_pstep[data-state='done'] .PFX_pstep-num {
+  background: var(--ui-text-primary);
+  box-shadow: none;
+  color: var(--ui-bg-editor);
+  animation: PFX_pop var(--PFX_dur-slow) var(--PFX_ease) both;
+}
+
+.PFX_pstep-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--PFX_s2);
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.PFX_pstep-title {
+  margin: 0;
+  color: var(--ui-text-primary);
+}
+
+.PFX_pstep[data-state='todo'] .PFX_pstep-title {
+  color: var(--ui-text-secondary);
+}
+
+.PFX_pstep-hint {
+  margin: 0;
+  color: var(--PFX_fg3);
+}
+
+/* the code stays left-aligned, next to the step */
+.PFX_pstep .PFX_pairing {
+  align-items: flex-start;
+}
+
+.PFX_pstep-status {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--PFX_s2);
+  row-gap: 2px;
+  min-width: 0;
+}
+
+.PFX_pstep-status .PFX_pstep-hint {
+  grid-column: 2;
+}
+
+.PFX_pstep-status-text {
+  color: var(--ui-text-primary);
+}
+
+.PFX_pstep-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  width: 22px;
+  height: 18px;
+}
+
+.PFX_pstep-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--ui-text-secondary);
+  animation: PFX_breathe 1.2s ease-in-out infinite;
+}
+
+.PFX_pstep-dot:nth-child(2) {
+  animation-delay: 160ms;
+}
+
+.PFX_pstep-dot:nth-child(3) {
+  animation-delay: 320ms;
+}
+
+.PFX_pstep-ok {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ui-green) 16%, transparent);
+  color: var(--ui-green);
+  animation: PFX_pop var(--PFX_dur-slow) var(--PFX_ease) both;
+}
+
+@container PFX_page (max-width: 480px) {
+  .PFX_psteps {
+    padding: var(--PFX_s4) var(--PFX_s3);
+  }
+
+  .PFX_pstep {
+    column-gap: var(--PFX_s3);
+  }
+}
+
+@container PFX_pairing (max-width: 360px) {
+  .PFX_code {
+    gap: 4px;
+  }
+
+  .PFX_code-digit {
+    width: 34px;
+    height: 46px;
+    font-size: 22px;
+  }
+
+  .PFX_code-sep {
+    width: 6px;
+  }
+}

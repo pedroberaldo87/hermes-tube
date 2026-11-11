@@ -1,0 +1,22 @@
+{
+  "running": "Syncing subscriptions…",
+  "done_complete": "Subscriptions synced ({count} channels)",
+  "done_partial": "Partly synced ({count} channels); nothing was marked as unsubscribed",
+  "error_invalid": "Hermes rejected the list (extension bug); it will not be resent",
+  "error_unauthorized": "Hermes did not accept this browser. Pair again.",
+  "error_ext_endpoint_down": "Open Hermes to sync; the list will be sent when it is back",
+  "error_timeout": "Hermes took too long; the list will be sent again",
+  "error_tab_closed": "The subscriptions tab was closed before the end",
+  "error_tab_timeout": "YouTube took too long to load your subscriptions",
+  "error_scrape_failed": "Could not read your subscriptions on YouTube",
+  "error_nothing_to_send": "No subscriptions found. Are you signed in to YouTube?",
+  "error_logged_out": "Sign in to YouTube in this browser to sync your subscriptions",
+  "error_other": "Sync failed",
+  "done_partial_needs_visible": "Partly synced ({count} channels): YouTube did not load the whole list in the background. Use \"Sync now\" to read it all",
+  "error_cancelled": "Sync cancelled; nothing was sent",
+  "overlay_title": "Hermes is reading your subscriptions",
+  "overlay_count": "Channels read: {count}",
+  "overlay_safe": "Read-only: nothing is changed in your YouTube account.",
+  "overlay_keep": "Keep this tab in view; it closes by itself when done.",
+  "overlay_cancel": "Cancel"
+}

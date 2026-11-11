@@ -1,0 +1,163 @@
+{
+  "title": "Cleanup",
+  "subtitle": {
+    "last_scan": "Last scan {when}",
+    "by_model": "reasons by {model}",
+    "by_rule": "reasons by rule",
+    "never": "Not scanned yet",
+    "scanning": "Scanning your subscriptions…",
+    "error": "Couldn't read the last scan"
+  },
+  "actions": {
+    "scan": "Scan again",
+    "scan_first": "Scan now",
+    "home": "Go to Subscriptions",
+    "connect": "Connect the extension"
+  },
+  "groups": {
+    "label": "{group} channels",
+    "loading": "Loading the cleanup",
+    "select_all": "Select all {count}",
+    "clear": "Unselect",
+    "stale": {
+      "title": "Inactive",
+      "rule": "No new video in 180 days or more."
+    },
+    "ignored": {
+      "title": "Not watched",
+      "rule": "8 or more videos in the last 90 days, none of them watched.",
+      "needs_history": "Needs the watch history from the browser extension to find these."
+    },
+    "off_profile": {
+      "title": "Off your profile",
+      "rule": "Far from the folders and favorites you use most, according to Hermes."
+    },
+    "manual": {
+      "title": "Marked by you",
+      "rule": "You marked these to cancel in Manage."
+    }
+  },
+  "row": {
+    "select": "Select {name}",
+    "keep": "Keep",
+    "keep_label": "Keep {name}",
+    "last_video": "last video {when}",
+    "no_videos": "no videos known",
+    "watched": "{count} watched in 90 days",
+    "per_week": "{count} a week"
+  },
+  "selection": {
+    "label": "Selection",
+    "none": "Pick channels or a whole group. Nothing is cancelled until you confirm.",
+    "count_one": "{count} channel selected",
+    "count_other": "{count} channels selected",
+    "clear": "Clear",
+    "review_none": "Review cancellation",
+    "review_one": "Review cancellation ({count})",
+    "review_other": "Review cancellation ({count})"
+  },
+  "approve": {
+    "title_one": "Cancel {count} subscription?",
+    "title_other": "Cancel {count} subscriptions?",
+    "description": "Nothing happens until you confirm here.",
+    "effect_one": "The browser extension will cancel {count} subscription on YouTube, in your browser.",
+    "effect_other": "The browser extension will cancel {count} subscriptions on YouTube, in your browser, one at a time.",
+    "effect_resubscribe": "You can resubscribe for {days} days from Ex-subscriptions.",
+    "effect_undo": "Until it runs, you can undo it in the queue.",
+    "effect_offline": "The extension is offline: it stays in the queue until your browser opens.",
+    "confirm_one": "Cancel {count} subscription",
+    "confirm_other": "Cancel {count} subscriptions",
+    "more": "+{count} more",
+    "refused": "Approval refused: only a click here, in Hermes Desktop, approves a cancellation.",
+    "failed": "Couldn't queue it: {error}",
+    "show_all": "See all {count}",
+    "show_less": "Show less",
+    "list_label": "Channels to cancel"
+  },
+  "resub": {
+    "title": "Resubscribe to {name}?",
+    "description": "It goes through the same queue as cancellations.",
+    "effect": "The browser extension will subscribe to {name} again on YouTube, in your browser.",
+    "effect_undo": "Until it runs, you can undo it in the queue.",
+    "confirm": "Resubscribe to {name}"
+  },
+  "queue": {
+    "title": "Queue",
+    "description": "The browser extension runs one at a time, with a short pause between them.",
+    "label": "Cancellation queue",
+    "unknown_channel": "Channel {id}",
+    "undo": "Undo",
+    "undo_label": "Undo {name}",
+    "undo_all_one": "Undo {count} pending",
+    "undo_all_other": "Undo {count} pending",
+    "action": {
+      "unsubscribe": "cancel subscription",
+      "resubscribe": "resubscribe"
+    },
+    "status": {
+      "approved": "approved · waiting for the extension",
+      "approved_offline": "approved · waits until your browser opens",
+      "running": "in progress in your browser",
+      "done": "done {when}",
+      "failed": "failed: {reason}",
+      "failed_unknown": "failed (the extension didn't say why)"
+    },
+    "note": {
+      "not_subscribed": "Already unsubscribed on YouTube; nothing was clicked.",
+      "already_subscribed": "Already subscribed on YouTube; nothing was clicked."
+    }
+  },
+  "ex": {
+    "title": "Ex-subscriptions",
+    "description": "Cancelled through the queue. You can resubscribe for {days} days.",
+    "label": "Ex-subscriptions",
+    "cancelled": "cancelled {when}",
+    "until": "resubscribe until {date}",
+    "resubscribe": "Resubscribe",
+    "resubscribe_label": "Resubscribe to {name}",
+    "queued": "In the queue",
+    "empty": "No ex-subscriptions. Channels you cancel here stay for {days} days, ready to come back.",
+    "error": "Couldn't load the ex-subscriptions"
+  },
+  "banner": {
+    "scanning": "Scanning your subscriptions…",
+    "scanning_progress": "Scanning your subscriptions… {done} of {total}",
+    "scan_failed": "The scan didn't finish: {error}",
+    "server_down": "Can't reach the plugin's server — the queue waits until it's back.",
+    "ext_endpoint_down": "The extension's local server is off — the queue waits until Hermes turns it back on.",
+    "ext_disconnected": "Browser extension disconnected — approvals stay in the queue until your browser opens.",
+    "no_model": "No AI model: reasons come from the rules and the Off-your-profile group is off. Pick a model and sign in under Settings → Models.",
+    "provider_unavailable": "Hermes couldn't reach your AI model ({route}): reasons come from the rules and the Off-your-profile group is off. Sign in to it again, or pick another model for “YouTube curator” in Settings → Model → Auxiliary models.",
+    "provider_unavailable_plain": "Hermes couldn't reach your AI model: reasons come from the rules and the Off-your-profile group is off. Sign in to it again, or pick another model for “YouTube curator” in Settings → Model → Auxiliary models.",
+    "provider_unavailable_action": "Open model settings",
+    "retry": "Try again",
+    "connect": "Connect",
+    "ext_not_paired": "Connect the browser extension to bring in your subscriptions",
+    "reconnect": "Reconnect"
+  },
+  "empty": {
+    "never_title": "Let's tidy up your subscriptions",
+    "never_desc": "Hermes looks for three kinds of channel. Nothing is cancelled without your click.",
+    "clean_title": "All tidy",
+    "clean_desc": "No inactive, unwatched or off-profile channels in the last scan ({when}).",
+    "criteria": {
+      "label": "What the scan looks for",
+      "stale": "Inactive: no new video in 180 days",
+      "ignored": "Not watched: no video watched in 90 days",
+      "off_profile": "Off your profile: far from your folders and favorites"
+    }
+  },
+  "toast": {
+    "queued_one": "{count} subscription queued to cancel",
+    "queued_other": "{count} subscriptions queued to cancel",
+    "resub_queued": "{name} queued to resubscribe",
+    "undo": "Undo",
+    "undone_one": "Approval undone",
+    "undone_other": "{count} approvals undone",
+    "undo_failed": "Couldn't undo: {error}",
+    "kept": "{name} stays — removed from the suggestions",
+    "keep_failed": "Couldn't remove the suggestion: {error}",
+    "scan_done": "Scan finished",
+    "scan_unavailable": "Scanning needs Hermes' AI from the Desktop backend."
+  }
+}

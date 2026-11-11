@@ -1,0 +1,34 @@
+{
+  "card": {
+    "label": "Video: {title}",
+    "loading": "Loading video details",
+    "unknown_title": "Watch on YouTube",
+    "unknown_note": "Not in your library yet",
+    "error": "Couldn't load the details",
+    "retry": "Try again"
+  },
+  "actions": {
+    "label": "Video actions",
+    "later": "Later",
+    "watched": "Watched",
+    "open": "Open on YouTube"
+  },
+  "toast": {
+    "later": "Saved for later",
+    "unlater": "Removed from Later",
+    "watched": "Marked as watched",
+    "unwatched": "Marked as not watched",
+    "undo": "Undo",
+    "failed": "Couldn't save: {error}",
+    "undo_failed": "Couldn't undo: {error}"
+  },
+  "mascot": {
+    "published": "⭐ {channel}: {title}",
+    "published_untitled": "⭐ {channel} just posted a new video",
+    "more": "⭐ {count} more favorites posted new videos",
+    "setting": {
+      "title": "Mascot announces favorites",
+      "description": "A short note from the mascot when a ⭐ channel posts, at most once per channel per day."
+    }
+  }
+}

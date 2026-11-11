@@ -1,0 +1,415 @@
+{
+  "version": 1,
+  "verified_at": "2026-11-09",
+  "note": "Real public channels; ids checked against the /channel/<id> page (live test in tests/test_data.py).",
+  "folders": [
+    {
+      "key": "tech",
+      "name": "Tecnologia",
+      "color": "#2563eb"
+    },
+    {
+      "key": "science",
+      "name": "Ciência",
+      "color": "#16a34a"
+    },
+    {
+      "key": "cooking",
+      "name": "Culinária",
+      "color": "#ea580c"
+    },
+    {
+      "key": "music",
+      "name": "Música",
+      "color": "#db2777"
+    },
+    {
+      "key": "news",
+      "name": "Notícias",
+      "color": "#475569"
+    },
+    {
+      "key": "games",
+      "name": "Games",
+      "color": "#7c3aed"
+    }
+  ],
+  "channels": [
+    {
+      "id": "UCsBjURrPoezykLs9EqgamOA",
+      "title": "Fireship",
+      "handle": "@Fireship",
+      "url": "https://www.youtube.com/@Fireship",
+      "thumb": "https://yt3.googleusercontent.com/3fPNbkf_xPyCleq77ZhcxyeorY97NtMHVNUbaAON_RBDH9ydL4hJkjxC8x_4mpuopkB8oI7Ct6Y=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "tech",
+      "favorite": true
+    },
+    {
+      "id": "UCBJycsmduvYEL83R_U4JriQ",
+      "title": "Marques Brownlee",
+      "handle": "@mkbhd",
+      "url": "https://www.youtube.com/@mkbhd",
+      "thumb": "https://yt3.googleusercontent.com/qu4TmIaYUlS41-dJ9gZ7DUR3nilvmB5_11i6OKSdvNnBNiyOusZP1bMN6ICnuxtjFBb6ioKgRQ=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "tech",
+      "favorite": false
+    },
+    {
+      "id": "UCXuqSBlHAE6Xw-yeJA0Tunw",
+      "title": "Linus Tech Tips",
+      "handle": "@LinusTechTips",
+      "url": "https://www.youtube.com/@LinusTechTips",
+      "thumb": "https://yt3.googleusercontent.com/gnvYLhXy8FAlPXZ2RTrkrgj-5kyt0vdE2FUGVOiKGdEZIa-wN5A-7nwZBlWJLzUMmoh1NWAU=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "tech",
+      "favorite": false
+    },
+    {
+      "id": "UCbfYPyITQ-7l4upoX8nvctg",
+      "title": "Two Minute Papers",
+      "handle": "@TwoMinutePapers",
+      "url": "https://www.youtube.com/@TwoMinutePapers",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_ljAkSpv16cJNUsE_rI1X-Kz9s78w1WNojUga-aZ1uVzEQ=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "tech",
+      "favorite": false
+    },
+    {
+      "id": "UC9-y-6csu5WGm29I7JiwpnA",
+      "title": "Computerphile",
+      "handle": "@Computerphile",
+      "url": "https://www.youtube.com/@Computerphile",
+      "thumb": "https://yt3.googleusercontent.com/ebHMyRfch3u2UTZN1WQJDp9J5U7o38T_WnGkd2QhAIQwBgvozdaOCOnfDMtngtoHWutJvLl4i0c=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "tech",
+      "favorite": false
+    },
+    {
+      "id": "UCXUPKJO5MZQN11PqgIvyuvQ",
+      "title": "Andrej Karpathy",
+      "handle": "@AndrejKarpathy",
+      "url": "https://www.youtube.com/@AndrejKarpathy",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_nDvyq2NoPL626bk1IbxQ94SfQsD-B0qgZchghtQNkLWoEz=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "tech",
+      "favorite": false
+    },
+    {
+      "id": "UCddiUEpeqJcYeBxX1IVBKvQ",
+      "title": "The Verge",
+      "handle": "@TheVerge",
+      "url": "https://www.youtube.com/@TheVerge",
+      "thumb": "https://yt3.googleusercontent.com/ZIj_dq7beCkAkhufNqCid_SjWW4mkv4tqIDtv7_AAKzWdhBWI-rpsRXYXB9X3mB0s0zNzNtYdQ=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "tech",
+      "favorite": false
+    },
+    {
+      "id": "UC8ENHE5xdFSwx71u3fDH5Xw",
+      "title": "ThePrimeagen",
+      "handle": "@ThePrimeagen",
+      "url": "https://www.youtube.com/@ThePrimeagen",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_laY82JAzs_2edBDxrxLgLWshhMK04SpAqOfoEzexOBZg=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "tech",
+      "favorite": false
+    },
+    {
+      "id": "UCHnyfMqiRRG1u-2MsSQLbXA",
+      "title": "Veritasium",
+      "handle": "@veritasium",
+      "url": "https://www.youtube.com/@veritasium",
+      "thumb": "https://yt3.googleusercontent.com/7vCbvtCqtjQ3YLgsJt7Y952MQV1sBvhllSCSxHP8_sVZdcPCBrITfhkN2RdyCuwPnsByq-1GoA=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "science",
+      "favorite": true
+    },
+    {
+      "id": "UCsXVk37bltHxD1rDPwtNM8Q",
+      "title": "Kurzgesagt – In a Nutshell",
+      "handle": "@kurzgesagt",
+      "url": "https://www.youtube.com/@kurzgesagt",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_n1Ribd7LwdP_qKtqWL3ZDfIgv9M1d6g78VwpHGXVR2Ir4=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "science",
+      "favorite": false
+    },
+    {
+      "id": "UCYO_jab_esuFRV4b17AJtAw",
+      "title": "3Blue1Brown",
+      "handle": "@3blue1brown",
+      "url": "https://www.youtube.com/@3blue1brown",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_nFzZFPLxPZRHcE3SSwzdrbuWqfoWYwLAu0_2iO6blQYAU=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "science",
+      "favorite": false
+    },
+    {
+      "id": "UC6107grRI4m0o2-emgoDnAA",
+      "title": "SmarterEveryDay",
+      "handle": "@smartereveryday",
+      "url": "https://www.youtube.com/@smartereveryday",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_l59Ewmp0DHZBRWbY9dVqjd2_mWwvrn8ad0bJfmdbMRYcA=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "science",
+      "favorite": false
+    },
+    {
+      "id": "UCEIwxahdLz7bap-VDs9h35A",
+      "title": "Steve Mould",
+      "handle": "@SteveMould",
+      "url": "https://www.youtube.com/@SteveMould",
+      "thumb": "https://yt3.googleusercontent.com/iX-akiHlJYuPDq4YVBO83cfjWW0aQefdewmI326XVhZkzxnS3MrqNVi49J33jLBw5LR_ZVyKFA=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "science",
+      "favorite": false
+    },
+    {
+      "id": "UCY1kMZp36IQSyNx_9h4mpCg",
+      "title": "Mark Rober",
+      "handle": "@MarkRober",
+      "url": "https://www.youtube.com/@MarkRober",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_ksXY2REjZ6gYKSgnWT5jC_zT9mX900vyFtVinR8KbHww=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "science",
+      "favorite": false
+    },
+    {
+      "id": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "title": "NASA",
+      "handle": "@NASA",
+      "url": "https://www.youtube.com/@NASA",
+      "thumb": "https://yt3.googleusercontent.com/eIf5fNPcIcj9ig-wZBeq4stFy1lgjWTW1nLT5dYlFkHZprZ03QBiMcbpwNMB6XSBjrSFGtAGQg=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "science",
+      "favorite": false
+    },
+    {
+      "id": "UCn9Erjy00mpnWeLnRqhsA1g",
+      "title": "Ciência Todo Dia",
+      "handle": "@CienciaTodoDia",
+      "url": "https://www.youtube.com/@CienciaTodoDia",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_lQoeh3pIl35H0tiDQ6fG3YeSrn2hWxKKCIxN11NQvnDdg=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "science",
+      "favorite": false
+    },
+    {
+      "id": "UCqqJQ_cXSat0KIAVfIfKkVA",
+      "title": "J. Kenji López-Alt",
+      "handle": "@JKenjiLopezAlt",
+      "url": "https://www.youtube.com/@JKenjiLopezAlt",
+      "thumb": "https://yt3.googleusercontent.com/tEql8Eq4IgP3UNx5v646k5U1QKidegUlZRvS18PyF2WM9YGt770IlxFVRrdDatLKHRCFuv9kfA=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "cooking",
+      "favorite": true
+    },
+    {
+      "id": "UChBEbMKI1eCcejTtmI32UEw",
+      "title": "Joshua Weissman",
+      "handle": "@JoshuaWeissman",
+      "url": "https://www.youtube.com/@JoshuaWeissman",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_nfXRvoxu5cFt2H4WhJfFLbL5SVdzmvEnFymnPzH3_1qPM=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "cooking",
+      "favorite": false
+    },
+    {
+      "id": "UCJHA_jMfCvEnv-3kRjTCQXw",
+      "title": "Binging with Babish",
+      "handle": "@bingingwithbabish",
+      "url": "https://www.youtube.com/@bingingwithbabish",
+      "thumb": "https://yt3.googleusercontent.com/AlCRk3X8JvmNqHC7R3c7yVDQaGyUvMAd3GXY77vTgzGS1Qa_vlVFY0ZNSH56otpeBKDq3gF-yw=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "cooking",
+      "favorite": false
+    },
+    {
+      "id": "UCDq5v10l4wkV5-ZBIJJFbzQ",
+      "title": "Ethan Chlebowski",
+      "handle": "@EthanChlebowski",
+      "url": "https://www.youtube.com/@EthanChlebowski",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_nASBGz3OXASRVham6ZgSHJrheFcXNKHtI86bw0QeA9ENc=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "cooking",
+      "favorite": false
+    },
+    {
+      "id": "UC9_p50tH3WmMslWRWKnM7dQ",
+      "title": "Adam Ragusea",
+      "handle": "@aragusea",
+      "url": "https://www.youtube.com/@aragusea",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_k1Qk7novhk1zSZqL-Ws8Xp3cFPPtvzdhroHp1DMMOO1Go=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "cooking",
+      "favorite": false
+    },
+    {
+      "id": "UCRIZtPl9nb9RiXc9btSTQNw",
+      "title": "Food Wishes",
+      "handle": "@foodwishes",
+      "url": "https://www.youtube.com/@foodwishes",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_kGZ14S6frarUZ0q3zzhqTSnl3zkYo_qxwQ8Wi-J11MaA=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "cooking",
+      "favorite": false
+    },
+    {
+      "id": "UCJquYOG5EL82sKTfH9aMA9Q",
+      "title": "Rick Beato",
+      "handle": "@RickBeato",
+      "url": "https://www.youtube.com/@RickBeato",
+      "thumb": "https://yt3.googleusercontent.com/ZfDOigTWKzMkwaokreALniSPfAzaAq4v2T9hawgoFmjX4mHULaVyCcySqKjmvcBqvoPyWX7gsg=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "music",
+      "favorite": true
+    },
+    {
+      "id": "UCnkp4xDOwqqJD7sSM3xdUiQ",
+      "title": "Adam Neely",
+      "handle": "@AdamNeely",
+      "url": "https://www.youtube.com/@AdamNeely",
+      "thumb": "https://yt3.googleusercontent.com/584RoBu_Mr3Ocp2I-GAomClNWH6ZeuVWeDpFAhFqziYIyTjMEoHHWzmyg8XtIN8v73eJa-19kTA=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "music",
+      "favorite": false
+    },
+    {
+      "id": "UC4eYXhJI4-7wSWc8UNRwD4A",
+      "title": "NPR Music",
+      "handle": "@nprmusic",
+      "url": "https://www.youtube.com/@nprmusic",
+      "thumb": "https://yt3.googleusercontent.com/IXJZjJSYR9kfnUcHwIzAYjunIfovC2QYOOAseZxrDHBwvCKQEHBNcdC6PmNxn8EALE357U3vvhE=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "music",
+      "favorite": false
+    },
+    {
+      "id": "UC2Qw1dzXDBAZPwS7zm37g8g",
+      "title": "COLORS",
+      "handle": "@COLORSxSTUDIOS",
+      "url": "https://www.youtube.com/@COLORSxSTUDIOS",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_nFe5LeXpVm-ggGY9NH3JqYvVyU1NBcXHZ827U0JtoFa0M=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "music",
+      "favorite": false
+    },
+    {
+      "id": "UC3I2GFN_F8WudD_2jUZbojA",
+      "title": "KEXP",
+      "handle": "@kexp",
+      "url": "https://www.youtube.com/@kexp",
+      "thumb": "https://yt3.googleusercontent.com/cl8yKGTNMIspmtTvc0UJIiFzn3b0jH-eOlSBwd4ODVbXNkxUEZ-7JVlCZi2DRPw8qtIDv-jN2Gg=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "music",
+      "favorite": false
+    },
+    {
+      "id": "UC8R8FRt1KcPiR-rtAflXmeg",
+      "title": "Nahre Sol",
+      "handle": "@NahreSol",
+      "url": "https://www.youtube.com/@NahreSol",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_n5wdFCiUb0EmwOd_HTqrATVMY0lbwhDwGU1_Tifi-zCyA=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "music",
+      "favorite": false
+    },
+    {
+      "id": "UCmGSJVG3mCRXVOP4yZrU1Dw",
+      "title": "Johnny Harris",
+      "handle": "@johnnyharris",
+      "url": "https://www.youtube.com/@johnnyharris",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_kswBDn49WW5IneVE-5RlKyud5GvdzyQQ5SJQyVvJ4S3pk=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "news",
+      "favorite": true
+    },
+    {
+      "id": "UCLXo7UDZvByw2ixzpQCufnA",
+      "title": "Vox",
+      "handle": "@Vox",
+      "url": "https://www.youtube.com/@Vox",
+      "thumb": "https://yt3.googleusercontent.com/iak9xjDjDoQHn9UNWSvkobPuxAzK1ApefjPH7HGObwo71AbaiEqdafMjmUJCgOoBFWNKPS2t2eI=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "news",
+      "favorite": false
+    },
+    {
+      "id": "UC16niRr50-MSBwiO3YDb3RA",
+      "title": "BBC News",
+      "handle": "@BBCNews",
+      "url": "https://www.youtube.com/@BBCNews",
+      "thumb": "https://yt3.googleusercontent.com/v4JamQ9B-PUiJHjmZQs9UwTaoLQW8vijJMMpV5QvA2wHQ6iwWM8Q1s6O4jgTl0dtDigVWAi7SA=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "news",
+      "favorite": false
+    },
+    {
+      "id": "UChqUTb7kYRX8-EiaN3XFrSQ",
+      "title": "Reuters",
+      "handle": "@Reuters",
+      "url": "https://www.youtube.com/@Reuters",
+      "thumb": "https://yt3.googleusercontent.com/bCcVVrrV0EhGFJKsSvmeZHA9Y-YzSL9Keqrrr0HWYUPQy3-mVUVNHMbjwt7IoVkpsHt4E6BZ3pM=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "news",
+      "favorite": false
+    },
+    {
+      "id": "UCknLrEdhRCp1aegoMqRaCZg",
+      "title": "DW News",
+      "handle": "@dwnews",
+      "url": "https://www.youtube.com/@dwnews",
+      "thumb": "https://yt3.googleusercontent.com/NSOdTQTWlqMy8O_j32dx-ftfTCHMOt04Hm7KZ4pfAK6-eQzQSZMWvvss90kG8KQfJ7iNP3phyA=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "news",
+      "favorite": false
+    },
+    {
+      "id": "UCNye-wNBqNL5ZzHSJj3l8Bg",
+      "title": "Al Jazeera English",
+      "handle": "@aljazeeraenglish",
+      "url": "https://www.youtube.com/@aljazeeraenglish",
+      "thumb": "https://yt3.googleusercontent.com/XsTga3Nsfc1E6ZgC6HfHfzTG_3zhuZleOnsKxSK2aILMjwkkIm-0vdALFaU-yt0Lw07iLtbSifk=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "news",
+      "favorite": false
+    },
+    {
+      "id": "UCqJ-Xo29CKyLTjn6z2XwYAw",
+      "title": "Game Maker's Toolkit",
+      "handle": "@GMTK",
+      "url": "https://www.youtube.com/@GMTK",
+      "thumb": "https://yt3.googleusercontent.com/fZzS7tuwCW14i6tAAtGG6q8E1Y3-_k2G36mbn7VNKHOwtaJ4vKF8Es8Ky6745TiNGOAVSAyR6A=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "games",
+      "favorite": true
+    },
+    {
+      "id": "UC0fDG3byEcMtbOqPMymDNbw",
+      "title": "/noclip",
+      "handle": "@NoclipDocs",
+      "url": "https://www.youtube.com/@NoclipDocs",
+      "thumb": "https://yt3.googleusercontent.com/093arh9Jg1MqfdvcqcrDcUQm9QMdXnzWEJ-dpT_YUn5QU_8AQYbBIL37TvUHQDUaG1XErynq3w=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "games",
+      "favorite": false
+    },
+    {
+      "id": "UC9PBzalIcEQCsiIkq36PyUA",
+      "title": "Digital Foundry",
+      "handle": "@DigitalFoundry",
+      "url": "https://www.youtube.com/@DigitalFoundry",
+      "thumb": "https://yt3.googleusercontent.com/PBh4giP5yBGdq6OxwdAW32ZvLI-uy_kzMAlV7sQ-jTaWK3q4f3euUJL8lFX3onIkHlc6OBCTpQ=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "games",
+      "favorite": false
+    },
+    {
+      "id": "UCtUbO6rBht0daVIOGML3c8w",
+      "title": "Summoning Salt",
+      "handle": "@SummoningSalt",
+      "url": "https://www.youtube.com/@SummoningSalt",
+      "thumb": "https://yt3.googleusercontent.com/ytc/AIdro_n8NSEiNfCuno3JKW2ggFYNvxVUKPg2jzf2O_7W-pmkAv4=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "games",
+      "favorite": false
+    },
+    {
+      "id": "UCKy1dAqELo0zrOtPkf0eTMw",
+      "title": "IGN",
+      "handle": "@IGN",
+      "url": "https://www.youtube.com/@IGN",
+      "thumb": "https://yt3.googleusercontent.com/4jRpju9vRtgoIA6SxuIomVcCmjub6ydA1TzGRHts853ZzxRITi41gxP50jTuGBdUlvAgehZJK8Y=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "games",
+      "favorite": false
+    },
+    {
+      "id": "UCbu2SsF-Or3Rsn3NxqODImw",
+      "title": "GameSpot",
+      "handle": "@gamespot",
+      "url": "https://www.youtube.com/@gamespot",
+      "thumb": "https://yt3.googleusercontent.com/2q8-YlqtAs3pWHamRcooAOvt_M88afnTwo7DYwqvHV9OSGlf2pBa5h3QJGeHrBkBidUjaL0mpA=s176-c-k-c0x00ffffff-no-rj",
+      "folder": "games",
+      "favorite": false
+    }
+  ],
+  "tabs": [
+    {
+      "key": "ai",
+      "name": "Inteligência artificial",
+      "icon": "🤖",
+      "kind": "theme",
+      "channels": [
+        "UCbfYPyITQ-7l4upoX8nvctg",
+        "UCXUPKJO5MZQN11PqgIvyuvQ",
+        "UCsBjURrPoezykLs9EqgamOA",
+        "UC9-y-6csu5WGm29I7JiwpnA",
+        "UCYO_jab_esuFRV4b17AJtAw",
+        "UC8ENHE5xdFSwx71u3fDH5Xw"
+      ]
+    }
+  ]
+}

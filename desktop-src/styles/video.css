@@ -1,0 +1,742 @@
+/* Video: Thumb, VideoCard (grid | compact | row | featured), QuickActions.
+   The thumbnail is the only color on the screen: everything around it is monochrome from the theme.
+   Font weights on a card: 600 (title) and 450 (everything else) — never more than two. */
+
+/* --------------------------------------------------------------- Thumb (16:9) */
+
+.PFX_thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--PFX_r-thumb);
+  background: var(--ui-bg-quaternary);
+}
+
+/* inner line: a light thumbnail does not bleed into the light background */
+.PFX_thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--ui-stroke-quaternary);
+  pointer-events: none;
+}
+
+.PFX_thumb-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.001);
+  transition:
+    opacity 220ms ease-out,
+    transform var(--PFX_dur-slow) var(--PFX_ease),
+    filter var(--PFX_dur-slow) ease-out;
+}
+
+.PFX_thumb-img[data-loaded='true'] {
+  opacity: 1;
+}
+
+.PFX_thumb[data-watched='true'] .PFX_thumb-img {
+  filter: saturate(0.5);
+}
+
+/* drawn fallback when the image fails */
+.PFX_thumb-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ui-text-quaternary);
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0 9px,
+      var(--ui-stroke-quaternary) 9px 10px
+    ),
+    var(--ui-bg-quaternary);
+}
+
+/* "watched" veil: enters fading (no flicker) */
+.PFX_thumb-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  padding: 6px;
+  background: var(--PFX_veil);
+  animation: PFX_fade-in var(--PFX_dur-slow) var(--PFX_ease) both;
+}
+
+.PFX_thumb-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 4px;
+  background: var(--PFX_scrim);
+  color: var(--ui-text-primary);
+  font-size: 11px;
+  line-height: 18px;
+  font-weight: 450;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Type mark + duration: ONE only, in the BOTTOM-right corner, always visible — where YouTube puts the
+   duration. Quick actions appear at the TOP of the thumbnail (hover/focus), so the two
+   never fight for the same corner (not even at 420 px). */
+.PFX_thumb-mark {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  z-index: 2;
+  gap: 4px;
+  max-width: calc(100% - 12px);
+}
+
+.PFX_thumb[data-has-progress='true'] .PFX_thumb-mark {
+  bottom: 9px;
+}
+
+.PFX_mark-icon {
+  flex: none;
+}
+
+.PFX_mark-kind,
+.PFX_mark-duration {
+  white-space: nowrap;
+}
+
+.PFX_mark-duration {
+  font-variant-numeric: tabular-nums;
+}
+
+/* in the list (small thumbnail) the mark is text in the metadata line, without a pill */
+.PFX_card-mark {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  color: var(--PFX_fg3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.PFX_card-mark .PFX_mark-icon {
+  color: var(--ui-text-secondary);
+}
+
+.PFX_thumb-badges {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+  /* the bottom right belongs to the type mark + duration ("Short 0:47" with icon ≈ 84 px) */
+  max-width: calc(100% - 102px);
+  transition: opacity var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_thumb[data-has-progress='true'] .PFX_thumb-badges {
+  bottom: 9px;
+}
+
+.PFX_thumb-new {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ui-accent);
+  box-shadow: 0 0 0 2px var(--PFX_scrim);
+}
+
+.PFX_thumb-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  height: 3px;
+  background: color-mix(in srgb, var(--ui-bg-editor) 55%, transparent);
+}
+
+.PFX_thumb-progress-fill {
+  display: block;
+  height: 100%;
+  width: var(--PFX_progress, 0%);
+  background: var(--ui-text-primary);
+}
+
+/* --------------------------------------------------------------- VideoCard */
+
+.PFX_card {
+  position: relative;
+  display: block;
+  min-width: 0;
+  height: 100%;
+  padding: var(--PFX_s1) var(--PFX_s1) var(--PFX_s2);
+  border: 1px solid transparent;
+  border-radius: var(--PFX_r-card);
+  color: var(--ui-text-primary);
+  container-type: inline-size;
+  container-name: PFX_card;
+  transition:
+    transform var(--PFX_dur) var(--PFX_ease),
+    border-color var(--PFX_dur) var(--PFX_ease),
+    background-color var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_card:hover,
+.PFX_card:focus-within,
+.PFX_grid-cell:focus-visible > .PFX_card {
+  transform: translateY(-1px);
+  border-color: var(--ui-stroke-secondary);
+  background: var(--ui-bg-quinary);
+}
+
+/* minimal thumbnail zoom on hover, inside the clip (.thumb crops) */
+.PFX_card:hover .PFX_thumb-img[data-loaded='true'] {
+  transform: scale(1.03);
+}
+
+/* outside a Grid (chat, running text), the grid card does not exceed ~360 px */
+.PFX_card[data-variant='grid']:not(.PFX_grid *) {
+  max-width: 360px;
+}
+
+.PFX_card-media {
+  position: relative;
+  flex: none;
+  min-width: 0;
+  transition: opacity var(--PFX_dur-slow) var(--PFX_ease);
+}
+
+/* watched / archived: the card fades (thumbnail and title), no flicker; the text stays legible */
+.PFX_card[data-state='watched'] .PFX_card-media,
+.PFX_card[data-state='archived'] .PFX_card-media,
+.PFX_card[data-state='hidden'] .PFX_card-media {
+  opacity: 0.78;
+}
+
+.PFX_card[data-state='watched'] .PFX_card-title,
+.PFX_card[data-state='archived'] .PFX_card-title,
+.PFX_card[data-state='hidden'] .PFX_card-title {
+  color: var(--ui-text-secondary);
+}
+
+.PFX_card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 0 var(--PFX_s1);
+  container-type: inline-size;
+  container-name: PFX_cardbody;
+}
+
+/* the title flows (1 or 2 lines); only the Grid reserves the 2 lines (grid rows aligned, skeleton without a jump) */
+.PFX_card-title {
+  margin: 0;
+  color: var(--ui-text-primary);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  transition: color var(--PFX_dur-slow) var(--PFX_ease);
+}
+
+.PFX_grid .PFX_card-title {
+  min-height: calc(2 * var(--PFX_lh-head));
+}
+
+.PFX_grid .PFX_card[data-variant='compact'] .PFX_card-title {
+  min-height: calc(2 * var(--PFX_lh-body));
+}
+
+/* the frame is the container; the arrangement (column, row, side by side) lives in the frame */
+.PFX_card-frame {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  height: 100%;
+}
+
+/* skeleton: the lines stack inside the same box */
+.PFX_card-title[data-skeleton],
+.PFX_card-excerpt[data-skeleton] {
+  display: flex;
+  flex-direction: column;
+}
+
+/* the title is the open target (a link: inline, so the 2-line cut applies); the ::after stretches the
+   click to the whole card */
+.PFX_card-open {
+  position: static;
+  color: inherit;
+  text-decoration: none;
+}
+
+.PFX_card-open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--PFX_r-card);
+}
+
+.PFX_card-open:focus-visible {
+  outline: none;
+}
+
+.PFX_card-open:focus-visible::after {
+  outline: 2px solid var(--PFX_ring);
+  outline-offset: 2px;
+}
+
+.PFX_card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: var(--PFX_lh-label);
+  overflow: hidden;
+  color: var(--ui-text-secondary);
+  white-space: nowrap;
+}
+
+.PFX_card-meta .PFX_avatar-fallback {
+  font-weight: 600;
+}
+
+.PFX_card-channel {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.PFX_card-sep {
+  flex: none;
+  color: var(--ui-text-quaternary);
+}
+
+.PFX_card-stat {
+  flex: none;
+  color: var(--PFX_fg3);
+  font-variant-numeric: tabular-nums;
+}
+
+.PFX_card-excerpt {
+  margin: 0;
+  color: var(--ui-text-secondary);
+  font-weight: 450;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+/* quick actions: appear on hover and focus, at the top of the thumbnail (the bottom belongs to the type mark + duration) */
+.PFX_card-actions {
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  z-index: 4;
+  max-width: calc(100% - 12px);
+  opacity: 0;
+  transform: translateY(-3px);
+  pointer-events: none;
+  transition:
+    opacity var(--PFX_dur) var(--PFX_ease),
+    transform var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_card:hover .PFX_card-actions,
+.PFX_card:focus-within .PFX_card-actions,
+.PFX_grid-cell:focus-visible .PFX_card-actions {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* actions appear at the top: the bottom (badges on the left, type mark + duration on the right) does not move */
+
+/* actions always in view (featured): in the body, with label, outside the thumbnail */
+.PFX_card-actions[data-persistent='true'] {
+  position: relative;
+  left: auto;
+  top: auto;
+  max-width: none;
+  margin-top: var(--PFX_s2);
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.PFX_card[data-variant='featured'] .PFX_card-media .PFX_thumb-badges {
+  opacity: 1;
+}
+
+.PFX_card-actions-sk {
+  display: block;
+  width: 228px;
+  max-width: 100%;
+  height: 28px;
+  border-radius: var(--PFX_r-control);
+}
+
+/* ---- compact: dense grid */
+
+.PFX_card[data-variant='compact'] {
+  padding: 3px 3px 6px;
+}
+
+.PFX_card[data-variant='compact'] .PFX_card-frame {
+  gap: var(--PFX_s2);
+}
+
+.PFX_card[data-variant='compact'] .PFX_card-title {
+  font-size: var(--PFX_fs-body);
+  line-height: var(--PFX_lh-body);
+}
+
+.PFX_card[data-variant='compact'] .PFX_card-meta .PFX_avatar,
+.PFX_card[data-variant='compact'] .PFX_card-stat[data-kind='views'],
+.PFX_card[data-variant='compact'] .PFX_card-sep[data-kind='views'] {
+  display: none;
+}
+
+/* ---- row: list with small thumbnail (default in chat) */
+
+.PFX_card[data-variant='row'] {
+  padding: 6px;
+}
+
+.PFX_card[data-variant='row'] .PFX_card-frame {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--PFX_s3);
+}
+
+.PFX_grid[data-density='list'] .PFX_grid-row + .PFX_grid-row .PFX_card[data-variant='row']::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: -1px;
+  height: 1px;
+  background: var(--ui-stroke-quaternary);
+}
+
+.PFX_card[data-variant='row']:hover::before,
+.PFX_card[data-variant='row']:focus-within::before {
+  opacity: 0;
+}
+
+.PFX_card[data-variant='row'] .PFX_card-media {
+  width: clamp(112px, 24cqi, 176px);
+}
+
+.PFX_card[data-variant='row'] .PFX_card-body {
+  flex: 1 1 auto;
+  padding: 0;
+}
+
+.PFX_card[data-variant='row'] .PFX_card-actions {
+  position: static;
+  flex: none;
+  max-width: none;
+  transform: none;
+}
+
+/* ---- featured: the main piece of Home. Large 16:9 thumbnail; beside it, overline (why it is here),
+   level-1 title, description in up to 3 lines, ONE channel line and the actions with label. Narrow: stacks. */
+
+.PFX_card[data-variant='featured'] {
+  padding: var(--PFX_s3);
+  border-color: var(--ui-stroke-tertiary);
+  background: var(--ui-bg-quinary);
+}
+
+.PFX_card[data-variant='featured']:hover,
+.PFX_card[data-variant='featured']:focus-within {
+  transform: none;
+}
+
+/* Always a grid: narrow = 1 column; wide = 2 (below). DO NOT switch `display` inside `@container`: the
+   card body is itself a query container, and in Chromium (seen in the real app, 145) switching the
+   parent's `display` when crossing the threshold leaves the nested container's children without a box (title, description and
+   actions vanish until the tree is rebuilt). `test/css-container.test.ts` guards the rule. */
+.PFX_card[data-variant='featured'] .PFX_card-frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--PFX_s4);
+}
+
+.PFX_card[data-variant='featured'] .PFX_thumb {
+  border-radius: calc(var(--PFX_r-card) - 2px);
+}
+
+.PFX_card[data-variant='featured'] .PFX_card-body {
+  gap: var(--PFX_s2);
+  padding: 0 var(--PFX_s1) var(--PFX_s1);
+}
+
+.PFX_card[data-variant='featured'] .PFX_card-title {
+  font-size: var(--PFX_fs-title);
+  line-height: var(--PFX_lh-title);
+  text-wrap: pretty;
+}
+
+.PFX_card[data-variant='featured'] .PFX_card-meta {
+  gap: 8px;
+  height: 20px;
+  margin-top: 2px;
+}
+
+.PFX_card[data-variant='featured'] .PFX_card-channel {
+  color: var(--ui-text-primary);
+}
+
+@container PFX_card (min-width: 620px) {
+  .PFX_card[data-variant='featured'] .PFX_card-frame {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: var(--PFX_s5);
+    align-items: center;
+  }
+
+  .PFX_card[data-variant='featured'] .PFX_card-body {
+    max-width: 52ch;
+    padding: var(--PFX_s2) var(--PFX_s4) var(--PFX_s2) 0;
+    gap: 10px;
+  }
+}
+
+@container PFX_card (min-width: 1100px) {
+  .PFX_card[data-variant='featured'] .PFX_card-frame {
+    grid-template-columns: minmax(0, 640px) minmax(0, 1fr);
+    gap: var(--PFX_s6);
+  }
+}
+
+@container PFX_card (max-width: 230px) {
+  .PFX_card-meta .PFX_avatar,
+  .PFX_quick-kbd {
+    display: none;
+  }
+}
+
+/* the metadata line never overflows: with no room, the views go first */
+@container PFX_cardbody (max-width: 260px) {
+  .PFX_card-stat[data-kind='views'],
+  .PFX_card-sep[data-kind='views'] {
+    display: none;
+  }
+}
+
+@container PFX_card (max-width: 360px) {
+  .PFX_card[data-variant='row'] .PFX_card-actions {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------- QuickActions */
+
+.PFX_quick {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 7px;
+  background: var(--PFX_scrim);
+  box-shadow: inset 0 0 0 1px var(--ui-stroke-tertiary);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.PFX_quick-btn {
+  gap: 5px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 5px;
+  color: var(--ui-text-secondary);
+  font-weight: 450;
+}
+
+.PFX_quick-btn:hover,
+.PFX_quick-btn[aria-pressed='true'] {
+  color: var(--ui-text-primary);
+  background: var(--ui-control-hover-background);
+}
+
+.PFX_quick-kbd {
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  font-weight: 450;
+}
+
+.PFX_quick-label {
+  white-space: nowrap;
+}
+
+.PFX_card[data-variant='row'] .PFX_quick {
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* with label (featured, or `showLabels`): calm bar, no veil; taller buttons */
+.PFX_quick[data-labels='true'] {
+  flex-wrap: wrap;
+  gap: var(--PFX_s1);
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.PFX_quick[data-labels='true'] .PFX_quick-btn {
+  height: 28px;
+  padding: 0 10px 0 8px;
+  border-radius: var(--PFX_r-control);
+  box-shadow: inset 0 0 0 1px var(--ui-stroke-tertiary);
+  color: var(--ui-text-primary);
+  font-size: var(--PFX_fs-label);
+}
+
+.PFX_quick[data-labels='true'] .PFX_quick-btn:hover {
+  box-shadow: inset 0 0 0 1px var(--ui-stroke-secondary);
+}
+
+.PFX_quick[data-labels='true'] .PFX_quick-kbd {
+  margin-left: 2px;
+}
+
+/* Placeholder of a video archived by click: the card disappears (invisible and inert, only to hold the
+   geometry) and the space shows "Archived · Undo" until the list changes; the neighbor does not move up. */
+.PFX_card-gone {
+  position: relative;
+}
+
+.PFX_card-gone-ghost {
+  visibility: hidden;
+}
+
+.PFX_card-gone-note {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--PFX_s2);
+  padding: var(--PFX_s2);
+  border: 1px dashed var(--ui-stroke-tertiary);
+  border-radius: var(--PFX_r-card);
+  color: var(--ui-text-secondary);
+  animation: PFX_gone-in var(--PFX_dur-slow) var(--PFX_ease);
+}
+
+@keyframes PFX_gone-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Grouped list (GET /feed?group=…): header per group (name, count of the loaded ones, collapse/expand),
+   stuck to the top of the scrolling area (the tab bar is outside it, so they do not fight) — each header only holds
+   inside its own group: the next one pushes the previous one. */
+.PFX_feed-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--PFX_s4);
+  min-width: 0;
+}
+
+.PFX_feed-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--PFX_s2);
+  min-width: 0;
+}
+
+.PFX_feed-group-head {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  margin: 0 calc(-1 * var(--PFX_s1));
+  padding: 2px var(--PFX_s1);
+  background: var(--ui-editor-surface-background, var(--ui-bg-editor));
+}
+
+.PFX_feed-group-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--PFX_s2);
+  width: 100%;
+  min-width: 0;
+  min-height: 32px;
+  padding: 4px 6px;
+  border-radius: var(--PFX_r-control);
+  color: var(--ui-text-primary);
+  text-align: left;
+  transition: background-color var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_feed-group-toggle:hover {
+  background: var(--ui-control-hover-background);
+}
+
+.PFX_feed-group-toggle:focus-visible {
+  outline: 2px solid var(--PFX_ring);
+  outline-offset: 1px;
+}
+
+.PFX_feed-group-caret {
+  flex: none;
+  color: var(--PFX_fg3);
+}
+
+.PFX_feed-group-lead {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  color: var(--ui-text-secondary);
+}
+
+.PFX_feed-group-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.PFX_feed-group-count {
+  flex: none;
+  color: var(--PFX_fg3);
+  font-variant-numeric: tabular-nums;
+}

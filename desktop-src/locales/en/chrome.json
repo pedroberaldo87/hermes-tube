@@ -1,0 +1,69 @@
+{
+  "locale": "en",
+  "chip": {
+    "new_one": "new",
+    "new_other": "new",
+    "none": "Nothing new",
+    "refreshing": "refreshing…",
+    "loading": "Subscriptions",
+    "unavailable_label": "Subscriptions unavailable",
+    "title_new": "{count} new videos — open your subscriptions",
+    "title_none": "You're all caught up — open your subscriptions",
+    "title_refreshing": "Looking for new videos… — open your subscriptions",
+    "title_loading": "Reading your subscriptions…",
+    "reason_unavailable": "HermesTube isn't on in the “{profile}” profile. Go back to the profile where you installed it, or turn it on in Capabilities → Plugins.",
+    "reason_offline": "Can't reach Hermes right now. It will try again on its own.",
+    "reason_error": "Couldn't read your new videos: {error}",
+    "updated": "updated {when}",
+    "pet": "Hermes says: {text}"
+  },
+  "palette": {
+    "open-home": {
+      "label": "Subscriptions: open",
+      "keywords": "youtube subscriptions home feed videos new"
+    },
+    "refresh-now": {
+      "label": "Subscriptions: refresh now",
+      "keywords": "youtube subscriptions refresh update rss fetch reload"
+    },
+    "new-theme-tab": {
+      "label": "Subscriptions: new topic tab",
+      "keywords": "youtube subscriptions theme tab topic new create"
+    },
+    "organize": {
+      "label": "Subscriptions: organize with Hermes",
+      "keywords": "youtube subscriptions organize folders sort ai"
+    },
+    "cleanup": {
+      "label": "Subscriptions: clean up",
+      "keywords": "youtube subscriptions cleanup unsubscribe tidy inactive"
+    },
+    "open-extras": {
+      "label": "Subscriptions: extras",
+      "keywords": "youtube subscriptions extras hackertube hn thumbnails lists"
+    },
+    "connect": {
+      "label": "HermesTube: Connect a browser or add a channel",
+      "keywords": "youtube subscriptions extension browser chrome connect pair code channel add link welcome setup"
+    }
+  },
+  "refresh": {
+    "started": "Looking for new videos…",
+    "running": "Already looking for new videos",
+    "skipped": "Your subscriptions are up to date",
+    "failed": "Couldn't refresh: {error}"
+  },
+  "detail": {
+    "refreshing": "refreshing…",
+    "new_one": "{count} new",
+    "new_other": "{count} new",
+    "none": "nothing new",
+    "updated": "updated {when}"
+  },
+  "gate": {
+    "title": "The plugin isn't on in “{profile}”",
+    "hint": "You're in the “{profile}” profile. Go back to the profile where you installed it, or turn it on here: Capabilities → Plugins → HermesTube.",
+    "remote": "You're connected to {name}, not this computer. Switch to {local} to use HermesTube with the Hermes on this computer.",
+    "local_default": "This device"
+  }
+}

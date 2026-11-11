@@ -1,0 +1,286 @@
+{
+  "title": "Boas-vindas",
+  "hero": {
+    "tagline": "Suas inscrições. Do seu jeito.",
+    "lead": "Traga suas inscrições do YouTube para o Hermes e organize do jeito que quiser. Escolha um caminho para começar — os outros continuam aqui depois."
+  },
+  "paths": {
+    "label": "Como começar",
+    "key_hint": "Tecle {key}",
+    "pair": {
+      "title": "Conectar a extensão do navegador",
+      "desc": "Traz todas as suas inscrições e o que você assiste, direto do navegador. Sem senha.",
+      "action": "Conectar",
+      "hint": "Recomendado"
+    },
+    "link": {
+      "title": "Colar um canal",
+      "desc": "Cole o link de um canal ou um @handle para seguir aqui, sem a extensão.",
+      "action": "Colar link",
+      "hint": "Sem extensão"
+    },
+    "demo": {
+      "title": "Experimentar a demonstração",
+      "desc": "40 canais públicos reais em 6 pastas, para explorar antes de conectar qualquer coisa.",
+      "action": "Carregar demonstração",
+      "hint": "Um clique",
+      "loaded_desc": "A demonstração está carregada. Limpe quando quiser — o que você adicionou fica.",
+      "loaded_action": "Gerenciar demonstração"
+    }
+  },
+  "back": "Todos os caminhos",
+  "plural": {
+    "channels_one": "{count} canal",
+    "channels_other": "{count} canais",
+    "folders_one": "{count} pasta",
+    "folders_other": "{count} pastas",
+    "videos_one": "{count} vídeo",
+    "videos_other": "{count} vídeos"
+  },
+  "pair": {
+    "title": "Conectar a extensão do navegador",
+    "desc": "Digite este código na extensão para ligar o seu navegador ao Hermes.",
+    "desc_syncing": "Conectado. Lendo suas inscrições…",
+    "desc_done": "Conectado. Tudo pronto.",
+    "code_label": "Seu código",
+    "steps_label": "Passos para conectar",
+    "step_open": "Abra a extensão no Chrome e digite o código",
+    "step_open_detail": "Clique no ícone da extensão na barra do navegador",
+    "step_read": "Lendo suas inscrições",
+    "step_read_detail": "A extensão abre a sua página de inscrições numa aba por alguns segundos; nada é alterado na sua conta",
+    "step_ready": "Pronto",
+    "waiting": "Aguardando a extensão…",
+    "expired_hint": "Este código venceu. Gere outro — leva um segundo.",
+    "connected_title": "{name} conectado",
+    "connected_desc": "Isto se preenche sozinho; costuma levar alguns segundos.",
+    "done_title": "Suas inscrições chegaram",
+    "slow": "A primeira leitura pode levar alguns minutos quando você segue muitos canais. Pode fechar — os canais aparecem sozinhos.",
+    "close": "Fechar",
+    "unnamed": "Seu navegador",
+    "endpoint_down": "A extensão só conversa com o Hermes enquanto ele está aberto. Deixe o Hermes aberto (pode ser em segundo plano) e a extensão se reconecta sozinha.",
+    "install": {
+      "title": "Ainda não tem a extensão?",
+      "body": "No Chrome, abra a página Extensões, ligue o Modo do desenvolvedor e escolha “Carregar sem compactação” com a pasta da extensão. Depois fixe o ícone na barra.",
+      "store_url": "",
+      "store_link": "Baixar a extensão"
+    },
+    "setup": {
+      "title": "Configurar a extensão",
+      "desc": "O Hermes coloca a extensão HermesTube numa pasta da sua pasta pessoal e abre a página Extensões do {browser}. Depois o navegador só precisa de dois cliques seus.",
+      "action": "Configurar a extensão",
+      "busy": "Configurando…",
+      "choose_browser": "Navegador",
+      "browser_generic": "seu navegador",
+      "no_browser_found": "O Hermes não encontrou Chrome, Edge, Brave, Chromium, Vivaldi nem Opera no computador onde ele roda. Ele ainda pode preparar a pasta; depois abra você mesmo a página Extensões do seu navegador.",
+      "update_title": "Uma versão nova da extensão está pronta",
+      "update_desc": "O Hermes troca os arquivos na mesma pasta (versão {version}). Depois aperte Recarregar no cartão da extensão no navegador.",
+      "update_action": "Atualizar a extensão",
+      "ready_title": "A pasta da extensão está pronta",
+      "reopen": "Abrir a página Extensões",
+      "steps_label": "Passos para instalar a extensão",
+      "step_folder": "O Hermes colocou a extensão numa pasta",
+      "step_updated": "O Hermes atualizou a extensão para a versão {version}",
+      "step_dev": "Ligue o “{dev}”",
+      "step_drag": "Arraste a pasta “HermesTube Extension” para essa página",
+      "step_drag_detail": "Ou clique em “{load}” e escolha a pasta — o caminho pode ser copiado acima",
+      "step_reload": "Aperte Recarregar no cartão do HermesTube no {browser}",
+      "step_reload_detail": "Na página Extensões do navegador. A extensão continua conectada ao Hermes.",
+      "step_code": "Digite o código abaixo na extensão",
+      "step_code_detail": "A extensão abre uma aba sozinha e pede o código",
+      "copy_path": "Copiar o caminho da pasta",
+      "opened": "A página Extensões do {browser} e a pasta estão abertas.",
+      "opened_page_only": "A página Extensões do {browser} está aberta. Use o caminho abaixo para achar a pasta.",
+      "not_opened_title": "O Hermes não conseguiu abrir o {browser}",
+      "open_yourself": "Página Extensões:",
+      "copy_url": "Copiar o endereço",
+      "other_computer": "Se o Hermes roda em outro computador, a pasta foi criada lá, não neste. A extensão só conversa com um Hermes no mesmo computador, então siga o guia de instalação no computador onde o Hermes roda.",
+      "problem": {
+        "no_browser": "O {browser} não foi encontrado no computador onde o Hermes roda.",
+        "no_display": "O computador onde o Hermes roda não tem tela para abrir o {browser}.",
+        "failed": "O {browser} não abriu no computador onde o Hermes roda.",
+        "unsupported": "O Hermes não consegue abrir um navegador neste sistema."
+      },
+      "manual_title": "Ou faça à mão",
+      "manual_open": "No {browser}, abra",
+      "manual_dev": "Ligue o “{dev}”",
+      "manual_load": "Clique em “{load}” e escolha esta pasta:",
+      "manual_load_above": "Clique em “{load}” e escolha a pasta acima.",
+      "manual_folder_later": "O Hermes cria esta pasta quando você aperta “Configurar a extensão”.",
+      "manual_code": "Digite o código abaixo na aba que a extensão abre (ou clique no ícone dela na barra).",
+      "browsers": {
+        "chrome": {
+          "dev": "Modo do desenvolvedor",
+          "load": "Carregar sem compactação",
+          "where": "A chave fica no canto superior direito da página Extensões."
+        },
+        "chromium": {
+          "dev": "Modo do desenvolvedor",
+          "load": "Carregar sem compactação",
+          "where": "A chave fica no canto superior direito da página Extensões."
+        },
+        "edge": {
+          "dev": "Modo de desenvolvedor (Developer mode)",
+          "load": "Carregar sem pacote (Load unpacked)",
+          "where": "A chave fica no painel da esquerda da página Extensões (se o painel estiver escondido, abra-o pelo botão de menu no canto superior esquerdo)."
+        },
+        "brave": {
+          "dev": "Modo do desenvolvedor",
+          "load": "Carregar sem compactação",
+          "where": "A chave fica no canto superior direito da página Extensões."
+        },
+        "vivaldi": {
+          "dev": "Modo do desenvolvedor",
+          "load": "Carregar sem compactação",
+          "where": "A chave fica no canto superior direito da página Extensões."
+        },
+        "opera": {
+          "dev": "Modo de desenvolvedor (Developer mode)",
+          "load": "Carregar sem compactação (Load unpacked)",
+          "where": "A chave fica no canto superior direito da página Extensões."
+        },
+        "arc": {
+          "dev": "Modo do desenvolvedor",
+          "load": "Carregar sem compactação",
+          "where": "A chave fica no canto superior direito da página Extensões."
+        },
+        "generic": {
+          "dev": "Modo do desenvolvedor (Developer mode)",
+          "load": "Carregar sem compactação (Load unpacked)",
+          "where": "A chave fica na página Extensões do navegador, em geral no canto superior direito."
+        }
+      },
+      "sandbox": {
+        "flatpak_title": "O {browser} é um Flatpak e ainda não enxerga esta pasta",
+        "flatpak_body": "Dê a ele acesso de leitura à pasta uma vez — rode isto num terminal e depois feche e abra o navegador:",
+        "copy_command": "Copiar o comando",
+        "snap_title": "O {browser} é um snap e não enxerga esta pasta",
+        "snap_body": "Navegadores em snap só enxergam pastas dentro de /home. Use uma versão do navegador que não seja snap, ou outro navegador."
+      },
+      "ask": {
+        "title": "Travou? O Hermes pode ajudar",
+        "desc": "Abre uma conversa nova com um pedido pronto: seu sistema, a pasta, o navegador e os passos. Nada é enviado até você apertar Enviar, e o pedido diz ao Hermes para não mexer no perfil do navegador, não pular os passos do próprio navegador e não instalar nada sem perguntar.",
+        "action": "Pedir ajuda ao Hermes",
+        "busy": "Abrindo uma conversa…",
+        "sent": "Uma conversa nova tem o pedido. Leia e aperte Enviar.",
+        "failed": "O Hermes não conseguiu abrir uma conversa. Copie o pedido e cole numa conversa com o Hermes:",
+        "copy_title": "Copiar um pedido para o Hermes",
+        "copy_desc": "Um pedido pronto com seu sistema, a pasta, o navegador e os passos, para uma conversa com o Hermes. Ele diz ao Hermes para não mexer no perfil do navegador, não pular os passos do próprio navegador e não instalar nada sem perguntar. O pedido vai em inglês.",
+        "copy_label": "Copiar um pedido para o Hermes"
+      },
+      "remote_title": "O Hermes roda em outro computador ({name})",
+      "remote_body": "Este botão configura a extensão naquele computador. A extensão só conversa com um Hermes no mesmo computador, então use o navegador de lá.",
+      "wsl": {
+        "title": "O Hermes roda dentro do WSL",
+        "localhost": "O navegador roda no Windows e chega ao Hermes dentro do WSL pelo encaminhamento de localhost do WSL, que vem ligado. Se o código nunca conectar, use “{ask}” abaixo.",
+        "no_interop": "O Hermes roda dentro do WSL com o interop desligado: abra o navegador você mesmo.",
+        "wsl_disk": "A pasta está no disco do WSL: copie-a para a sua pasta de usuário do Windows se o navegador recusar este caminho."
+      },
+      "not_ours_title": "Já existe uma pasta chamada “HermesTube Extension”",
+      "not_ours_body": "O Hermes não a criou, então não vai mexer nela. Renomeie ou mova essa pasta e verifique de novo.",
+      "check_again": "Verificar de novo",
+      "error_title": "O Hermes não conseguiu configurar a extensão",
+      "error_body": "Tente de novo, ou siga os passos à mão logo abaixo.",
+      "read_failed": "Ainda não deu para conferir a pasta da extensão — tentando de novo sozinho. O botão funciona mesmo assim.",
+      "show_folder": "Mostrar a pasta"
+    },
+    "errors": {
+      "ext_endpoint_down": {
+        "title": "O Hermes não conseguiu abrir a conexão com o navegador",
+        "body": "Feche e abra o Hermes de novo e tente outra vez. Se continuar, outro aplicativo pode estar atrapalhando."
+      },
+      "timeout": {
+        "title": "O Hermes demorou para responder",
+        "body": "Ele ainda pode estar iniciando. Tente de novo em instantes."
+      },
+      "generic": {
+        "title": "Não conseguimos criar um código",
+        "body": "O Hermes não respondeu como esperado. Tente de novo."
+      }
+    }
+  },
+  "done": {
+    "closing": "Abrindo suas inscrições em {seconds} s",
+    "stay": "Ficar aqui",
+    "open_now": "Ver minhas inscrições"
+  },
+  "link": {
+    "title": "Colar um canal",
+    "desc": "Link de canal, link de vídeo ou @handle. Você segue aqui — nada muda no YouTube.",
+    "label": "Link do canal ou @handle",
+    "placeholder": "@veritasium ou youtube.com/@veritasium",
+    "examples": "Por exemplo @mkbhd, youtube.com/@3blue1brown ou o link de um vídeo",
+    "submit": "Adicionar",
+    "list_title": "Adicionados aqui",
+    "undo": "Desfazer",
+    "retry": "Tentar de novo",
+    "dismiss": "Dispensar",
+    "add_again": "Adicionar de novo",
+    "done": "Concluir",
+    "status": {
+      "pending": "Procurando no YouTube…",
+      "added": "Seguindo · {handle}",
+      "added_plain": "Seguindo",
+      "exists": "Já está na sua lista",
+      "late": "O YouTube está lento — o canal aparece na sua lista em instantes",
+      "undoing": "Desfazendo…",
+      "undone": "Tirado da sua lista"
+    },
+    "errors": {
+      "empty": "Cole o link de um canal ou um @handle.",
+      "format": "Isso não parece um canal do YouTube. Use um @handle, o link do canal ou o link de um vídeo.",
+      "not_found": "Não encontramos este canal no YouTube. Confira o link ou o @handle.",
+      "rate_limited": "O YouTube está limitando os pedidos agora. Tente de novo em alguns minutos.",
+      "youtube_down": "O YouTube não está respondendo agora. Tente de novo em instantes.",
+      "timeout": "O YouTube demorou para responder. Tente de novo.",
+      "generic": "Não conseguimos adicionar este canal. Tente de novo.",
+      "undo_failed": "Não conseguimos desfazer. Tente de novo."
+    }
+  },
+  "demo": {
+    "title": "Modo demonstração",
+    "desc": "40 canais públicos reais em 6 pastas, alguns favoritos e uma aba por assunto. Nada mexe na sua conta do YouTube.",
+    "steps_label": "Carregando a demonstração",
+    "step_channels": "Adicionando canais e pastas",
+    "step_videos": "Buscando os vídeos mais recentes",
+    "step_ready": "Pronto para explorar",
+    "load": "Carregar demonstração",
+    "loaded_title": "A demonstração está carregada",
+    "loaded_desc": "Os canais da demonstração estão na sua lista. Limpar tira só eles — o que você adicionou fica.",
+    "clear": "Limpar demonstração",
+    "cleared_title": "Demonstração limpa",
+    "cleared_desc": "Só os canais da demonstração foram tirados.",
+    "load_again": "Carregar de novo",
+    "skipped": "{count} canais da demonstração já eram seus e ficaram como estavam",
+    "videos_later": "Os vídeos continuam chegando em segundo plano.",
+    "rss_down": "O feed do YouTube está instável agora — os vídeos chegam aos poucos.",
+    "errors": {
+      "load": "Não conseguimos carregar a demonstração. Tente de novo.",
+      "clear": "Não conseguimos limpar a demonstração. Tente de novo."
+    }
+  },
+  "devices": {
+    "title": "Navegadores conectados",
+    "desc": "Navegadores ligados ao Hermes pela extensão.",
+    "seen": "Ativo {when}",
+    "never_seen": "Ainda não apareceu",
+    "online": "Conectado agora",
+    "revoke": "Desconectar",
+    "revoke_label": "Desconectar {name}",
+    "revoke_title": "Desconectar {name}?",
+    "revoke_desc": "Suas inscrições e pastas continuam aqui.",
+    "revoke_effect_stop": "A extensão neste navegador para de sincronizar com o Hermes",
+    "revoke_effect_again": "Para conectar de novo, gere um novo código aqui",
+    "revoke_confirm": "Desconectar {name}",
+    "revoke_cancel": "Agora não",
+    "revoke_failed": "Não conseguimos desconectar {name}. Tente de novo.",
+    "error": "Não conseguimos carregar os navegadores conectados."
+  },
+  "reach": {
+    "remote_title": "Você está conectado a {name}, não a este computador",
+    "remote_body": "A extensão conversa com o Hermes do computador onde está o seu navegador. Troque para {local} para configurar.",
+    "local_default": "This device",
+    "anyway": "Meu navegador está em {name}",
+    "off_title": "O plugin não está ligado em “{profile}”",
+    "off_body": "Você está no perfil “{profile}”. Volte ao perfil onde instalou o plugin, ou ligue aqui: Capabilities → Plugins → HermesTube."
+  }
+}

@@ -1,0 +1,33 @@
+# Project configuration. No build backend: the plugin ships as a folder (`plugin/`), not as an
+# installable package. This file only holds development dependencies and tool settings.
+[project]
+name = "tube-plugin-workspace"
+version = "0.0.0"
+description = "Hermes Agent plugin: YouTube subscriptions organizer (workspace config)"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest", "ruff", "pytest-timeout", "jsonschema", "pyyaml"]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+# tools/: standalone maintainer utilities, outside the project's code
+extend-exclude = ["ref", "spikes", "node_modules", "units", "tools", "tests/fixtures"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["tube_pkg"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not live' -q"
+markers = ["live: uses the real network (left out of scripts/check)"]
+timeout = 60

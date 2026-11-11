@@ -1,0 +1,612 @@
+/* Navigation: TabBar (over the SDK's Tabs*), ModeSwitch (the SDK's SegmentedControl), FilterBar (the SDK's SearchField).
+   The SDK look is adjusted only through the plugin's classes (unlayered CSS beats the host's utilities). */
+
+/* --------------------------------------------------------------- TabBar */
+
+.PFX_tabbar {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--PFX_s1);
+  min-width: 0;
+  border-bottom: 1px solid var(--ui-stroke-tertiary);
+  container-type: inline-size;
+  container-name: PFX_tabbar;
+}
+
+.PFX_tabbar-root {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 0;
+}
+
+.PFX_tabbar-scroll {
+  position: relative;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.PFX_tabbar-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* edge shadow: the list fades out where there are still tabs to scroll */
+.PFX_tabbar[data-overflow='end'] .PFX_tabbar-scroll {
+  mask-image: linear-gradient(to right, currentColor calc(100% - 32px), transparent);
+}
+
+.PFX_tabbar[data-overflow='start'] .PFX_tabbar-scroll {
+  mask-image: linear-gradient(to right, transparent, currentColor 32px);
+}
+
+.PFX_tabbar[data-overflow='both'] .PFX_tabbar-scroll {
+  mask-image: linear-gradient(to right, transparent, currentColor 32px, currentColor calc(100% - 32px), transparent);
+}
+
+.PFX_tabbar-list {
+  display: flex;
+  width: max-content;
+  height: auto;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 2px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.PFX_tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: auto;
+  padding: 8px 10px 10px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--PFX_fg3);
+  font-size: var(--PFX_fs-body);
+  line-height: var(--PFX_lh-body);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_tab:hover {
+  color: var(--ui-text-secondary);
+  background: transparent;
+}
+
+.PFX_tab[data-state='active'],
+.PFX_tab[aria-selected='true'] {
+  color: var(--ui-text-primary);
+  background: transparent;
+  box-shadow: none;
+}
+
+.PFX_tab::after {
+  content: '';
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ui-text-primary);
+  transform: scaleX(0);
+  transition: transform var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_tab[data-state='active']::after,
+.PFX_tab[aria-selected='true']::after {
+  transform: scaleX(1);
+}
+
+/* single indicator: slides (position and width) to the active tab; replaces each tab's underline once measured */
+.PFX_tab-ink {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  display: none;
+  width: var(--PFX_ink-w, 0);
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ui-text-primary);
+  transform: translateX(var(--PFX_ink-x, 0));
+  pointer-events: none;
+}
+
+.PFX_tabbar[data-ink='true'] .PFX_tab-ink {
+  display: block;
+}
+
+.PFX_tab-ink[data-moved='true'] {
+  transition:
+    transform var(--PFX_dur-slow) var(--PFX_ease),
+    width var(--PFX_dur-slow) var(--PFX_ease);
+}
+
+.PFX_tabbar[data-ink='true'] .PFX_tab::after {
+  display: none;
+}
+
+.PFX_tab:focus-visible {
+  outline: 2px solid var(--PFX_ring);
+  outline-offset: -4px;
+  border-radius: var(--PFX_r-control);
+  box-shadow: none;
+}
+
+.PFX_tab-icon {
+  color: var(--PFX_fg3);
+}
+
+.PFX_tab-count {
+  color: var(--ui-accent);
+  font-size: var(--PFX_fs-label);
+  line-height: var(--PFX_lh-label);
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+
+.PFX_tab-add {
+  flex: none;
+  margin-bottom: 5px;
+  /* own outline and readable text: as a light-gray ghost action nobody found the button.
+     The outline lives here (not only in the app's variant) so it looks the same in any theme. */
+  border: 1px solid var(--ui-stroke-secondary);
+  border-radius: 6px;
+  color: var(--ui-text-primary);
+}
+
+.PFX_tab-add:hover {
+  border-color: var(--ui-stroke-primary, var(--ui-stroke-secondary));
+  background: var(--ui-bg-quinary);
+}
+
+/* each tab in a cell: the tab, the subtle "⋯" (active tab only) and the anchor of the right-click menu */
+.PFX_tab-cell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  transition: opacity var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_tab-more {
+  flex: none;
+  margin: 0 2px 2px -6px;
+  color: var(--PFX_fg3);
+  opacity: 0.7;
+}
+
+.PFX_tab-cell:hover .PFX_tab-more,
+.PFX_tab-more:focus-visible,
+.PFX_tab-more[data-state='open'],
+.PFX_tab-more[aria-expanded='true'] {
+  opacity: 1;
+  color: var(--ui-text-secondary);
+}
+
+.PFX_tab-menu-anchor {
+  position: absolute;
+  left: 8px;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+/* dragging: the dragged tab fades a little; the vertical mark shows where it lands */
+.PFX_tab-cell[data-dragging='true'] {
+  opacity: 0.45;
+}
+
+.PFX_tab-cell[data-drop]::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--ui-text-secondary);
+  pointer-events: none;
+}
+
+.PFX_tab-cell[data-drop='before']::before {
+  left: -2px;
+}
+
+.PFX_tab-cell[data-drop='after']::before {
+  right: -2px;
+}
+
+.PFX_tab[draggable='true'] {
+  -webkit-user-drag: element;
+}
+
+/* `addSlot`: what the screen puts in place of the "+" (e.g. a menu trigger); menu anchor, outside the scroller */
+.PFX_tab-add-slot {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+}
+
+/* "New theme" (AI) next to "+ New tab": same outline, the wand in the accent color to invite a click */
+.PFX_tab-theme {
+  flex: none;
+  margin-bottom: 5px;
+  border: 1px solid var(--ui-stroke-secondary);
+  border-radius: 6px;
+  color: var(--ui-text-primary);
+}
+
+.PFX_tab-theme:hover:not(:disabled) {
+  border-color: var(--ui-stroke-primary, var(--ui-stroke-secondary));
+  background: var(--ui-bg-quinary);
+}
+
+.PFX_tab-theme .PFX_tab-theme-icon {
+  color: var(--ui-accent);
+}
+
+.PFX_tab-theme:disabled .PFX_tab-theme-icon {
+  color: inherit;
+}
+
+/* no AI model: the disabled button sits in a focusable wrapper that carries the reason (tip) */
+.PFX_tab-theme-off {
+  display: inline-flex;
+  border-radius: 6px;
+}
+
+.PFX_tab-theme-off:focus-visible {
+  outline: 2px solid var(--PFX_ring);
+  outline-offset: 1px;
+}
+
+/* a theme building in the background: a quiet notice with the elapsed time (click = its progress) */
+.PFX_tab-building {
+  flex: none;
+  max-width: 280px;
+  margin-bottom: 5px;
+  color: var(--ui-text-secondary);
+}
+
+.PFX_tab-building-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.PFX_tab-building-time {
+  color: var(--PFX_fg3);
+  font-variant-numeric: tabular-nums;
+}
+
+.PFX_tab-skeleton {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 10px;
+}
+
+@container PFX_tabbar (max-width: 420px) {
+  .PFX_tab-add-label,
+  .PFX_tab-theme-label,
+  .PFX_tab-building-label {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------- StatusBarItem (the app's status bar) */
+
+.PFX_baritem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  padding: 0 6px;
+  border-radius: 4px;
+  color: var(--PFX_fg3);
+  font-size: inherit;
+  line-height: 1;
+  white-space: nowrap;
+  transition: color var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_baritem:hover {
+  color: var(--ui-text-primary);
+  background: var(--ui-control-hover-background);
+}
+
+.PFX_baritem-count {
+  color: var(--ui-accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.PFX_baritem-note {
+  color: var(--PFX_fg3); /* the app's quaternary gives 2.2–3:1: unreadable on the bar */
+}
+
+/* --------------------------------------------------------------- ModeSwitch */
+
+.PFX_mode {
+  flex: none;
+}
+
+/* --------------------------------------------------------------- FilterBar */
+
+.PFX_filterbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--PFX_s2);
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.PFX_filterbar-search {
+  flex: 1 1 200px;
+  min-width: 160px;
+  max-width: 340px;
+}
+
+.PFX_filterbar-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* filter chip on: besides the kit chip's subtle background, the weight says "on" without relying on color */
+.PFX_filterbar-filters .PFX_chip[data-active='true'] {
+  font-weight: 600;
+}
+
+.PFX_filterbar-count {
+  color: var(--PFX_fg3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------- Sort / group (Subscriptions filter bar) */
+
+.PFX_view-controls {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+}
+
+.PFX_view-trigger {
+  gap: 5px;
+  max-width: 200px;
+  color: var(--ui-text-secondary);
+  font-weight: 450;
+}
+
+.PFX_view-trigger:hover,
+.PFX_view-trigger[data-open='true'] {
+  color: var(--ui-text-primary);
+}
+
+.PFX_view-trigger-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.PFX_view-trigger-caret {
+  flex: none;
+  color: var(--ui-text-quaternary);
+}
+
+/* choice item: the ✓ shows only on the chosen one, but keeps its place on all (aligned text) */
+.PFX_view-check {
+  flex: none;
+}
+
+.PFX_view-check-off {
+  visibility: hidden;
+}
+
+/* section label in the single "View" menu (narrow bar) */
+.PFX_view-menu-label {
+  padding: 4px 8px 2px;
+  color: var(--PFX_fg3);
+  letter-spacing: 0.04em;
+}
+
+/* --------------------------------------------------------------- SectionNav + the single page */
+
+/* Frame: the header above the page; the page takes the rest of the height and scrolls inside. The single page
+   (ShellPage) uses the same frame with one section box per visited section (only the current one shown). */
+.PFX_sections {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  container-type: inline-size;
+  container-name: PFX_sections;
+}
+
+.PFX_sections > .PFX_page {
+  flex: 1 1 auto;
+  height: auto;
+}
+
+.PFX_shell-section {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* (the class above sets display: the hidden sections must still go away) */
+.PFX_shell-section[hidden] {
+  display: none;
+}
+
+.PFX_shell-section > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.PFX_shell-section > .PFX_page {
+  height: auto;
+}
+
+.PFX_secnav-back {
+  flex: none;
+  margin-right: -4px;
+  color: var(--ui-text-secondary);
+}
+
+.PFX_secnav-back:disabled {
+  color: var(--ui-text-quaternary);
+}
+
+.PFX_secnav {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--PFX_s3);
+  min-width: 0;
+  padding: 14px var(--PFX_s5) 0;
+}
+
+.PFX_secnav-brand {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  color: var(--ui-text-primary);
+  white-space: nowrap;
+}
+
+.PFX_secnav-brand-icon {
+  color: var(--ui-text-secondary);
+}
+
+/* segmented strip: tinted track, current item raised (the same language as the app's SegmentedControl) */
+.PFX_secnav-track {
+  display: inline-flex;
+  flex: 0 1 auto;
+  min-width: 0;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--PFX_r-control);
+  background: var(--ui-bg-tertiary);
+}
+
+.PFX_secnav-item {
+  padding: 3px 10px;
+  border-radius: 4px;
+  color: var(--PFX_fg3);
+  white-space: nowrap;
+  transition:
+    color var(--PFX_dur) var(--PFX_ease),
+    background-color var(--PFX_dur) var(--PFX_ease);
+}
+
+.PFX_secnav-item:hover {
+  color: var(--ui-text-primary);
+}
+
+.PFX_secnav-item[aria-current='page'] {
+  color: var(--ui-text-primary);
+  background: var(--ui-bg-editor);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ui-base) 14%, transparent);
+  font-weight: 550;
+  cursor: default;
+}
+
+.PFX_secnav-compact {
+  flex: none;
+  min-width: 0;
+}
+
+/* the Watch tab: one more item in the strip, with the short video title and its own ✕ */
+.PFX_secnav-watch {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 260px;
+  border-radius: 4px;
+}
+
+.PFX_secnav-watch[data-current='true'] {
+  background: var(--ui-bg-editor);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ui-base) 14%, transparent);
+}
+
+.PFX_secnav-watch .PFX_secnav-item[aria-current='page'] {
+  background: transparent;
+  box-shadow: none;
+}
+
+.PFX_secnav-watch-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  padding-right: 4px;
+}
+
+.PFX_secnav-watch-icon {
+  flex: none;
+}
+
+.PFX_secnav-watch-close {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 3px;
+  border-radius: 3px;
+  color: var(--PFX_fg3);
+}
+
+.PFX_secnav-watch-close:hover {
+  background: color-mix(in srgb, var(--ui-base) 10%, transparent);
+  color: var(--ui-text-primary);
+}
+
+.PFX_secnav-watch-close:focus-visible {
+  outline: 2px solid var(--PFX_ring);
+  outline-offset: 1px;
+}
+
+/* narrow width: the strip gives way to the compact menu (each query hides only one of the forms) */
+@container PFX_sections (max-width: 479px) {
+  .PFX_secnav-track {
+    display: none;
+  }
+
+  .PFX_secnav {
+    padding-inline: var(--PFX_s3);
+  }
+}
+
+@container PFX_sections (min-width: 480px) {
+  .PFX_secnav-compact {
+    display: none;
+  }
+}

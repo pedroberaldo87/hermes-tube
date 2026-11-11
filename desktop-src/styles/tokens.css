@@ -1,0 +1,223 @@
+/* Plugin visual language — tokens and base. Normative: docs/design/DESIGN.md.
+   Everything here derives from the host theme variables (var(--ui-*), --dt-*); no fixed color.
+   `PFX_` is swapped for the plugin prefix in lib/style.ts (derived from PLUGIN_ID). */
+
+:root {
+  /* 4/8 px rhythm */
+  --PFX_s1: 4px;
+  --PFX_s2: 8px;
+  --PFX_s3: 12px;
+  --PFX_s4: 16px;
+  --PFX_s5: 24px;
+  --PFX_s6: 32px;
+
+  /* typography: 4 levels and only 4 */
+  --PFX_fs-title: 17px;
+  --PFX_lh-title: 24px;
+  --PFX_fs-head: 14px;
+  --PFX_lh-head: 20px;
+  --PFX_fs-body: 13px;
+  --PFX_lh-body: 18px;
+  --PFX_fs-label: 12px;
+  --PFX_lh-label: 16px;
+
+  /* one radius for the card, another for the thumbnail */
+  --PFX_r-card: 10px;
+  --PFX_r-thumb: 6px;
+  --PFX_r-control: 6px;
+
+  /* motion: elevation only on hover/focus */
+  --PFX_dur: 160ms;
+  --PFX_dur-slow: 180ms;
+  --PFX_ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --PFX_stagger: 28ms;
+
+  /* theme-derived tones. Text in 3 tones: --ui-text-primary, --ui-text-secondary and --PFX_fg3
+     (66% of --ui-base: the host's --ui-text-tertiary, 54%, sits at ~3.5:1 on light; 66% passes 4.5:1
+     also on the theme's tinted surfaces). The
+     --ui-text-quaternary is decorative only (separators, supporting icons). */
+  --PFX_fg3: color-mix(in srgb, var(--ui-base) 66%, transparent);
+  --PFX_ring: color-mix(in srgb, var(--ui-base) 52%, transparent);
+  --PFX_scrim: color-mix(in srgb, var(--ui-bg-editor) 84%, transparent);
+  --PFX_veil: color-mix(in srgb, var(--ui-bg-editor) 58%, transparent);
+  --PFX_accent-soft: color-mix(in srgb, var(--ui-accent) 12%, transparent);
+}
+
+/* --------------------------------------------------------------- typography (4 levels) */
+
+.PFX_t-title {
+  font-size: var(--PFX_fs-title);
+  line-height: var(--PFX_lh-title);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+.PFX_t-head {
+  font-size: var(--PFX_fs-head);
+  line-height: var(--PFX_lh-head);
+  font-weight: 600;
+  letter-spacing: -0.004em;
+}
+
+.PFX_t-body {
+  font-size: var(--PFX_fs-body);
+  line-height: var(--PFX_lh-body);
+  font-weight: 400;
+}
+
+.PFX_t-label {
+  font-size: var(--PFX_fs-label);
+  line-height: var(--PFX_lh-label);
+  font-weight: 450;
+  letter-spacing: 0.012em;
+}
+
+.PFX_num {
+  font-variant-numeric: tabular-nums;
+}
+
+.PFX_truncate {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.PFX_sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* native button with no appearance (the look comes from the class that uses it) */
+.PFX_bare {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.PFX_bare:focus-visible,
+.PFX_focus:focus-visible {
+  outline: 2px solid var(--PFX_ring);
+  outline-offset: 2px;
+  border-radius: var(--PFX_r-control);
+}
+
+/* --------------------------------------------------------------- skeleton (bar in place of text) */
+
+/* The skeleton line inherits the real line's box (same typography class); the bar takes the glyph height,
+   centered — which is why the skeleton has exactly the final geometry. */
+.PFX_sk-line {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 1lh;
+}
+
+/* Almost imperceptible tone, derived from the theme line (not from the accent-tinted fill), with a soft
+   shimmer that passes slowly. The SDK's Skeleton brings `animate-pulse` + its own background: the plugin class
+   (unlayered) beats both. `prefers-reduced-motion` turns the shimmer off (global rule at the end). */
+.PFX_sk {
+  display: block;
+  flex: none;
+  height: 0.7em;
+  width: var(--PFX_sk-w, 72%);
+  border-radius: 3px;
+  background-color: color-mix(in srgb, var(--ui-stroke-quaternary) 70%, color-mix(in srgb, var(--ui-base) 3%, transparent));
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, var(--ui-bg-elevated) 55%, transparent) 50%,
+    transparent 70%
+  );
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  opacity: 1;
+  animation: PFX_shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes PFX_shimmer {
+  from {
+    background-position: 140% 0;
+  }
+
+  to {
+    background-position: -40% 0;
+  }
+}
+
+.PFX_sk[data-shape='block'] {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.PFX_sk[data-shape='round'] {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+}
+
+@keyframes PFX_fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes PFX_count-in {
+  from {
+    opacity: 0;
+    transform: translateY(45%);
+  }
+}
+
+/* cards enter on load: rise 4 px and appear, in a light cascade (--PFX_i = order) */
+@keyframes PFX_rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+/* "waiting…": three dots that breathe */
+@keyframes PFX_breathe {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* success: the badge enters with a slight growth */
+@keyframes PFX_pop {
+  from {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+}
+
+/* --------------------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  [class*='PFX_'],
+  [class*='PFX_']::before,
+  [class*='PFX_']::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

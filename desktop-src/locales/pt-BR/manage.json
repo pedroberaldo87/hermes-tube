@@ -1,0 +1,154 @@
+{
+  "title": "Gerenciar",
+  "subtitle": "{subscribed} inscritos · {followed} seguidos",
+  "count": "{shown} de {total} canais",
+  "table_label": "Canais",
+  "loading": "Carregando canais",
+  "select_all": "Selecionar os {count} canais filtrados",
+  "select_row": "Selecionar {name}",
+  "sort_by": "Ordenar por {name}",
+  "columns": {
+    "select": "Seleção",
+    "name": "Canal",
+    "folder": "Pasta",
+    "tags": "Tags",
+    "last": "Último vídeo",
+    "rhythm": "Ritmo",
+    "shorts": "Shorts",
+    "watched": "Assistidos",
+    "relation": "Relação"
+  },
+  "column_hints": {
+    "last": "Quando saiu o vídeo mais recente",
+    "rhythm": "Vídeos por semana",
+    "shorts": "Parte de Shorts entre os vídeos recentes",
+    "watched": "Vídeos que você assistiu nos últimos 90 dias"
+  },
+  "rhythm_value": "{n}/sem",
+  "no_folder": "Sem pasta",
+  "add_tags": "Pôr tags",
+  "edit_folder": "Trocar a pasta de {name}",
+  "edit_tags": "Trocar as tags de {name}",
+  "favorite": "Favorito",
+  "muted": "Silenciado",
+  "relation": {
+    "active": "Inscritos + seguidos",
+    "subscribed": "Inscrito",
+    "followed": "Seguido",
+    "ex": "Ex-inscrição",
+    "ignored": "Ignorado"
+  },
+  "filters": {
+    "search": "Buscar nome ou @handle",
+    "folder": "Pasta",
+    "folder_all": "Todas as pastas",
+    "tag": "Tag",
+    "tag_all": "Qualquer tag",
+    "relation": "Relação",
+    "favorite": "Favoritos",
+    "muted": "Silenciados",
+    "stale": "Parados",
+    "stale_any": "Qualquer data",
+    "stale_option": "Sem vídeo há {count} meses"
+  },
+  "chips": {
+    "folder": "Pasta: {name}",
+    "tag": "#{name}",
+    "stale": "Sem vídeo há {count}+ meses",
+    "remove": "Tirar o filtro: {name}"
+  },
+  "rail": {
+    "label": "Pastas",
+    "all": "Todos os canais",
+    "none": "Sem pasta",
+    "new": "Nova pasta",
+    "placeholder": "Nome da pasta",
+    "rename": "Renomear {name}",
+    "drop": "Solte para mover para cá"
+  },
+  "picker": {
+    "filter": "Digite para filtrar",
+    "create_folder": "Nova pasta “{name}”",
+    "create_tag": "Nova tag “{name}”",
+    "apply": "Aplicar",
+    "empty": "Nada encontrado",
+    "move": "Mover para a pasta",
+    "tag": "Pôr tag",
+    "untag": "Tirar tag"
+  },
+  "batch": {
+    "label": "Ações da seleção",
+    "selected_one": "{count} selecionado",
+    "selected_other": "{count} selecionados",
+    "hidden_one": "{count} escondido pelos filtros",
+    "hidden_other": "{count} escondidos pelos filtros",
+    "move": "Mover para…",
+    "tag": "Pôr tag",
+    "untag": "Tirar tag",
+    "favorite": "Favoritar",
+    "unfavorite": "Desfavoritar",
+    "mute": "Silenciar",
+    "unmute": "Reativar",
+    "read": "Marcar como lido",
+    "organize": "Organizar com Hermes",
+    "clear": "Limpar seleção"
+  },
+  "toast": {
+    "move_one": "{name} movido para {folder}",
+    "move_other": "{count} canais movidos para {folder}",
+    "move_none_one": "{name} tirado da pasta",
+    "move_none_other": "{count} canais tirados das pastas",
+    "tag_one": "#{tag} posta em {name}",
+    "tag_other": "#{tag} posta em {count} canais",
+    "untag_one": "#{tag} tirada de {name}",
+    "untag_other": "#{tag} tirada de {count} canais",
+    "favorite_one": "{name} nos favoritos",
+    "favorite_other": "{count} canais nos favoritos",
+    "unfavorite_one": "{name} fora dos favoritos",
+    "unfavorite_other": "{count} canais fora dos favoritos",
+    "mute_one": "{name} silenciado",
+    "mute_other": "{count} canais silenciados",
+    "unmute_one": "{name} reativado",
+    "unmute_other": "{count} canais reativados",
+    "read_one": "{name} marcado como lido",
+    "read_other": "{count} canais marcados como lidos",
+    "read_nothing": "Nada novo para marcar como lido",
+    "read_partial": "{count} canais não foram marcados: {error}",
+    "tags_set": "Tags de {name} atualizadas",
+    "nothing": "Nada mudou",
+    "folder_created": "Pasta “{name}” criada",
+    "folder_renamed": "Pasta renomeada para “{name}”",
+    "undo": "Desfazer",
+    "undone": "Desfeito",
+    "undo_failed": "Não deu para desfazer: {error}",
+    "failed": "Não deu para salvar: {error}"
+  },
+  "row_error": "Não salvou: {error}",
+  "banner": {
+    "ext_disconnected": "Extensão do navegador desconectada — inscrições novas não sincronizam.",
+    "reconnect": "Reconectar",
+    "ext_not_paired": "Conecte a extensão do navegador para trazer suas inscrições",
+    "connect": "Conectar"
+  },
+  "empty": {
+    "title": "Nenhum canal ainda",
+    "description": "Conecte a extensão do navegador, cole o link de um canal ou carregue a demo.",
+    "action": "Começar"
+  },
+  "no_results": {
+    "title": "Nenhum canal com esses filtros",
+    "description": "Afrouxe um filtro ou limpe todos.",
+    "action": "Limpar filtros"
+  },
+  "error": {
+    "title": "Não deu para carregar seus canais"
+  },
+  "actions": {
+    "organize": "Organizar com Hermes",
+    "cleanup": "Faxina",
+    "connect": "Conectar um navegador",
+    "connect_hint": "Conectar um navegador ou adicionar um canal",
+    "connected": "Navegador conectado",
+    "connected_hint": "Ver navegadores conectados ou adicionar um canal"
+  }
+}

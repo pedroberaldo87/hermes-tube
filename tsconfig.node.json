@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "types": ["node"]
+  },
+  "include": ["vitest.config.ts", "extension/vite.config.ts", "extension/e2e/**/*.ts"],
+  "exclude": ["node_modules"]
+}

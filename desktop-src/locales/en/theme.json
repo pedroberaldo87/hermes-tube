@@ -1,0 +1,154 @@
+{
+  "title": "New topic tab",
+  "description": "Hermes searches YouTube, curates with AI and shows a preview. Nothing is saved until you say so.",
+  "field": {
+    "label": "What do you want a tab about?",
+    "placeholder": "e.g. AI agents, sourdough bread, Roman history",
+    "hint": "A few words are enough. Hermes plans the searches.",
+    "too_short": "Type at least 2 characters.",
+    "invalid": "Hermes couldn't use this text. Try other words."
+  },
+  "examples": {
+    "label": "Try one",
+    "ex1": "AI agents",
+    "ex2": "Sourdough bread",
+    "ex3": "Roman history",
+    "ex4": "Espresso at home",
+    "ex5": "Learning Rust"
+  },
+  "options": {
+    "label": "Options",
+    "language": "Videos in",
+    "lang_any": "Any language",
+    "lang_pt": "Portuguese",
+    "lang_en": "English",
+    "classics": "Include classics",
+    "classics_hint": "older, well-known videos too"
+  },
+  "hints": {
+    "lang_pt": "(videos in Portuguese)",
+    "lang_en": "(videos in English)",
+    "classics": "(include classics: older, well-known videos)"
+  },
+  "steps": {
+    "label": "Progress",
+    "expand": "Expanding the topic",
+    "search": "Searching YouTube",
+    "curate": "Curating with AI",
+    "preview": "Building the preview",
+    "expand_running": "reading the topic…",
+    "searches_one": "{count} search",
+    "searches_other": "{count} searches",
+    "search_running_one": "{count} search on YouTube…",
+    "search_running_other": "{count} searches on YouTube…",
+    "found_one": "{count} video",
+    "found_other": "{count} videos",
+    "rating_one": "rating {count} video…",
+    "rating_other": "rating {count} videos…",
+    "rated_progress": "{done} of {total} rated",
+    "rated_one": "{count} rated",
+    "rated_other": "{count} rated",
+    "kept_one": "{count} kept",
+    "kept_other": "{count} kept",
+    "channels_one": "{count} channel",
+    "channels_other": "{count} channels"
+  },
+  "progress": {
+    "lead": "This usually takes 1–3 minutes: Hermes is reading the candidates one by one.",
+    "background": "Closing this window doesn't stop it: the tab keeps building and Subscriptions tells you when it's ready.",
+    "elapsed": "Elapsed time {time}",
+    "coming": "Preview",
+    "coming_desc": "The videos Hermes keeps show up here.",
+    "cancel_failed": "Couldn't cancel; the search will finish on its own. Nothing is saved until you confirm."
+  },
+  "preview": {
+    "name_label": "Tab name",
+    "name_empty": "Give the tab a name.",
+    "name_long": "Up to {max} characters.",
+    "about": "About “{query}”",
+    "videos": "Videos",
+    "videos_desc": "Drop what doesn't fit with 👎 (or D on a focused video). Hermes learns from it.",
+    "grid_label": "Preview videos",
+    "down": "Not for me",
+    "reason_search": "found by search",
+    "reason_classics": "classic",
+    "reason_rss": "from a seed channel",
+    "seeds": "Seed channels",
+    "seeds_desc": "Channels with 3 or more kept videos. Following them keeps this tab fresh.",
+    "seeds_empty": "No channel showed up 3 or more times, so the tab will rely on search.",
+    "seed_kept_one": "{count} kept video",
+    "seed_kept_other": "{count} kept videos",
+    "seed_choice": "What to do with {name}",
+    "follow": "Follow",
+    "ignore": "Ignore",
+    "follow_all": "Follow all",
+    "ignore_all": "Ignore all",
+    "in_list": "Already in your list",
+    "folder": "Also create the folder “{name}”",
+    "folder_plain": "Also create a folder",
+    "partial_title": "Partial preview",
+    "partial": "Time ran out before Hermes rated everything. You can save what is here or try again.",
+    "saved_title": "This topic is already a tab",
+    "saved": "Open it in Subscriptions, or start a new topic.",
+    "all_removed_title": "You dropped every video",
+    "all_removed": "Bring them back, or rephrase the topic."
+  },
+  "footer": {
+    "not_now": "Not now",
+    "start": "Build preview",
+    "cancel": "Cancel",
+    "background": "Continue in background",
+    "discard": "Discard",
+    "save": "Save tab",
+    "save_folder": "Save tab and folder",
+    "open_home": "Open in Subscriptions",
+    "rephrase": "Rephrase",
+    "new_theme": "New topic",
+    "save_shortcut": "⌘Enter saves"
+  },
+  "empty": {
+    "title": "Nothing found for “{query}”",
+    "desc": "Try fewer or broader words, or a related topic.",
+    "restore": "Bring them back"
+  },
+  "ai": {
+    "no_model_title": "No AI model is available",
+    "no_model_desc": "Topic tabs need an AI model to plan the searches and curate. Pick one and sign in under Settings → Models first.",
+    "open_settings": "Open Settings",
+    "provider_unavailable_title": "Hermes couldn't reach your AI model",
+    "provider_unavailable_action": "Open model settings"
+  },
+  "no_model": {
+    "title": "Pick an AI model first",
+    "desc": "Topic tabs need a model to plan the searches and curate. Pick one and sign in under Settings → Models.",
+    "action": "Open Settings"
+  },
+  "provider_unavailable": {
+    "title": "Hermes couldn't reach your AI model",
+    "action": "Open model settings",
+    "retry": "Try again"
+  },
+  "busy": {
+    "title": "A topic tab is already being built",
+    "desc": "Hermes builds one topic tab at a time. Follow it, or try again when it finishes.",
+    "follow": "Follow it",
+    "retry": "Try again"
+  },
+  "error": {
+    "title": "Couldn't build the preview",
+    "load_title": "Couldn't open this preview",
+    "expired_title": "That search is gone",
+    "expired": "Previews are kept for 7 days. Start a new one.",
+    "save_title": "Couldn't save",
+    "conflict": "This topic was already saved as a tab."
+  },
+  "toast": {
+    "saved": "Tab “{name}” created",
+    "undo": "Undo",
+    "undone": "Tab “{name}” removed",
+    "reopen": "Reopen preview",
+    "undo_failed": "Couldn't undo: {error}",
+    "removed": "Dropped “{title}”",
+    "down_failed": "Couldn't drop it: {error}"
+  }
+}

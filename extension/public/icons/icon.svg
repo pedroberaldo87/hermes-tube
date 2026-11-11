@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- HermesTube: a folder with a cut-out "play". Neutral on purpose: neither the red nor the shape of the YouTube logo. -->
+  <rect width="128" height="128" rx="28" fill="#14161b"/>
+  <path fill="#eef0f4" d="M22 44c0-7.7 6.3-14 14-14h17.5c3.9 0 7.6 1.6 10.2 4.4l4.1 4.4c1.1 1.2 2.7 1.9 4.4 1.9H92c7.7 0 14 6.3 14 14v32c0 7.7-6.3 14-14 14H36c-7.7 0-14-6.3-14-14V44z"/>
+  <path fill="#14161b" d="M55 56.6c0-2.3 2.5-3.8 4.5-2.6l22.6 13.4c2 1.2 2 4 0 5.2L59.500 86c-2 1.200-4.500-.300-4.500-2.600V56.600z"/>
+</svg>

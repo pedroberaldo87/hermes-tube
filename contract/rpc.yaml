@@ -1,0 +1,497 @@
+format: tube-rpc/1
+info:
+  title: Plugin RPC methods and events
+  version: 1.0.0
+  description: |
+    Source of truth for the RPC methods (`plugin.<PLUGIN_ID>.<group>.<verb>`) and the events. Own format
+    `tube-rpc/1`, validated by `scripts/gen_types.py` (meta-schema `RPC_META`). Schemas: JSON Schema 2020-12; domain
+    types through `$ref` to `../shared/domain.schema.json`; REST schemas through `api.yaml#/components/schemas/…`.
+
+    Rules
+    - Registration: `ctx.register_rpc("<group>.<verb>", handler)` in `register(ctx)`. Hermes enforces the prefix:
+      name on the wire = `plugin.<PLUGIN_ID>.<group>.<verb>` (`rpcMethod()` in shared/ids.ts). Handler:
+      `handler(params: dict, *, session_id: str | None = None, **kwargs) -> dict` — returns the envelope
+      `{"ok": true, "data": …}` / `{"ok": false, "error": {code, message, reason?, details?}}` (never raises;
+      an unexpected exception → `internal`). Invalid `params` → `invalid`.
+    - **RPC only exists in the gateway** (the process of `register(ctx)`; on the local Desktop, served profile = gateway topology). The
+      client checks `plugin-rpc-v1` in `runtime.describe`; a JSON-RPC `-32601` answer = no RPC on this backend
+      → follow the method's `fallback`: `{rest: <operationId>}` (same operation over REST) or `{message: <i18n key>}`
+      (the interface shows "open it from the Desktop with a local backend" and offers the chat/`/tube` path when there is one).
+      There is no REST path for AI or for approval (`plugin_api` has neither `ctx` nor `ctx.llm`).
+    - **Answers in < 1 s.** `kind: job` → stores the job (`JobRunner.submit`) and returns `{job: Job}` (status
+      `queued`/`running`); the work runs in a gateway thread (`contextvars.copy_context`, database path already
+      resolved) and the result goes to `jobs.result` in the shape of `job_result`. The interface follows it through
+      `GET /jobs/{id}` every 2 s while active (**required**) and uses the `events` only to speed things up. The Desktop client
+      cuts the call at 30 s; the server does not. `kind: direct` → short result right away.
+    - Events: `JobRunner.submit(kind, fn, event=<events[-1]>, progress_event=<…progress>, session_id=session_id)`.
+      With `session_id` (from the JSON-RPC frame, not from `params`) the event goes only to that session
+      (`ctx.emit_to_session`); without it, a global `broadcast_plugin_event`. A call without a session is accepted. Details per
+      topology: `contract/events.md`.
+    - Human approval of an unsubscribe: only `cleanup.approve`/`cleanup.resubscribe` (via `desktop_rpc`, a native
+      Desktop credential the agent does not have) and `/tube cleanup` (via `ask_choice`). Tools and routines never.
+
+components:
+  schemas:
+    EmptyParams:
+      type: object
+      properties: {}
+    JobAccepted:
+      description: 'Answer of a `kind: job` method: the job already stored; follow it through `GET /jobs/{id}`.'
+      type: object
+      required: [job]
+      properties:
+        job: {$ref: '../shared/domain.schema.json#/$defs/Job'}
+    ChannelIdsParams:
+      type: object
+      required: [channel_ids]
+      properties:
+        channel_ids: {type: array, items: {type: string, pattern: '^UC[A-Za-z0-9_-]{22}$'}, minItems: 1, maxItems: 500}
+    QueueItems:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items: {$ref: '../shared/domain.schema.json#/$defs/QueueItem'}
+    OrganizeRunParams:
+      type: object
+      properties:
+        channel_ids:
+          type: [array, 'null']
+          items: {type: string}
+          description: '`null`/absent = channels without a folder.'
+    OrganizeAcceptParams:
+      description: 'Per suggestion or per channel (at least one). `edits` (channel_id → correction) become examples for the next call.'
+      type: object
+      minProperties: 1
+      properties:
+        suggestion_ids: {type: array, items: {type: string}}
+        channel_ids: {type: array, items: {type: string}}
+        edits:
+          type: object
+          additionalProperties: {$ref: '../shared/domain.schema.json#/$defs/OrganizeEdit'}
+    OrganizeRejectParams:
+      type: object
+      minProperties: 1
+      properties:
+        suggestion_ids: {type: array, items: {type: string}}
+        channel_ids: {type: array, items: {type: string}}
+    RejectResult:
+      type: object
+      required: [count]
+      properties:
+        count: {type: integer, minimum: 0}
+    ThemeCreateParams:
+      type: object
+      required: [query]
+      properties:
+        query: {type: string, minLength: 2, maxLength: 200, description: Free-text theme.}
+        language:
+          type: [string, 'null']
+          enum: [any, pt, en, null]
+          description: 'Language of the videos (searches and curation). `any`/`null`/absent = no restriction. Also applies to the theme''s refreshes.'
+        classics:
+          type: [boolean, 'null']
+          description: '`true` adds the classics (best of all time) even if the model finds the theme "of the moment"; `false` never adds them; `null`/absent = the model decides.'
+    JobCancelParams:
+      type: object
+      required: [job_id]
+      properties:
+        job_id: {type: string, minLength: 1}
+    JobCancelResult:
+      description: '`job` = state after the request (`null` if the id does not exist); `cancelled` = this request cancelled it (false if it had already finished, was already cancelled or does not exist).'
+      type: object
+      required: [job, cancelled]
+      properties:
+        job:
+          oneOf:
+            - {$ref: '../shared/domain.schema.json#/$defs/Job'}
+            - {type: 'null'}
+        cancelled: {type: boolean}
+    ThemeSaveParams:
+      type: object
+      required: [theme_id]
+      properties:
+        theme_id: {type: string}
+        edits: {$ref: '../shared/domain.schema.json#/$defs/ThemeSaveEdits'}
+    ThemeIdParams:
+      type: object
+      required: [theme_id]
+      properties:
+        theme_id: {type: string}
+    ListImportParams:
+      type: object
+      required: [url]
+      properties:
+        url: {type: string, pattern: '^https?://', description: 'Page with the list (post, article); downloaded through `core/http.py`.'}
+    ListToTabParams:
+      type: object
+      required: [list_id]
+      properties:
+        list_id: {type: string}
+        name: {type: [string, 'null']}
+        follow: {type: boolean, default: true, description: 'Follows the resolved channels (`source=list`).'}
+    # ---------------------------------------------------------------- event payloads
+    JobEventPayload:
+      description: 'End of a job (`JobRunner`): read `GET /jobs/{id}` for the result.'
+      type: object
+      required: [job, status]
+      properties:
+        job: {type: string}
+        status: {$ref: '../shared/domain.schema.json#/$defs/JobStatus'}
+    ThemeProgressPayload:
+      type: object
+      required: [job, progress]
+      properties:
+        job: {type: string}
+        progress: {$ref: '../shared/domain.schema.json#/$defs/Progress'}
+    QueueChangedPayload:
+      type: object
+      required: [queue_ids, pending]
+      properties:
+        queue_ids: {type: array, items: {type: string}, description: Items that changed.}
+        pending: {type: integer, minimum: 0, description: 'approved + running after the change.'}
+    CleanupScannedPayload:
+      description: 'May come from the core (`scan_id`) and/or from the JobRunner (`job`, `status`): all optional; the consumer reloads `GET /cleanup`.'
+      type: object
+      minProperties: 1
+      properties:
+        job: {type: string}
+        status: {$ref: '../shared/domain.schema.json#/$defs/JobStatus'}
+        scan_id: {type: string}
+
+methods:
+  # ==================================================================== jobs
+  job.cancel:
+    summary: Cancels an AI job (cooperative; idempotent)
+    description: |
+      `JobRunner.cancel(job_id)`. Active job → closes **right away** with `status: error` and `error.code: cancelled`
+      (`JOB_CANCELLED_CODE`; a dedicated `JobStatus` depends on the `CHECK` on `jobs.status`), leaves `GET /jobs` and frees the
+      "one at a time" slot (following `organize.run`/`theme.create` calls do not get `busy`); the end is announced by the event of the method that
+      created the job (`organize.done`, `theme.ready`…, `status: error`), only once. The work stops at the
+      next checkpoint: organise between batches (finished batches stay as pending suggestions; nothing is
+      applied), theme between steps and between searches (the preview is not created; `theme.refresh` leaves the saved theme as
+      it was). A model call already in flight ends in the background and is discarded. Finished/missing → `ok`
+      with `cancelled: false` (never an error).
+    x-module: plugin/rpc/jobs.py
+    x-unit: area-ai
+    kind: direct
+    params: {$ref: '#/components/schemas/JobCancelParams'}
+    result: {$ref: '#/components/schemas/JobCancelResult'}
+    errors: [invalid]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {job_id: job_3}
+      result: {ok: true, data: {job: {id: job_3, kind: theme, status: error, created_at: 1762700000, updated_at: 1762700021, progress: {stage: search, done: 0, total: 16, message: Buscando 8 pesquisas no YouTube…, step: {name: search, done: 0, total: null}}, result: null, error: {code: cancelled, message: Trabalho cancelado a pedido. O que já estava pronto continua salvo.}}, cancelled: true}}
+
+  # ==================================================================== organise
+  organize.run:
+    summary: Generates folder/tag suggestions with AI (nothing is applied)
+    x-module: plugin/rpc/organize.py
+    x-unit: area-organize
+    kind: job
+    job_kind: organize
+    events: [organize.done]
+    params: {$ref: '#/components/schemas/OrganizeRunParams'}
+    result: {$ref: '#/components/schemas/JobAccepted'}
+    job_result: {$ref: '../shared/domain.schema.json#/$defs/OrganizeResult'}
+    errors: [llm_unavailable, busy, invalid]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {channel_ids: null}
+      result: {ok: true, data: {job: {id: job_1, kind: organize, status: queued, created_at: 1762700000, updated_at: 1762700000, progress: null, result: null, error: null}}}
+      job_result:
+        model: claude-haiku-5-5
+        suggestions:
+          - {id: sg_1, kind: organize, status: pending, payload: {channel_id: UCBJycsmduvYEL83R_U4JriQ, folder: Tech, new_folder: false, tags: [review], confidence: 0.92, why: Reviews de celulares}, created_at: 1762700000, channel_id: UCBJycsmduvYEL83R_U4JriQ, model: claude-haiku-5-5, decided_at: null}
+
+  organize.accept:
+    summary: Applies suggestions (block or channel) through the services, in one history group
+    description: '`change_ids` = ids of every history entry of this acceptance (empty if nothing changed); `POST /changes/{change_ids[0]}/undo` undoes exactly this acceptance (the whole group).'
+    x-module: plugin/rpc/organize.py
+    x-unit: area-organize
+    kind: direct
+    params: {$ref: '#/components/schemas/OrganizeAcceptParams'}
+    result: {$ref: '../shared/domain.schema.json#/$defs/AcceptReport'}
+    errors: [not_found, invalid, conflict]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {suggestion_ids: [sg_1], edits: {UCBJycsmduvYEL83R_U4JriQ: {folder: Reviews}}}
+      result: {ok: true, data: {accepted: [sg_1], created_folders: [f_reviews], created_tags: [], change_group: grp_7, change_ids: [41, 42, 43]}}
+
+  organize.reject:
+    summary: Rejects suggestions (block or channel)
+    x-module: plugin/rpc/organize.py
+    x-unit: area-organize
+    kind: direct
+    params: {$ref: '#/components/schemas/OrganizeRejectParams'}
+    result: {$ref: '#/components/schemas/RejectResult'}
+    errors: [invalid]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {channel_ids: [UCBJycsmduvYEL83R_U4JriQ]}
+      result: {ok: true, data: {count: 1}}
+
+  # ==================================================================== cleanup
+  cleanup.scan:
+    summary: Builds the cleanup (rules + AI reasons); approves nothing and changes no channel
+    description: 'No model: returns only the rule groups (`stale`, `ignored`) and `model: null`, with no error.'
+    x-module: plugin/rpc/cleanup.py
+    x-unit: area-cleanup
+    kind: job
+    job_kind: cleanup_scan
+    events: [cleanup.scanned]
+    params: {$ref: '#/components/schemas/EmptyParams'}
+    result: {$ref: '#/components/schemas/JobAccepted'}
+    job_result: {$ref: '../shared/domain.schema.json#/$defs/CleanupScan'}
+    errors: [busy]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {}
+      result: {ok: true, data: {job: {id: job_2, kind: cleanup_scan, status: queued, created_at: 1762700000, updated_at: 1762700000, progress: null, result: null, error: null}}}
+      job_result:
+        scan_id: scan_3
+        created_at: 1762700000
+        model: null
+        candidates:
+          - {id: cc_1, channel_id: UCBJycsmduvYEL83R_U4JriQ, group: stale, why: Sem vídeo novo há 240 dias, status: pending, scan_id: scan_3, created_at: 1762700000}
+
+  cleanup.approve:
+    summary: Human approval of an unsubscribe → queue items (approved_via = desktop_rpc)
+    description: |
+      `Cleanup.approve(channel_ids, via=ApprovedVia.desktop_rpc)`. Idempotent (an active item is returned). Only
+      `subscribed` channels. Emits `queue.changed`. There is no equivalent REST route; tools and routines never call it.
+    x-module: plugin/rpc/cleanup.py
+    x-unit: area-cleanup
+    kind: direct
+    approved_via: desktop_rpc
+    emits: [queue.changed]
+    params: {$ref: '#/components/schemas/ChannelIdsParams'}
+    result: {$ref: '#/components/schemas/QueueItems'}
+    errors: [approval_refused, not_found, conflict, invalid]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {channel_ids: [UCBJycsmduvYEL83R_U4JriQ]}
+      result:
+        ok: true
+        data:
+          items:
+            - {id: q_1, channel_id: UCBJycsmduvYEL83R_U4JriQ, action: unsubscribe, status: approved, approved_at: 1762700000, approved_via: desktop_rpc, created_at: 1762700000, updated_at: 1762700000, reason: Sem vídeo novo há 240 dias, error: null, device_id: null}
+
+  cleanup.resubscribe:
+    summary: Resubscribe (Former subscriptions) → a resubscribe item in the same queue
+    x-module: plugin/rpc/cleanup.py
+    x-unit: area-cleanup
+    kind: direct
+    approved_via: desktop_rpc
+    emits: [queue.changed]
+    params: {$ref: '#/components/schemas/ChannelIdsParams'}
+    result: {$ref: '#/components/schemas/QueueItems'}
+    errors: [approval_refused, not_found, conflict, invalid]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {channel_ids: [UCBJycsmduvYEL83R_U4JriQ]}
+      result:
+        ok: true
+        data:
+          items:
+            - {id: q_2, channel_id: UCBJycsmduvYEL83R_U4JriQ, action: resubscribe, status: approved, approved_at: 1762790000, approved_via: desktop_rpc, created_at: 1762790000, updated_at: 1762790000, reason: null, error: null, device_id: null}
+
+  # ==================================================================== themes
+  theme.create:
+    summary: Creates a theme tab by search (expands, batch search, curates) up to the preview
+    description: |
+      Same function as the `tube_theme_create` tool. Progress per step: `expand`, `search`, `curate`, `preview`.
+      `progress.step` = `{name, done, total}` with the step numbers (planned searches · videos found ·
+      judged out of found · kept out of judged); `language`/`classics` optional (without them, the earlier
+      behaviour); `job.cancel` stops the work between steps/searches and frees `busy`.
+    x-module: plugin/rpc/themes.py
+    x-unit: area-themes
+    kind: job
+    job_kind: theme
+    events: [theme.progress, theme.ready]
+    params: {$ref: '#/components/schemas/ThemeCreateParams'}
+    result: {$ref: '#/components/schemas/JobAccepted'}
+    job_result: {$ref: '../shared/domain.schema.json#/$defs/ThemePreview'}
+    errors: [llm_unavailable, busy, invalid]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {query: agentes de IA, language: pt, classics: false}
+      result: {ok: true, data: {job: {id: job_3, kind: theme, status: queued, created_at: 1762700000, updated_at: 1762700000, progress: null, result: null, error: null}}}
+      job_result:
+        theme: {id: th_1, query: agentes de IA, status: preview, created_at: 1762700000, name: Agentes de IA, icon: '🤖', tab_id: null, searches: [AI agents tutorial], seeds: [], include_terms: [], exclude_terms: [], last_search_at: 1762700040, cadence_days: 7, error: null}
+        items: [{theme_id: th_1, video_id: dQw4w9WgXcQ, verdict: keep, source: search, score: 0.91, reason: Tutorial prático}]
+        videos: {}
+        seeds: []
+        channel_count: 1
+
+  theme.save:
+    summary: Saves the theme as a tab (and an optional folder); applies follow/subscribe/ignore to the seeds
+    description: '`subscribe` only follows and comes back in `to_subscribe` (ThemeSaveEdits): really subscribing is human — the interface offers `cleanup.resubscribe` with those ids (contract request: `Cleanup.resubscribe` accepting `followed`, today only `ex`); until then, it opens the channel on YouTube.'
+    x-module: plugin/rpc/themes.py
+    x-unit: area-themes
+    kind: direct
+    params: {$ref: '#/components/schemas/ThemeSaveParams'}
+    result: {$ref: '../shared/domain.schema.json#/$defs/ThemeSaved'}
+    errors: [not_found, invalid, conflict]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {theme_id: th_1, edits: {name: Agentes de IA, create_folder: true, seed_actions: {UCBJycsmduvYEL83R_U4JriQ: follow}}}
+      result:
+        ok: true
+        data:
+          theme_id: th_1
+          tab:
+            id: tab_th1
+            name: Agentes de IA
+            kind: theme
+            rules:
+              include: {folders: [], tags: [], channels: [], themes: [th_1], lenses: [], all: false, favorites: false}
+              exclude: {folders: [], tags: [], channels: [], shorts: false}
+              filters: {only_new: false, per_channel: null, min_s: null, max_s: null}
+              mode: classics
+            icon: '🤖'
+            filters: {}
+            sort: 5
+            builtin: false
+          folder_id: f_agents
+          followed: [UCBJycsmduvYEL83R_U4JriQ]
+          to_subscribe: []
+          change_id: 52
+
+  theme.refresh:
+    summary: New search + curation of a theme (kept videos stay)
+    x-module: plugin/rpc/themes.py
+    x-unit: area-themes
+    kind: job
+    job_kind: theme
+    events: [theme.progress, theme.ready]
+    params: {$ref: '#/components/schemas/ThemeIdParams'}
+    result: {$ref: '#/components/schemas/JobAccepted'}
+    job_result: {$ref: '../shared/domain.schema.json#/$defs/ThemePreview'}
+    errors: [not_found, invalid, llm_unavailable, busy]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {theme_id: th_1}
+      result: {ok: true, data: {job: {id: job_4, kind: theme, status: running, created_at: 1762800000, updated_at: 1762800001, progress: {stage: expand, done: 0, total: null, message: null}, result: null, error: null}}}
+      job_result:
+        theme: {id: th_1, query: agentes de IA, status: saved, created_at: 1762700000, name: Agentes de IA, icon: '🤖', tab_id: tab_th1, searches: [AI agents tutorial], seeds: [UCBJycsmduvYEL83R_U4JriQ], include_terms: [], exclude_terms: [], last_search_at: 1762800050, cadence_days: 7, error: null}
+        items: []
+        videos: {}
+        seeds: []
+        channel_count: 0
+
+  # ==================================================================== import a list (Extra)
+  lists.import:
+    summary: Downloads the page, extracts channels with AI, resolves them and stores the preview
+    x-module: plugin/rpc/lists.py
+    x-unit: area-lists
+    kind: job
+    job_kind: list_import
+    events: [lists.ready]
+    params: {$ref: '#/components/schemas/ListImportParams'}
+    result: {$ref: '#/components/schemas/JobAccepted'}
+    job_result: {$ref: '../shared/domain.schema.json#/$defs/ListPreview'}
+    errors: [conflict, invalid, llm_unavailable, busy]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {url: 'https://example.com/melhores-canais-de-ciencia'}
+      result: {ok: true, data: {job: {id: job_5, kind: list_import, status: queued, created_at: 1762700000, updated_at: 1762700000, progress: null, result: null, error: null}}}
+      job_result:
+        id: li_1
+        url: 'https://example.com/melhores-canais-de-ciencia'
+        title: Melhores canais de ciência
+        created_at: 1762700030
+        entries:
+          - {name: Marques Brownlee, handle_or_url: '@mkbhd', note: Reviews, channel_id: UCBJycsmduvYEL83R_U4JriQ, title: Marques Brownlee}
+          - {name: Canal sem link, handle_or_url: null, note: null, channel_id: null, title: null}
+        video_ids: []
+        tab_id: null
+
+  lists.to_tab:
+    summary: Turns the preview into a tab (and follows the resolved channels)
+    x-module: plugin/rpc/lists.py
+    x-unit: area-lists
+    kind: direct
+    params: {$ref: '#/components/schemas/ListToTabParams'}
+    result: {$ref: '../shared/domain.schema.json#/$defs/Tab'}
+    errors: [not_found, conflict, invalid]
+    fallback: {message: open_desktop_backend}
+    example:
+      params: {list_id: li_1, name: Ciência}
+      result:
+        ok: true
+        data:
+          id: tab_li1
+          name: Ciência
+          kind: channels
+          rules:
+            include: {folders: [], tags: [], channels: [UCBJycsmduvYEL83R_U4JriQ], themes: [], lenses: [], all: false, favorites: false}
+            exclude: {folders: [], tags: [], channels: [], shorts: false}
+            filters: {only_new: false, per_channel: null, min_s: null, max_s: null}
+            mode: fresh
+          icon: null
+          filters: {}
+          sort: 6
+          builtin: false
+
+  # ==================================================================== pairing
+  pair.start:
+    summary: Pairing code; turns on the extension server in the gateway if nobody did
+    description: 'Same as `POST /pair/start` (REST fallback). `ensure_server(db=…, settings=…, data_dir=…)` with the profile resolved **before** the thread.'
+    x-module: plugin/rpc/pair.py
+    x-unit: area-pair
+    kind: direct
+    params: {$ref: '#/components/schemas/EmptyParams'}
+    result: {$ref: 'api.yaml#/components/schemas/PairStartResponse'}
+    errors: [ext_endpoint_down]
+    fallback: {rest: postPairStart}
+    example:
+      params: {}
+      result: {ok: true, data: {code: '482913', expires_at: 1762700300, port: 47615}}
+
+events:
+  refresh.done:
+    summary: End of an RSS cycle (`Refresher.refresh_all`)
+    payload: {$ref: '../shared/domain.schema.json#/$defs/RefreshReport'}
+    emitters:
+      - 'Refresher.refresh_all, on the kick_if_due thread: reaches the Desktop only if the thread was born in the gateway (tube_status, RPC); from GET /status (plugin host) and from cron it is dropped'
+    example: {channels: 412, new_videos: 37, errors: {}, started_at: 1762700000, finished_at: 1762700101, partial: false}
+  queue.changed:
+    summary: The unsubscribe queue changed (approval, extension result, undo)
+    payload: {$ref: '#/components/schemas/QueueChangedPayload'}
+    emitters:
+      - 'Cleanup.approve/resubscribe over RPC (gateway): arrives'
+      - 'Cleanup.queue_result from the /ext/queue/{id}/result handler: arrives only if the extension server belongs to the gateway'
+      - 'Cleanup.undo_approval over REST (plugin host): dropped'
+    example: {queue_ids: [q_1], pending: 1}
+  cleanup.scanned:
+    summary: Cleanup built
+    payload: {$ref: '#/components/schemas/CleanupScannedPayload'}
+    emitters:
+      - 'cleanup.scan (RPC thread in the gateway, through JobRunner and/or Cleanup.scan): arrives'
+    example: {job: job_2, status: done}
+  organize.done:
+    summary: '"Organize with Hermes" suggestions ready'
+    payload: {$ref: '#/components/schemas/JobEventPayload'}
+    emitters:
+      - 'organize.run (JobRunner, RPC thread in the gateway): arrives'
+    example: {job: job_1, status: done}
+  theme.progress:
+    summary: Step of a theme creation/refresh (expand, search, curate, preview)
+    payload: {$ref: '#/components/schemas/ThemeProgressPayload'}
+    emitters:
+      - 'theme.create/theme.refresh (JobRunner progress_event, RPC thread in the gateway): arrives'
+    example: {job: job_3, progress: {stage: search, done: 6, total: 12, message: Buscando no YouTube}}
+  theme.ready:
+    summary: Theme preview ready (or error)
+    payload: {$ref: '#/components/schemas/JobEventPayload'}
+    emitters:
+      - 'theme.create/theme.refresh (JobRunner, RPC thread in the gateway): arrives'
+    example: {job: job_3, status: done}
+  lists.ready:
+    summary: Imported list preview ready (or error)
+    payload: {$ref: '#/components/schemas/JobEventPayload'}
+    emitters:
+      - 'lists.import (JobRunner, RPC thread in the gateway): arrives'
+    example: {job: job_5, status: error}

@@ -1,0 +1,13 @@
+{
+  "reconnect_open_hermes": "Open Hermes to reconnect",
+  "unpaired": "Not connected to Hermes yet",
+  "unauthorized": "Hermes did not accept this browser. Pair again.",
+  "connected": "Connected to Hermes",
+  "connected_port": "Connected to Hermes (port {port})",
+  "timeout": "Hermes took too long to answer",
+  "error": "Something went wrong talking to Hermes",
+  "invalid_response": "Unexpected answer from Hermes",
+  "server_unverified": "The program answering on this port could not prove it is your Hermes, so the extension did not send anything. Open Hermes, or pair again.",
+  "server_outdated": "Hermes needs a newer version of the HermesTube plugin to pair with this extension.",
+  "code_mismatch": "The code did not match the one Hermes is showing."
+}

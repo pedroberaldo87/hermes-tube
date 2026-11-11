@@ -1,0 +1,344 @@
+/* Structure: Page, Section, Toolbar, Banner, Stack, Grid. Responsive to the container (the page and the panes
+   go from ~260 px to ~1800 px and resize all the time), never to the window. */
+
+/* --------------------------------------------------------------- Page */
+
+.PFX_page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  color: var(--ui-text-primary);
+  container-type: inline-size;
+  container-name: PFX_page;
+}
+
+.PFX_page > * {
+  --PFX_pad: var(--PFX_s5);
+}
+
+.PFX_page-head {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--PFX_s3);
+  padding: 20px var(--PFX_pad) var(--PFX_s3);
+}
+
+.PFX_page-titles {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.PFX_page-title {
+  margin: 0;
+  color: var(--ui-text-primary);
+}
+
+.PFX_page-sub {
+  margin: 2px 0 0;
+  color: var(--PFX_fg3);
+}
+
+.PFX_page-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+}
+
+.PFX_page-toolbar {
+  padding: 0 var(--PFX_pad);
+}
+
+.PFX_page-banner {
+  padding: var(--PFX_s2) var(--PFX_pad) 0;
+}
+
+.PFX_page-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.PFX_page-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--PFX_s5);
+  padding: var(--PFX_s4) var(--PFX_pad) var(--PFX_s6);
+}
+
+/* centered composition (welcome): comfortable max width and more room between blocks */
+.PFX_page[data-narrow='true'] .PFX_page-inner {
+  width: 100%;
+  max-width: 920px;
+  margin-inline: auto;
+  gap: var(--PFX_s6);
+  padding-top: var(--PFX_s6);
+  padding-bottom: calc(2 * var(--PFX_s6));
+}
+
+@container PFX_page (max-width: 560px) {
+  .PFX_page > * {
+    --PFX_pad: var(--PFX_s3);
+  }
+
+  .PFX_page-head {
+    flex-wrap: wrap;
+    align-items: center;
+    padding-top: 14px;
+  }
+
+  .PFX_page-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* --------------------------------------------------------------- Section */
+
+.PFX_section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--PFX_s3);
+  min-width: 0;
+}
+
+.PFX_section-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--PFX_s2);
+  min-width: 0;
+}
+
+.PFX_section-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.PFX_section-title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--PFX_s2);
+  margin: 0;
+  color: var(--ui-text-primary);
+}
+
+.PFX_section-count {
+  color: var(--PFX_fg3);
+  font-weight: 450;
+}
+
+.PFX_section-desc {
+  margin: 0;
+  color: var(--PFX_fg3);
+}
+
+.PFX_section-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --------------------------------------------------------------- Toolbar */
+
+.PFX_toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--PFX_s2) var(--PFX_s3);
+  min-height: 36px;
+  min-width: 0;
+}
+
+.PFX_toolbar-start {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--PFX_s2);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.PFX_toolbar-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--PFX_s2);
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-left: auto;
+}
+
+/* --------------------------------------------------------------- Banner (info / warning / error; strip at the top) */
+
+.PFX_banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px var(--PFX_s3);
+  border: 1px solid var(--ui-stroke-tertiary);
+  border-radius: var(--PFX_r-control);
+  background: var(--ui-bg-quinary);
+  color: var(--ui-text-secondary);
+  animation: PFX_fade-in 180ms var(--PFX_ease);
+}
+
+.PFX_banner-icon {
+  display: inline-flex;
+  flex: none;
+  height: var(--PFX_lh-body);
+  align-items: center;
+  color: var(--PFX_fg3);
+}
+
+.PFX_banner[data-tone='warning'] .PFX_banner-icon {
+  color: var(--ui-yellow);
+}
+
+.PFX_banner[data-tone='error'] {
+  border-color: color-mix(in srgb, var(--ui-red) 28%, var(--ui-stroke-tertiary));
+}
+
+.PFX_banner[data-tone='error'] .PFX_banner-icon {
+  color: var(--ui-red);
+}
+
+.PFX_banner-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.PFX_banner-title {
+  color: var(--ui-text-primary);
+  font-weight: 550;
+  margin-right: 6px;
+}
+
+.PFX_banner-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--PFX_s1);
+  margin: -2px -4px -2px 0;
+}
+
+/* inside the page strip: subtle, flush with the edges */
+.PFX_page-banner > .PFX_banner {
+  padding: 7px var(--PFX_s3);
+}
+
+/* --------------------------------------------------------------- Stack */
+
+.PFX_stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--PFX_s2);
+  min-width: 0;
+}
+
+.PFX_stack[data-direction='row'] {
+  flex-direction: row;
+  align-items: center;
+}
+
+.PFX_stack[data-wrap='true'] {
+  flex-wrap: wrap;
+}
+
+.PFX_stack[data-align='start'] {
+  align-items: flex-start;
+}
+
+.PFX_stack[data-align='center'] {
+  align-items: center;
+}
+
+.PFX_stack[data-align='end'] {
+  align-items: flex-end;
+}
+
+.PFX_stack[data-align='stretch'] {
+  align-items: stretch;
+}
+
+.PFX_stack[data-justify='between'] {
+  justify-content: space-between;
+}
+
+.PFX_stack[data-justify='end'] {
+  justify-content: flex-end;
+}
+
+.PFX_stack[data-gap='0'] {
+  gap: 0;
+}
+
+.PFX_stack[data-gap='1'] {
+  gap: var(--PFX_s1);
+}
+
+.PFX_stack[data-gap='3'] {
+  gap: var(--PFX_s3);
+}
+
+.PFX_stack[data-gap='4'] {
+  gap: var(--PFX_s4);
+}
+
+.PFX_stack[data-gap='5'] {
+  gap: var(--PFX_s5);
+}
+
+.PFX_stack[data-gap='6'] {
+  gap: var(--PFX_s6);
+}
+
+/* --------------------------------------------------------------- Grid (auto-fill + 3 densities) */
+
+.PFX_grid {
+  --PFX_col: 264px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--PFX_col)), 1fr));
+  gap: var(--PFX_s5) var(--PFX_s3);
+  min-width: 0;
+  outline: none;
+}
+
+.PFX_grid[data-density='compact'] {
+  --PFX_col: 184px;
+  gap: var(--PFX_s4) var(--PFX_s2);
+}
+
+.PFX_grid[data-density='list'] {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+
+/* slight cascade on load (only rows that mount; archiving an item does not re-animate the others) */
+.PFX_grid-row {
+  min-width: 0;
+  animation: PFX_rise var(--PFX_dur-slow) var(--PFX_ease) both;
+  animation-delay: calc(min(var(--PFX_i, 0), 14) * var(--PFX_stagger));
+}
+
+.PFX_grid-cell {
+  height: 100%;
+  min-width: 0;
+  border-radius: var(--PFX_r-card);
+  outline: none;
+}
+
+.PFX_grid-cell:focus-visible {
+  outline: 2px solid var(--PFX_ring);
+  outline-offset: 2px;
+}
+
+.PFX_grid[data-density='list'] .PFX_grid-cell:focus-visible {
+  outline-offset: -2px;
+}
