@@ -1,11 +1,11 @@
 # HermesTube
 
-Retome o controle do que você assiste. O HermesTube traz as suas inscrições do YouTube para dentro do Hermes. Lá você
-organiza tudo em pastas e tags, monta as suas próprias abas e vê de relance o que saiu de novo nos canais que
-importam. O modelo do seu Hermes faz a parte chata: sugere pastas e monta uma aba inteira a partir de um assunto que
-você digita. Não há cadastro nem servidor nosso: não coletamos nada, e os seus dados ficam no seu computador. Uma
-pequena extensão de navegador conecta a sua conta do YouTube, e ela nunca cancela inscrição nenhuma sem o seu clique.
-Quem escolhe o que você assiste é você. Não o algoritmo.
+Retome o seu feed: o HermesTube traz as suas inscrições para dentro do Hermes Agent, onde você e o seu agente decidem
+o que você assiste. Não o algoritmo. No Hermes você organiza tudo em pastas e tags, monta as suas próprias abas e vê
+de relance o que saiu de novo nos canais que importam. O modelo do seu Hermes faz a parte chata: sugere pastas e monta
+uma aba inteira a partir de um assunto que você digita. Não há cadastro nem servidor nosso: não coletamos nada, e os
+seus dados ficam no seu computador. Uma pequena extensão de navegador conecta a sua conta do YouTube, e ela nunca
+cancela inscrição nenhuma sem o seu clique.
 
 [English](README.md) · **Português**
 
@@ -143,18 +143,18 @@ Os recursos de IA rodam numa tarefa própria do plugin, que aparece em Settings 
 - **Desktop.** O HermesTube na barra lateral abre a página do HermesTube na seção Subscriptions. Manage e Cleanup são seções da mesma página do HermesTube, e o painel Subscriptions mostra a sua árvore de pastas. Clique num vídeo para assistir na seção Watch, ou use ⌘/Ctrl-clique para abrir no YouTube.
 - **Chat.** Pergunte "o que saiu hoje no YouTube?", "por que não vejo mais o canal X?" ou "monta uma aba sobre café espresso em casa". O Hermes usa as nove ferramentas `tube_*` do plugin. Elas nunca aprovam um cancelamento.
 - **`/tube`.** Um resumo em qualquer chat. No Telegram (ou em outra plataforma de mensagens do Hermes com botões): `/tube triage`, `/tube cleanup`, `/tube topic <assunto>`, `/tube routines` (os subcomandos em português, como `/tube faxina`, também funcionam). Use numa conversa direta com o seu bot, não num grupo. Veja [docs/user/telegram.md](docs/user/telegram.md).
-- **Rotinas.** Cinco rotinas agendadas (resumo da manhã, favoritos, resumo por pasta, lista mensal da faxina, canais novos sem pasta), instaladas pelo Telegram com uma confirmação.
+- **Rotinas.** Cinco rotinas agendadas (resumo da manhã, favoritos, resumo por pasta, lista mensal da faxina, canais novos sem pasta), instaladas pelo Telegram com uma confirmação. No Telegram, cada vídeo novo dos favoritos chega como uma mensagem com a capa do vídeo, o canal, o título e o link (testado no Telegram; as outras plataformas ficam com a entrega comum do cron).
 - **Extensão.** Sincroniza as inscrições no pareamento, a cada 6 horas e no Sync now; registra os vídeos que você assiste; põe uma seção do HermesTube no menu lateral do YouTube; faz os cancelamentos que você aprovou, um por vez, numa aba visível, com um botão Stop.
 
 <table>
 <tr>
 <td width="50%" valign="top" align="center">
-<img src="docs/screenshots/manage.png" alt="A tabela Manage com vários canais selecionados e a barra de ações em lote" width="100%">
-<br><sub>Manage</sub>
+<img src="docs/screenshots/connect-pairing.png" alt="A tela de conexão do HermesTube com dados de exemplo: um código de pareamento para digitar na extensão do navegador e os três passos (abrir a extensão, ler as suas inscrições, pronto)" width="100%">
+<br><sub>Conectar o navegador</sub>
 </td>
 <td width="50%" valign="top" align="center">
-<img src="docs/screenshots/cleanup.png" alt="A seção Cleanup com dados de exemplo: canais agrupados pelo motivo (Not watched, Off your profile), dois deles marcados, o botão Review cancellation (2) e a lista Ex-subscriptions vazia" width="100%">
-<br><sub>Cleanup</sub>
+<img src="docs/screenshots/topic-tab-building.png" alt="O diálogo de nova aba por assunto enquanto a aba é montada, com dados de exemplo: a lista de etapas (expandir o assunto, buscar no YouTube, selecionar com IA, montar a prévia) e espaços vazios para a prévia" width="100%">
+<br><sub>Aba por assunto, sendo montada</sub>
 </td>
 </tr>
 <tr>
@@ -164,8 +164,28 @@ Os recursos de IA rodam numa tarefa própria do plugin, que aparece em Settings 
 
 </td>
 <td width="50%" valign="top" align="center">
+<img src="docs/screenshots/organize-suggestions.png" alt="O diálogo Organize with Hermes com dados de exemplo: sugestões de pasta agrupadas por pasta, cada grupo com os botões Reject group e Accept group, e um botão Accept all; nada muda até você aceitar" width="100%">
+<br><sub>Organizar com o Hermes</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/manage.png" alt="A tabela Manage com vários canais selecionados e a barra de ações em lote" width="100%">
+<br><sub>Manage</sub>
+</td>
+<td width="50%" valign="top" align="center">
 <img src="docs/screenshots/watching-tab.png" alt="Um vídeo tocando na seção Watch do HermesTube, no player embutido do próprio Hermes, com o título e o canal embaixo" width="100%">
 <br><sub>Watch</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/playlists.png" alt="A aba Playlists do HermesTube com dados de exemplo: uma playlist, Weekend watchlist, com a capa e uma linha dizendo que ela fica no HermesTube neste computador, não na sua conta do YouTube" width="100%">
+<br><sub>Playlists</sub>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/cleanup.png" alt="A seção Cleanup com dados de exemplo: canais agrupados pelo motivo (Not watched, Off your profile), dois deles marcados, o botão Review cancellation (2) e a lista Ex-subscriptions vazia" width="100%">
+<br><sub>Cleanup</sub>
 </td>
 </tr>
 </table>
@@ -173,11 +193,12 @@ Os recursos de IA rodam numa tarefa própria do plugin, que aparece em Settings 
 <p align="center">
 <img src="docs/screenshots/folder-pane.png" alt="O painel de pastas ao lado do Hermes Desktop com pastas, canais e contagem de vídeos novos" width="230">
 <img src="docs/screenshots/youtube-sidebar.png" alt="A seção do HermesTube no menu lateral do YouTube, acima de Inscrições, com pastas e contagem de vídeos novos" width="340">
+<img src="docs/screenshots/telegram-favorite.png" alt="Um alerta de favoritos no Telegram com dados de exemplo: a capa do vídeo, o canal, o título e o link" width="400">
 </p>
 
 ## Privacidade e divulgação
 
-- O plugin lê só páginas públicas de `www.youtube.com`, sem login: os feeds RSS dos canais, as páginas dos canais, as playlists de envios e de Shorts de cada canal, as páginas `/shorts/<id>` e `/watch` para saber a duração de cada vídeo recente e se ele é um Short, e a página de busca para as abas por assunto. As páginas do Desktop carregam as miniaturas de `i.ytimg.com` e os avatares dos canais dos endereços que o YouTube informa.
+- O plugin lê só páginas públicas de `www.youtube.com` (e, para a capa dos favoritos, imagens de `i.ytimg.com`), sem login: os feeds RSS dos canais, as páginas dos canais, as playlists de envios e de Shorts de cada canal, as páginas `/shorts/<id>` e `/watch` para saber a duração de cada vídeo recente e se ele é um Short, e a página de busca para as abas por assunto. As páginas do Desktop carregam as miniaturas de `i.ytimg.com` e os avatares dos canais dos endereços que o YouTube informa.
 - Seus dados ficam num banco SQLite dentro do perfil do Hermes (na pasta `plugin-data/` do perfil). Os recursos de IA mandam nomes de canais, títulos de vídeos e os nomes das suas pastas para o modelo que você configurou no Hermes, inclusive a partir de jobs agendados criados com os blueprints de automação do plugin, que rodam sem ninguém presente.
 - A extensão conversa só com o servidor local do plugin em `127.0.0.1` (portas 47615 a 47624) e age só no seu navegador, com a sua sessão.
 - Sem telemetria, sem analytics, sem servidor nosso.

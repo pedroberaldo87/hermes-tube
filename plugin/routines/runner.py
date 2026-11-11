@@ -11,6 +11,16 @@ called in the agent job); exit ≠ 0 = alert. That is why:
   silence + a warning on stderr, exit 0: the next run tries again and nothing is lost, because the
   "notified up to here" mark (``meta routine.<key>.mark``) is written **before** printing and
   only if the write succeeded;
+- ``Outcome.media`` files are printed as ``MEDIA:<absolute path>`` lines after the text, which the
+  cron delivers as a native photo; no text → no delivery, so no MEDIA line either;
+- ``Outcome.cards`` (one message each: text + optional cover) are first tried through
+  ``routines.deliver`` (the public ``hermes send`` command, one photo bubble per card, only when
+  the routine's cron job was installed from Telegram). **Cards that were delivered directly are
+  not printed.** Every card that was not delivered (no target, no ``hermes``, any failure) goes to
+  stdout in the same shape as before: the texts of the remaining cards separated by one empty
+  line, then one ``MEDIA:`` line per remaining cover. All cards delivered → stdout stays empty
+  (a silent run, exit 0). The marks are written **before** any delivery, so a failure never
+  repeats or loses a notice. ``TUBE_NO_DIRECT_SEND=1`` turns the direct path off;
 - YouTube RSS down / no network → carries on with what is already in the database;
 - any other failure → one line on stderr and exit 1 (the cron delivers it as an alert).
 
@@ -32,6 +42,7 @@ from typing import Any
 from tube_pkg._id import PLUGIN_ID
 from tube_pkg.core import lang as lang_rule
 from tube_pkg.core import types as T
+from tube_pkg.routines import deliver
 from tube_pkg.routines.catalog import mark_key
 
 LOCK_PROBE_TIMEOUT_S = 3.0
@@ -45,6 +56,13 @@ class Outcome:
 
     text: str | None = None
     marks: Mapping[str, int] = field(default_factory=dict)
+    media: tuple[str, ...] = ()
+    """Absolute paths of files delivered with the text (one ``MEDIA:`` line each, after the text).
+    Never printed without text."""
+    cards: tuple[deliver.Card, ...] = ()
+    """Messages to try through ``hermes send`` first (see the module docstring). ``text`` must be
+    their texts joined by an empty line (it gates marks and silence); ``media`` is ignored when
+    there are cards."""
 
 
 @dataclass
@@ -148,6 +166,17 @@ def _alert_lang(home: Path) -> str:
         return lang_rule.DEFAULT
 
 
+def _media_lines(paths: tuple[str, ...]) -> list[str]:
+    """``MEDIA:<path>`` lines for the files that really exist (absolute path, one line each)."""
+    lines: list[str] = []
+    for raw in paths:
+        path = str(raw)
+        if path and "\n" not in path and "\r" not in path and Path(path).is_absolute():
+            if Path(path).is_file():
+                lines.append(f"MEDIA:{path}")
+    return lines
+
+
 def save_marks(db: T.Db, marks: Mapping[str, int]) -> None:
     if not marks:
         return
@@ -158,6 +187,21 @@ def save_marks(db: T.Db, marks: Mapping[str, int]) -> None:
                 " ON CONFLICT(key) DO UPDATE SET value = excluded.value",
                 (mark_key(key), str(int(value))),
             )
+
+
+def _deliver_cards(
+    key: str, home: Path, cards: tuple[deliver.Card, ...]
+) -> tuple[str | None, list[str]]:
+    """Try the cards through ``hermes send``; returns the stdout text and MEDIA lines left."""
+    try:
+        sent = deliver.send_cards(cards, home, key=key, note=lambda m: _err(f"routine {key}: {m}"))
+    except Exception as exc:  # noqa: BLE001 - never lose the message: the cron delivers it
+        _err(f"routine {key}: direct delivery failed ({type(exc).__name__})")
+        sent = 0
+    rest = cards[max(0, min(sent, len(cards))) :]
+    text = "\n\n".join(c.text.strip() for c in rest if c.text.strip())
+    lines = [line for c in rest if (line := deliver.media_line(c.media)) is not None]
+    return (text or None), lines
 
 
 def run(key: str, resolved: Any, *, warn: str | None = None) -> int:
@@ -174,6 +218,8 @@ def run(key: str, resolved: Any, *, warn: str | None = None) -> int:
         _err(f"routine {key}: database does not exist yet ({db_path}); nothing to report")
         return 0
     text: str | None = None
+    media: list[str] = []
+    cards: tuple[deliver.Card, ...] = ()
     try:
         with _stdout_to_stderr():
             if not _write_lock_free(db_path):
@@ -187,6 +233,8 @@ def run(key: str, resolved: Any, *, warn: str | None = None) -> int:
                 if outcome.text:
                     save_marks(env.db, outcome.marks)
                     text = outcome.text.strip()
+                    media = _media_lines(outcome.media)
+                    cards = tuple(outcome.cards)
             finally:
                 env.db.close()
     except Exception as exc:  # noqa: BLE001 — becomes a readable cron alert
@@ -200,8 +248,10 @@ def run(key: str, resolved: Any, *, warn: str | None = None) -> int:
             )
         )
         return 1
+    if text and cards:
+        text, media = _deliver_cards(key, home, cards)
     if text:
-        sys.stdout.write(text + "\n")
+        sys.stdout.write("".join(f"{line}\n" for line in [text, *media]))
         sys.stdout.flush()
     return 0
 

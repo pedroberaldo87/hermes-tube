@@ -1,11 +1,11 @@
 # HermesTube
 
-Take back control of what you watch. HermesTube brings your YouTube subscriptions into Hermes. There you organize them
-into folders and tags, build your own tabs, and see at a glance what's new from the channels you care about. Your
-Hermes model does the boring part: it suggests folders and builds a whole tab from a topic you type. There's no
-sign-up and no server on our side: we collect nothing, and your data stays on your machine. A small browser extension
-hooks up your YouTube account, and it never unsubscribes from anything unless you click. You pick what you watch. Not
-the algorithm.
+Take back your feed: HermesTube brings your subscriptions into Hermes Agent, where you and your agent decide what you
+watch. Not the algorithm. In Hermes you organize them into folders and tags, build your own tabs, and see at a glance
+what's new from the channels you care about. Your Hermes model does the boring part: it suggests folders and builds a
+whole tab from a topic you type. There's no sign-up and no server on our side: we collect nothing, and your data stays
+on your machine. A small browser extension hooks up your YouTube account, and it never unsubscribes from anything
+unless you click.
 
 **English** · [Português](README.pt-BR.md)
 
@@ -141,18 +141,18 @@ The AI features run on the plugin's own task, listed in Settings → Models as "
 - **Desktop.** HermesTube in the sidebar opens the HermesTube page at its Subscriptions section. Manage and Cleanup are sections of the same HermesTube page, and the Subscriptions pane shows your folder tree. Click a video to watch it in the Watch section, or ⌘/Ctrl-click to open it on YouTube.
 - **Chat.** Ask "what's new on YouTube today?", "why don't I see channel X anymore?" or "make a tab about home espresso". Hermes uses the plugin's nine `tube_*` tools. They never approve a cancellation.
 - **`/tube`.** A summary in any chat. On Telegram (or another Hermes messaging platform with buttons): `/tube triage`, `/tube cleanup`, `/tube topic <subject>`, `/tube routines`. Use it in a direct chat with your bot, not in a group. See [docs/user/telegram.md](docs/user/telegram.md).
-- **Routines.** Five scheduled routines (morning digest, favorites, folder summary, monthly cleanup list, new channels without a folder), installed from Telegram with one confirmation.
+- **Routines.** Five scheduled routines (morning digest, favorites, folder summary, monthly cleanup list, new channels without a folder), installed from Telegram with one confirmation. On Telegram, each new favorite video arrives as one message with the video's cover, the channel, the title and the link (tested on Telegram; other platforms keep the plain cron delivery).
 - **Extension.** Syncs your subscriptions on pairing, every 6 hours and on Sync now; records the videos you watch; adds a HermesTube section to YouTube's left menu; runs the unsubscribes you approved, one at a time, in a visible tab, with a Stop button.
 
 <table>
 <tr>
 <td width="50%" valign="top" align="center">
-<img src="docs/screenshots/manage.png" alt="The Manage table with several channels selected and the batch action bar" width="100%">
-<br><sub>Manage</sub>
+<img src="docs/screenshots/connect-pairing.png" alt="HermesTube's connect screen with sample data: a pairing code to type into the browser extension, and the three steps (open the extension, reading your subscriptions, ready)" width="100%">
+<br><sub>Connect the browser</sub>
 </td>
 <td width="50%" valign="top" align="center">
-<img src="docs/screenshots/cleanup.png" alt="The Cleanup section with sample data: channels grouped by reason (Not watched, Off your profile), two of them ticked, the Review cancellation (2) button and an empty Ex-subscriptions list" width="100%">
-<br><sub>Cleanup</sub>
+<img src="docs/screenshots/topic-tab-building.png" alt="The new topic tab dialog while the tab is being built, with sample data: a step list (expanding the topic, searching YouTube, curating with AI, building the preview) and empty preview slots" width="100%">
+<br><sub>Topic tab, being built</sub>
 </td>
 </tr>
 <tr>
@@ -162,8 +162,28 @@ The AI features run on the plugin's own task, listed in Settings → Models as "
 
 </td>
 <td width="50%" valign="top" align="center">
+<img src="docs/screenshots/organize-suggestions.png" alt="The Organize with Hermes dialog with sample data: folder suggestions grouped by folder, each with Reject group and Accept group buttons and an Accept all button; nothing changes until you accept" width="100%">
+<br><sub>Organize with Hermes</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/manage.png" alt="The Manage table with several channels selected and the batch action bar" width="100%">
+<br><sub>Manage</sub>
+</td>
+<td width="50%" valign="top" align="center">
 <img src="docs/screenshots/watching-tab.png" alt="A video playing in the Watch section of HermesTube with Hermes's own embedded player, the title and channel below it" width="100%">
 <br><sub>Watch</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/playlists.png" alt="The Playlists tab of HermesTube with sample data: one playlist, Weekend watchlist, with its cover and a line saying it is kept in HermesTube on this computer, not on your YouTube account" width="100%">
+<br><sub>Playlists</sub>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/cleanup.png" alt="The Cleanup section with sample data: channels grouped by reason (Not watched, Off your profile), two of them ticked, the Review cancellation (2) button and an empty Ex-subscriptions list" width="100%">
+<br><sub>Cleanup</sub>
 </td>
 </tr>
 </table>
@@ -171,11 +191,12 @@ The AI features run on the plugin's own task, listed in Settings → Models as "
 <p align="center">
 <img src="docs/screenshots/folder-pane.png" alt="The folder pane at the side of Hermes Desktop with folders, channels and new-video counts" width="230">
 <img src="docs/screenshots/youtube-sidebar.png" alt="The HermesTube section in YouTube's left menu, above Subscriptions, with folders and new-video counts" width="340">
+<img src="docs/screenshots/telegram-favorite.png" alt="A favorites alert on Telegram with sample data: the video cover, the channel, the title and the link" width="400">
 </p>
 
 ## Privacy and disclosure
 
-- The plugin reads only public `www.youtube.com` pages, without login: channel RSS feeds, channel pages, the uploads and Shorts playlists of each channel, `/shorts/<id>` and `/watch` pages to learn each recent video's length and whether it is a Short, and the search page for topic tabs. The Desktop pages load thumbnails from `i.ytimg.com` and channel avatars from the addresses YouTube gives.
+- The plugin reads only public `www.youtube.com` pages (and, for the favorites cover, `i.ytimg.com` images), without login: channel RSS feeds, channel pages, the uploads and Shorts playlists of each channel, `/shorts/<id>` and `/watch` pages to learn each recent video's length and whether it is a Short, and the search page for topic tabs. The Desktop pages load thumbnails from `i.ytimg.com` and channel avatars from the addresses YouTube gives.
 - Your data is one SQLite database in the Hermes profile (`<HERMES_HOME>/plugin-data/hermes-tube/`). The AI features send channel names, video titles and your folder names to the model you set up in Hermes, also from scheduled jobs made from the plugin's automation blueprints, which run with nobody present.
 - The extension talks only to the plugin's local server on `127.0.0.1` (ports 47615 to 47624) and acts only in your signed-in browser.
 - No telemetry, no analytics, no server of ours.

@@ -3,7 +3,8 @@
 Common rules:
 
 - nothing new → ``Outcome(None)`` (silence; 0 tokens);
-- short messages for Telegram: plain text, one piece of information per line, no tables/markdown;
+- short messages for Telegram: plain text, one piece of information per line, no tables/markdown
+  (the one exception is the bold first line of the ``favoritos`` card, see ``fav_card``);
   third-party titles on a single line, without control characters, clipped;
 - no routine changes a channel, approves or unsubscribes: the cleanup **only builds the list**
   (rule-based scan, the same as ``tube_cleanup_scan``) and points to ``/tube faxina``;
@@ -28,6 +29,7 @@ from collections.abc import Iterable
 
 from tube_pkg.core import lang as lang_rule
 from tube_pkg.core import types as T
+from tube_pkg.routines import cover, deliver
 from tube_pkg.routines.catalog import REPLY_LANGUAGE, UNTRUSTED_CLOSE, UNTRUSTED_OPEN
 from tube_pkg.routines.runner import Composer, Outcome, RoutineEnv, is_lock_error
 
@@ -76,6 +78,41 @@ def line(text: object, limit: int = 80) -> str:
     return _clip(" ".join(raw.split()), limit)
 
 
+_HAIR = "\u200a"  # hair space: nearly invisible, and it breaks an adjacent markup pair
+_WORD_JOINER = "\u2060"
+_TG_TAG = re.compile(r"<(?=/?[A-Za-z])")
+_TG_MEDIA = re.compile(r"(media)(?=:)", re.I)
+_TG_STARS = re.compile(r"\*")
+_TG_TILDES = re.compile(r"~{2,}")
+_TG_BARS = re.compile(r"\|{2,}")
+
+
+def telegram_safe(text: str) -> str:
+    """Make one line of third-party text literal for ``hermes send`` (Telegram).
+
+    ``hermes send`` turns the message into MarkdownV2 with the Telegram plugin's
+    ``to_markdown_v2``. That formatter has **no escape**: a backslash before ``*`` is itself
+    escaped and the asterisk still opens bold. It treats as markup ``*`` (bold and italic runs),
+    ``[text](target)`` (link), ``~~x~~`` (strike), ``||x||`` (spoiler), a leading ``#`` (header)
+    or ``>`` (quote), backticks (already turned into quotes by ``line``) and, outside the
+    formatter, a Telegram HTML tag (``<b>``, ``<a ...>``) flips the whole message to HTML, and a
+    ``MEDIA:`` tag or ``[[as_document]]`` directive is read by ``hermes send`` itself. Underscore,
+    a single pipe or tilde, a single bracket, ``$`` and ``(`` are plain text there (escaped).
+
+    So each trigger is replaced by a look-alike or broken with a hair space; nothing else changes.
+    """
+    out = _TG_STARS.sub("\u2217", text)  # asterisk operator
+    out = _TG_TILDES.sub(lambda m: "\u223c" * len(m.group(0)), out)  # tilde operator
+    out = _TG_BARS.sub(lambda m: "\u2223" * len(m.group(0)), out)  # divides
+    out = out.replace("](", "]" + _HAIR + "(")
+    out = re.sub(r"\[(?=\[)", "[" + _HAIR, out)
+    out = _TG_TAG.sub("\u2039", out)
+    out = _TG_MEDIA.sub(lambda m: m.group(1) + _HAIR, out)
+    if out[:1] in ("#", ">"):
+        out = _WORD_JOINER + out
+    return out
+
+
 def untrusted(text: object, limit: int) -> str:
     """YouTube text that goes to the model: one line, neutralized and clipped."""
     raw = _strip_controls(str(text or "")).replace("`", "'")
@@ -117,6 +154,14 @@ def _refresh(env: RoutineEnv) -> None:
     except Exception as exc:  # noqa: BLE001
         kind = "database busy" if is_lock_error(exc) else type(exc).__name__
         env.notes.append(f"RSS not refreshed ({kind}: {' '.join(str(exc).split())[:160]})")
+
+
+def _cover(env: RoutineEnv, video_id: str | None) -> str | None:
+    """Cover file of one video for its message (``None`` on any failure)."""
+    try:
+        return cover.fetch(env.get("http"), env.home, video_id)
+    except Exception:  # noqa: BLE001 - a cover is optional
+        return None
 
 
 def _new_items(env: RoutineEnv, tab_id: str) -> list[T.FeedItem]:
@@ -191,6 +236,26 @@ def bom_dia(env: RoutineEnv) -> Outcome:
     return Outcome("\n".join(lines))
 
 
+def fav_card(env: RoutineEnv, it: T.FeedItem, cover_path: str | None) -> deliver.Card:
+    """The approved message of one new favorite video (see ``routines.deliver``)::
+
+        ⭐ **New from CHANNEL**
+        TITLE
+        <empty line>
+        ▶️ https://youtu.be/ID
+
+    The name is bold unless it held anything that had to be neutralised (``telegram_safe``).
+    """
+    who = line(it.channel.title if it.channel else it.video.channel_title, 40) or "YouTube"
+    safe_who = telegram_safe(who)
+    head = f"{env.t('Novo de', 'New from')} {safe_who}"
+    if safe_who == who:
+        head = f"**{head}**"
+    title = telegram_safe(line(it.video.title, 90))
+    text = f"\u2b50 {head}\n{title}\n\n\u25b6\ufe0f {video_url(it.video.id)}"
+    return deliver.Card(text, cover_path)
+
+
 def favoritos(env: RoutineEnv) -> Outcome:
     """⚡ every 30 min: only when a new ⭐ video arrived since the last notice."""
     _refresh(env)
@@ -202,16 +267,17 @@ def favoritos(env: RoutineEnv) -> Outcome:
     if not fresh:
         return Outcome()
     fresh.sort(key=lambda it: (-(it.video.published_at or 0), it.video.id))
-    lines = []
-    for it in fresh[:FAV_MAX_ITEMS]:
-        who = line(it.channel.title if it.channel else it.video.channel_title, 40)
-        lines.append(f"⭐ {who}: {line(it.video.title, 90)}")
-        lines.append(video_url(it.video.id))
+    cards = [fav_card(env, it, _cover(env, it.video.id)) for it in fresh[:FAV_MAX_ITEMS]]
     if len(fresh) > FAV_MAX_ITEMS:
         rest = len(fresh) - FAV_MAX_ITEMS
-        lines.append(env.t(f"+{rest} outro(s) — /tube triar", f"+{rest} more — /tube triage"))
+        more = env.t(f"+{rest} outro(s) — /tube triar", f"+{rest} more — /tube triage")
+        cards[-1] = deliver.Card(f"{cards[-1].text}\n\n{more}", cards[-1].media)
     newest = max(it.video.first_seen_at for it in fresh)
-    return Outcome("\n".join(lines), marks={env.key: max(newest, since)})
+    return Outcome(
+        "\n\n".join(c.text for c in cards),
+        marks={env.key: max(newest, since)},
+        cards=tuple(cards),
+    )
 
 
 def resumo_pasta(env: RoutineEnv) -> Outcome:
@@ -345,4 +411,4 @@ COMPOSERS: dict[str, Composer] = {
 }
 assert tuple(COMPOSERS) == T.ROUTINE_KEYS
 
-__all__ = ["COMPOSERS", "line", "untrusted", "video_url"]
+__all__ = ["COMPOSERS", "fav_card", "line", "telegram_safe", "untrusted", "video_url"]

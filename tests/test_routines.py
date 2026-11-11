@@ -194,7 +194,17 @@ def _run(
     python = os.environ.get("TUBE_ROUTINE_PY") or sys.executable
     t0 = time.monotonic()
     proc = subprocess.run(
-        ["/usr/bin/env", "-i", f"HOME={home}", *env, python, "-I", str(shim)],
+        [
+            "/usr/bin/env",
+            "-i",
+            f"HOME={home}",
+            "TUBE_NO_COVERS=1",
+            "TUBE_NO_DIRECT_SEND=1",
+            *env,
+            python,
+            "-I",
+            str(shim),
+        ],
         capture_output=True,
         text=True,
         timeout=timeout,
@@ -219,8 +229,13 @@ def _assert_never_approved(home: Path) -> None:
     assert rows == []
 
 
+_APPROVED_BOLD = re.compile(r"^(\u2b50 )\*\*((?:New from|Novo de) [^*\n]+)\*\*$", re.M)
+
+
 def _assert_telegram_text(text: str, *, limit: int = 1500) -> None:
     assert len(text) <= limit, len(text)
+    # the one bold line the owner approved for the favorites message (hermes send renders it)
+    text = _APPROVED_BOLD.sub(r"\1\2", text)
     for bad in ("```", "**", "<b>", "| --", "|---"):
         assert bad not in text, bad
     assert not re.search(r"^\s*\|.*\|\s*$", text, re.M), "table"

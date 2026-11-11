@@ -2,7 +2,7 @@
 
 **Your subscriptions. Your way.**
 
-Take back control of what you watch. HermesTube brings your YouTube subscriptions into Hermes. There you organize them into folders and tags, build your own tabs, and see at a glance what's new from the channels you care about. Your Hermes model does the boring part: it suggests folders and builds a whole tab from a topic you type. There's no sign-up and no server on our side: we collect nothing, and your data stays on your machine. A small browser extension hooks up your YouTube account, and it never unsubscribes from anything unless you click. You pick what you watch. Not the algorithm.
+Take back your feed: HermesTube brings your subscriptions into Hermes Agent, where you and your agent decide what you watch. Not the algorithm. In Hermes you organize them into folders and tags, build your own tabs, and see at a glance what's new from the channels you care about. Your Hermes model does the boring part: it suggests folders and builds a whole tab from a topic you type. There's no sign-up and no server on our side: we collect nothing, and your data stays on your machine. A small browser extension hooks up your YouTube account, and it never unsubscribes from anything unless you click.
 
 HermesTube is formerly MyTube, a Chrome extension by the same author. It is an independent project, not affiliated with or endorsed by YouTube, Google, Nous Research or Hermès.
 
@@ -24,6 +24,8 @@ The screenshots use sample data invented for this project: made-up channels and 
 
 **Playlists.** Choose Add to playlist on any video card (or press `p`) or in the Watch player, and pick or create a playlist. The Playlists tab, right after Watch later, lists them: open one to see its videos, press Play all to queue it in the Watch section, rename it or delete it (the videos stay). Playlists are local: they live in the plugin's database and nothing is written to your YouTube account. The agent can reach them through existing tools: `tube_mark` adds a video to a playlist and `tube_feed` lists the playlists or the videos in one.
 
+![The Playlists tab of HermesTube with sample data: one playlist, Weekend watchlist, with its cover and a line saying it is kept in HermesTube on this computer, not on your YouTube account](../docs/screenshots/playlists.png)
+
 **Folder pane.** A Subscriptions pane in Desktop with your folder tree, channels and new-video counts. Move channels between folders, star favorites, mute, mark as read, open a folder as a tab. A status bar counter shows how many new videos you have, and the command palette has entries for the main actions.
 
 <p align="center"><img src="../docs/screenshots/folder-pane.png" alt="The folder pane at the side of Hermes Desktop with folders, channels and new-video counts" width="260"></p>
@@ -35,6 +37,8 @@ The screenshots use sample data invented for this project: made-up channels and 
 **Follow without subscribing.** Paste a channel link, a video link or an @handle. The channel shows up in your tabs; nothing changes on YouTube.
 
 **Organize with AI.** From Manage, "Organize with Hermes" sends each channel's name, handle and five latest video titles to your Hermes model, which proposes a folder and tags. Suggestions come grouped by folder; accept or reject a group or a single channel. Nothing is applied before you accept, and accepted changes can be undone.
+
+![The Organize with Hermes dialog with sample data: folder suggestions grouped by folder, each with Reject group and Accept group buttons and an Accept all button; nothing changes until you accept](../docs/screenshots/organize-suggestions.png)
 
 **Cleanup with approval.** The Cleanup section lists channels to drop, in groups:
 
@@ -48,6 +52,8 @@ Nothing is cancelled without a human click. The rules pick the channels; the mod
 ![The Cleanup section with sample data: channels grouped by reason (Not watched, Off your profile), two of them ticked, the Review cancellation (2) button and an empty Ex-subscriptions list](../docs/screenshots/cleanup.png)
 
 **Topic tabs with AI.** Type a topic ("AI agents for beginners"). The model plans 5 to 8 YouTube searches, the plugin reads YouTube's public search results (best and last month), the model keeps what fits and explains why, and you get a preview with the videos and the channels behind them. Drop what does not fit, then save it as a tab. The same works from the chat ("make a tab about AI agents") and from `/tube topic` on Telegram.
+
+![The new topic tab dialog while the tab is being built, with sample data: a step list (expanding the topic, searching YouTube, curating with AI, building the preview) and empty preview slots](../docs/screenshots/topic-tab-building.png)
 
 ![The new topic tab dialog showing the preview: the videos kept, why each one fits, and the channels behind them](../docs/screenshots/theme-tab-preview.png)
 
@@ -64,12 +70,14 @@ Nothing is cancelled without a human click. The rules pick the channels; the mod
 | Key | When | What it sends |
 |---|---|---|
 | `bom-dia` | 08:00 daily | new videos from Favorites and counts per tab |
-| `favoritos` | every 30 min | only when a favorite channel posts |
+| `favoritos` | every 30 min | only when a favorite channel posts. On Telegram each new video arrives as one message with the video's cover, the channel, the title and the link (tested on Telegram; other platforms keep the plain cron delivery) |
 | `resumo-pasta` | 19:00 daily | a short summary of new videos per folder (calls the model only when there is something new) |
 | `faxina-mensal` | day 1, 10:00 | the cleanup list and a pointer to `/tube cleanup` (cancels nothing) |
 | `pasta-novos` | 09:00 daily | new channels without a folder |
 
 Four are plain scripts that use no model and send nothing when there is nothing new. Separately, Hermes's automation blueprints (Desktop, Cron page) offer three agent versions under the same keys: a folder summary (`resumo-pasta`), the monthly cleanup list (`faxina-mensal`), and folder suggestions for new channels (`pasta-novos`; the model suggests, nothing is applied).
+
+![A favorites alert on Telegram with sample data: the video cover, the channel, the title and the link](../docs/screenshots/telegram-favorite.png)
 
 **Sidebar inside youtube.com.** The extension adds a HermesTube section to YouTube's left menu with your folders and tabs, new-video counts, a list of videos per folder and Mark as read.
 
@@ -110,6 +118,8 @@ You need:
 
 4. **Pair the extension.** On the same screen, a 6-digit code appears (valid for 5 minutes, single use). Type it in the tab the extension opens when it is first loaded (later, click the extension icon) and press Connect. The extension finds Hermes on this computer by itself. It then opens your YouTube subscriptions page in a tab for a moment and reads the list; nothing in your account changes.
 
+![HermesTube's connect screen with sample data: a pairing code to type into the browser extension, and the three steps (open the extension, reading your subscriptions, ready)](../docs/screenshots/connect-pairing.png)
+
 If it goes wrong: "The plugin isn't on in …" (in the side panel or on the main screen), or a connect dialog that says you're connected to another computer, means the Desktop is on a profile or a gateway without the plugin. Switch the Desktop to This device, go back to the profile where you installed it, or turn the plugin on in Capabilities → Plugins.
 
 The step-by-step guide with troubleshooting and removal is in [docs/user/install.md](../docs/user/install.md).
@@ -141,11 +151,12 @@ What HermesTube does on your machine and on the network, with the file that show
   - `/shorts/<id>` (without following the redirect) and the video page `/watch`, for single videos the playlists did not cover.
 
   See `plugin/core/youtube.py`.
+- `i.ytimg.com`, for the cover that the `favoritos` routine attaches to the message of each new video: one `https://i.ytimg.com/vi/<video id>/` JPEG (`maxresdefault.jpg`, then `hq720.jpg`, then `mqdefault.jpg`), tried in turn with a 4 s timeout each and 8 s in total. It is saved as `<HERMES_HOME>/plugin-data/hermes-tube/covers/<video id>.jpg`, the newest 20 files are kept, and any failure just sends the message without a cover. See `plugin/routines/cover.py`.
 - Length and Short detection run in the background, without the screen asking: after every refresh, and whenever the Desktop page polls the plugin's status while recent videos (published in the last 30 days, or added in the last 7) still lack that information. One request at a time, 0.75 s apart, at most 40 per pass and 30 s between passes; after a "too many requests" answer it waits 30 minutes. What is learned is stored and not asked again. See `plugin/core/details.py`, `plugin/core/refresh.py`.
 - Loading a tab that filters by duration or hides Shorts can also fetch the `/shorts/<id>` and `/watch` pages of the videos on that page that still lack the information. See `plugin/core/feed.py`.
 - Requests send a desktop browser User-Agent, `Accept-Language: en-US` and YouTube's anonymous consent cookie `SOCS=CAI`, which goes only to YouTube hosts. At most 4 requests at a time per host, 10 s timeout, 3 attempts. See `plugin/core/http.py`.
 - Redirects: the HTTP client follows up to 10 redirects. The consent cookie is sent only to YouTube hosts, and cookie and authorization headers are dropped when a redirect leaves the original host. See `plugin/core/http.py`.
-- The HTTP client connects only to public internet addresses. It refuses loopback, private networks, link-local addresses (including cloud metadata at `169.254.169.254`) and other reserved ranges, on every redirect, and checks the address it actually connects to. Responses are capped in size after decompression and in total time. In this version only the YouTube URLs above are built. `KNOWN_HOSTS` in `plugin/core/http.py` also lists `hackertube.org` for a hidden Extra that is not implemented (`plugin/core/extras_hn.py` is a stub), so no request goes there.
+- The HTTP client connects only to public internet addresses. It refuses loopback, private networks, link-local addresses (including cloud metadata at `169.254.169.254`) and other reserved ranges, on every redirect, and checks the address it actually connects to. Responses are capped in size after decompression and in total time. In this version only the YouTube and `i.ytimg.com` URLs above are built. `KNOWN_HOSTS` in `plugin/core/http.py` also lists `hackertube.org` for a hidden Extra that is not implemented (`plugin/core/extras_hn.py` is a stub), so no request goes there.
 - When refreshes run: when the Desktop page or the extension asks for status, when you press Refresh, when you add a channel or load the demo, and when an agent tool or a routine needs fresh data, at most once per refresh interval (30 minutes by default). Nothing runs when `register()` loads the plugin. See `plugin/core/refresh.py`, `plugin/api/status.py`.
 
 **What the Desktop pages load.** Video thumbnails straight from `i.ytimg.com` and channel avatars from the address YouTube gives for each channel (in the demo data, `yt3.googleusercontent.com`). Everything else goes to the plugin's own backend inside Hermes. See `desktop-src/components/Thumb.tsx`, `desktop-src/components/ChannelAvatar.tsx`, `plugin/data/demo_channels.json`.
@@ -158,11 +169,12 @@ What HermesTube does on your machine and on the network, with the file that show
 - It refuses any `Host` header that is not loopback and any `Origin` that is not a `chrome-extension://` origin. Every route except the health check and pairing needs a device token.
 - Pairing: a 6-digit code shown in Desktop, valid for 300 s, single use, 5 wrong tries locks it; a new code cancels the old one. The code itself is never sent: pairing is a password-authenticated key exchange (SPAKE2) bound to the port, so another program listening on one of these ports learns nothing it can use, and each try spends one of the code's 5 attempts. Before the extension sends its token to a port, that port must prove it knows the token. The extension gets a random 32-byte token; the database keeps only hashes of codes and tokens. Disconnect in the extension popup revokes the device's token. See `plugin/core/devices.py`, `plugin/ext/_mount.py`.
 
-**Where your data lives.** One SQLite database at `<HERMES_HOME>/plugin-data/hermes-tube/tube.db`, opened through Hermes's `plugin_db` helper for the active profile, plus the server lock file `ext-server.lock` in the same folder. The database keeps channels, folders, tags, tabs, playlists, video states, watch history from the extension, the change history and paired devices. It survives `hermes plugins update` and `hermes plugins remove`; delete that folder to erase it. See `plugin/adapters/storage.py`, `contract/schema.sql`.
+**Where your data lives.** One SQLite database at `<HERMES_HOME>/plugin-data/hermes-tube/tube.db`, opened through Hermes's `plugin_db` helper for the active profile, plus the server lock file `ext-server.lock` and the routine cover images (`covers/`, the newest 20) in the same folder. The database keeps channels, folders, tags, tabs, playlists, video states, watch history from the extension, the change history and paired devices. It survives `hermes plugins update` and `hermes plugins remove`; delete that folder to erase it. See `plugin/adapters/storage.py`, `contract/schema.sql`.
 
 **Reads outside the plugin's data.**
 
 - The active profile's `config.yaml`, read-only: the plugin's own settings, Hermes's display language (`display.language`, the one the Desktop app uses), whether the plugin is enabled, and whether a model is set up. See `plugin/adapters/settings.py`, `plugin/core/lang.py`, `plugin/adapters/hermes_llm.py`, `plugin/ext/_server.py`. The settings module can also write the plugin's own keys (`plugins.entries.hermes-tube.settings`) through Hermes's config writer, but nothing in this version calls it; the Desktop settings form is Hermes's own.
+- The profile's `cron/jobs.json`, read-only, by the `favoritos` routine only: it finds the job it was installed as and reads where that job delivers (the Telegram chat, and the topic if any) to send its message there. Any other shape of that file means no direct delivery. See `plugin/routines/deliver.py`.
 - A JSON file you point to: the import routes of the plugin's API (`POST /import/mytube` for a MyTube backup, `POST /import` for a HermesTube export) accept the path of a file on this computer and read it, up to 50 MB, as JSON. The Desktop pages in this version have no button that calls them. See `plugin/api/data.py`.
 - The plugin reads no browser profile, cookie store, password, keychain, `.env` or `auth.json`.
 
@@ -208,7 +220,7 @@ The browser still needs your two clicks (Developer mode, then loading the folder
 
 See `plugin/core/prompts.py`, `contract/llm.md`, `plugin/core/ai.py`, `plugin/routines/catalog.py`. When the agent uses the `tube_*` tools in a chat, their results (video titles, channel names, counts) go to your chat model like any tool result. In Desktop chats a `pre_llm_call` hook adds three lines telling the model how to write a video card. See `plugin/tools/directive.py`.
 
-**Shell commands and subprocesses.** No shell, ever. The only subprocesses are the ones the "Set up the extension" button starts, described above: opening the chosen browser's Extensions page and showing the folder in the file manager (`open` on macOS, `xdg-open` on Linux, `explorer.exe` on Windows), with fixed argument lists and time limits. With Hermes inside WSL, those are the Windows programs (the browser's `.exe` and `explorer.exe`) started through WSL interop; with interop off, nothing is started. Routines are run by Hermes's own scheduler.
+**Shell commands and subprocesses.** No shell, ever. The only subprocesses are the ones the "Set up the extension" button starts, described above: opening the chosen browser's Extensions page and showing the folder in the file manager (`open` on macOS, `xdg-open` on Linux, `explorer.exe` on Windows), with fixed argument lists and time limits. With Hermes inside WSL, those are the Windows programs (the browser's `.exe` and `explorer.exe`) started through WSL interop; with interop off, nothing is started. Routines are run by Hermes's own scheduler. The one more subprocess is started by the `favoritos` routine, only from its scheduled script: `hermes send --to telegram:<chat> --json` (the `hermes` command found on `PATH`, a fixed argument list, never a shell), with the message on standard input, for each new favorite video, 40 s at most per message and 75 s per run, with `HERMES_HOME` set to the profile. The plugin does not read the bot token or call the Telegram API: `hermes send` does the sending. If anything about it fails, the message is printed instead and the Hermes scheduler delivers it as before. `TUBE_NO_DIRECT_SEND=1` turns it off. See `plugin/routines/deliver.py`.
 
 **Background work.** The plugin starts no thread when it loads and has no timer of its own; everything below is started by a request, a refresh or the Desktop status poll.
 
