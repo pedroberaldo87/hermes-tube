@@ -146,17 +146,34 @@ Os recursos de IA rodam numa tarefa própria do plugin, que aparece em Settings 
 - **Rotinas.** Cinco rotinas agendadas (resumo da manhã, favoritos, resumo por pasta, lista mensal da faxina, canais novos sem pasta), instaladas pelo Telegram com uma confirmação.
 - **Extensão.** Sincroniza as inscrições no pareamento, a cada 6 horas e no Sync now; registra os vídeos que você assiste; põe uma seção do HermesTube no menu lateral do YouTube; faz os cancelamentos que você aprovou, um por vez, numa aba visível, com um botão Stop.
 
-![O painel de pastas ao lado do Hermes Desktop com pastas, canais e contagem de vídeos novos](docs/screenshots/folder-pane.png)
+<table>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/manage.png" alt="A tabela Manage com vários canais selecionados e a barra de ações em lote" width="100%">
+<br><sub>Manage</sub>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/cleanup.png" alt="A seção Cleanup com dados de exemplo: canais agrupados pelo motivo (Not watched, Off your profile), dois deles marcados, o botão Review cancellation (2) e a lista Ex-subscriptions vazia" width="100%">
+<br><sub>Cleanup</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
 
-![A tabela Manage com vários canais selecionados e a barra de ações em lote](docs/screenshots/manage.png)
+![O diálogo de nova aba por assunto mostrando a prévia: os vídeos que ficaram, por que cada um serve e os canais por trás deles](docs/screenshots/theme-tab-preview.png)<br><sub>Prévia da aba por assunto</sub>
 
-![A seção Cleanup com dados de exemplo: canais agrupados pelo motivo (Not watched, Off your profile), dois deles marcados, o botão Review cancellation (2) e a lista Ex-subscriptions vazia](docs/screenshots/cleanup.png)
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/watching-tab.png" alt="Um vídeo tocando na seção Watch do HermesTube, no player embutido do próprio Hermes, com o título e o canal embaixo" width="100%">
+<br><sub>Watch</sub>
+</td>
+</tr>
+</table>
 
-![O diálogo de nova aba por assunto mostrando a prévia: os vídeos que ficaram, por que cada um serve e os canais por trás deles](docs/screenshots/theme-tab-preview.png)
-
-![Um vídeo tocando na seção Watch do HermesTube, no player embutido do próprio Hermes, com o título e o canal embaixo](docs/screenshots/watching-tab.png)
-
-![A seção do HermesTube no menu lateral do YouTube, acima de Inscrições, com pastas e contagem de vídeos novos](docs/screenshots/youtube-sidebar.png)
+<p align="center">
+<img src="docs/screenshots/folder-pane.png" alt="O painel de pastas ao lado do Hermes Desktop com pastas, canais e contagem de vídeos novos" width="230">
+<img src="docs/screenshots/youtube-sidebar.png" alt="A seção do HermesTube no menu lateral do YouTube, acima de Inscrições, com pastas e contagem de vídeos novos" width="340">
+</p>
 
 ## Privacidade e divulgação
 

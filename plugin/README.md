@@ -26,7 +26,7 @@ The screenshots use sample data invented for this project: made-up channels and 
 
 **Folder pane.** A Subscriptions pane in Desktop with your folder tree, channels and new-video counts. Move channels between folders, star favorites, mute, mark as read, open a folder as a tab. A status bar counter shows how many new videos you have, and the command palette has entries for the main actions.
 
-![The folder pane at the side of Hermes Desktop with folders, channels and new-video counts](../docs/screenshots/folder-pane.png)
+<p align="center"><img src="../docs/screenshots/folder-pane.png" alt="The folder pane at the side of Hermes Desktop with folders, channels and new-video counts" width="260"></p>
 
 **Manage.** A table of every channel: folder, tags, last video, pace (videos per week), share of Shorts, videos you watched in the last 90 days, and relation (subscribed, following, former subscription). Filter, sort, select many and move, tag, favorite, mute or mark as read in one go. Every change goes to a history with undo.
 
@@ -73,7 +73,7 @@ Four are plain scripts that use no model and send nothing when there is nothing 
 
 **Sidebar inside youtube.com.** The extension adds a HermesTube section to YouTube's left menu with your folders and tabs, new-video counts, a list of videos per folder and Mark as read.
 
-![The HermesTube section in YouTube's left menu, above Subscriptions, with folders and new-video counts](../docs/screenshots/youtube-sidebar.png)
+<p align="center"><img src="../docs/screenshots/youtube-sidebar.png" alt="The HermesTube section in YouTube's left menu, above Subscriptions, with folders and new-video counts" width="340"></p>
 
 ## Install
 

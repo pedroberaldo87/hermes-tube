@@ -144,17 +144,34 @@ The AI features run on the plugin's own task, listed in Settings → Models as "
 - **Routines.** Five scheduled routines (morning digest, favorites, folder summary, monthly cleanup list, new channels without a folder), installed from Telegram with one confirmation.
 - **Extension.** Syncs your subscriptions on pairing, every 6 hours and on Sync now; records the videos you watch; adds a HermesTube section to YouTube's left menu; runs the unsubscribes you approved, one at a time, in a visible tab, with a Stop button.
 
-![The folder pane at the side of Hermes Desktop with folders, channels and new-video counts](docs/screenshots/folder-pane.png)
+<table>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/manage.png" alt="The Manage table with several channels selected and the batch action bar" width="100%">
+<br><sub>Manage</sub>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/cleanup.png" alt="The Cleanup section with sample data: channels grouped by reason (Not watched, Off your profile), two of them ticked, the Review cancellation (2) button and an empty Ex-subscriptions list" width="100%">
+<br><sub>Cleanup</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
 
-![The Manage table with several channels selected and the batch action bar](docs/screenshots/manage.png)
+![The new topic tab dialog showing the preview: the videos kept, why each one fits, and the channels behind them](docs/screenshots/theme-tab-preview.png)<br><sub>Topic tab preview</sub>
 
-![The Cleanup section with sample data: channels grouped by reason (Not watched, Off your profile), two of them ticked, the Review cancellation (2) button and an empty Ex-subscriptions list](docs/screenshots/cleanup.png)
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/screenshots/watching-tab.png" alt="A video playing in the Watch section of HermesTube with Hermes's own embedded player, the title and channel below it" width="100%">
+<br><sub>Watch</sub>
+</td>
+</tr>
+</table>
 
-![The new topic tab dialog showing the preview: the videos kept, why each one fits, and the channels behind them](docs/screenshots/theme-tab-preview.png)
-
-![A video playing in the Watch section of HermesTube with Hermes's own embedded player, the title and channel below it](docs/screenshots/watching-tab.png)
-
-![The HermesTube section in YouTube's left menu, above Subscriptions, with folders and new-video counts](docs/screenshots/youtube-sidebar.png)
+<p align="center">
+<img src="docs/screenshots/folder-pane.png" alt="The folder pane at the side of Hermes Desktop with folders, channels and new-video counts" width="230">
+<img src="docs/screenshots/youtube-sidebar.png" alt="The HermesTube section in YouTube's left menu, above Subscriptions, with folders and new-video counts" width="340">
+</p>
 
 ## Privacy and disclosure
 
