@@ -4,7 +4,9 @@
 
 # Retome o seu feed.
 
-As suas inscrições do YouTube dentro do Hermes Agent.<br>Você e o seu agente decidem o que você assiste. Não o algoritmo.
+Lembra daquele canal que você curtia e parou de aparecer no seu feed?<br>E de tudo aquilo que você nunca pediu e continua chegando?
+
+**O HermesTube traz as suas inscrições para dentro do Hermes, e você decide o que aparece.**
 
 [English](README.md) · **Português**
 
@@ -21,26 +23,34 @@ As suas inscrições do YouTube dentro do Hermes Agent.<br>Você e o seu agente 
 
 ![Imagem de capa do HermesTube com o nome do projeto](assets/hermes-tube.jpg)
 
+### O que o HermesTube faz
+
 <table>
 <tr>
-<td width="50%" valign="top">
-<h3>Organizado do seu jeito</h3>
-<p>Pastas, tags e as suas próprias abas. Veja de relance o que saiu de novo nos canais que importam.</p>
-<h3>Os seus dados ficam no seu computador</h3>
-<p>Não há cadastro nem servidor nosso: não coletamos nada.</p>
+<td valign="top">
+<ul>
+<li><b>Pastas, abas e playlists completas</b></li>
+<li><b>Aba curada sobre qualquer assunto</b></li>
+<li><b>O Hermes organiza todas as suas inscrições</b></li>
+<li><b>Assista no Hermes ou no navegador</b></li>
+</ul>
 </td>
-<td width="50%" valign="top">
-<h3>O seu modelo faz a parte chata</h3>
-<p>Ele sugere pastas e monta uma aba inteira a partir de um assunto que você digita.</p>
-<h3>Nunca sem o seu clique</h3>
-<p>Uma pequena extensão de navegador conecta a sua conta do YouTube. Ela nunca cancela inscrição nenhuma sem o seu clique.</p>
+<td valign="top">
+<ul>
+<li><b>Faxina dos canais que pararam</b></li>
+<li><b>Integração total com o Hermes e o Telegram</b></li>
+<li><b>Tudo espelhado no seu navegador</b></li>
+<li><b>Os dados são seus e locais</b></li>
+</ul>
 </td>
 </tr>
 </table>
 
+**E tudo roda na sua máquina.**
+
 ![A seção Subscriptions do HermesTube no Hermes Desktop com dados de exemplo: a barra de abas no alto, a aba de todos os vídeos novos selecionada e uma grade de vídeos novos, cada cartão com uma linha dizendo por que está ali](docs/screenshots/home.png)
 
-<p align="center"><sub>Todas as imagens usam dados de exemplo inventados para o projeto: canais e vídeos fictícios, nenhuma conta real. A interface nas imagens está em inglês.</sub></p>
+<p align="center"><sub>O que saiu nos seus canais, nas suas próprias abas.</sub></p>
 
 ## Sobre
 
@@ -65,8 +75,8 @@ As suas inscrições do YouTube dentro do Hermes Agent.<br>Você e o seu agente 
 <p align="center">
 <img src="docs/screenshots/organize-suggestions.png" alt="O diálogo Organize with Hermes com dados de exemplo: sugestões de pasta agrupadas por pasta, cada grupo com os botões Reject group e Accept group, e um botão Accept all; nada muda até você aceitar" width="100%">
 </p>
-<h3>Organizar com o Hermes</h3>
-<p>O seu modelo propõe pastas e tags. Nada muda até você aceitar.</p>
+<h3>O Hermes organiza as suas inscrições</h3>
+<p>O Hermes sugere pastas. Você aprova.</p>
 <ul><li>Aceite ou rejeite por grupo</li><li>Pastas aninhadas e pastas favoritas</li></ul>
 <p><kbd>Desktop</kbd> <kbd>IA</kbd></p>
 </td>
@@ -74,8 +84,8 @@ As suas inscrições do YouTube dentro do Hermes Agent.<br>Você e o seu agente 
 <p align="center">
 <img src="docs/screenshots/topic-tab-building.png" alt="O diálogo de nova aba por assunto enquanto a aba é montada, com dados de exemplo: a lista de etapas (expandir o assunto, buscar no YouTube, selecionar com IA, montar a prévia) e espaços vazios para a prévia" width="100%">
 </p>
-<h3>Abas por assunto</h3>
-<p>Digite um assunto. O modelo busca no YouTube e fica com o que serve.</p>
+<h3>Abas por assunto, num clique</h3>
+<p>Digite um assunto. O Hermes monta a aba.</p>
 <ul><li>Diz por que cada vídeo está na aba</li><li>Filtros: Shorts, não vistos, duração</li></ul>
 <p><kbd>Desktop</kbd> <kbd>IA</kbd></p>
 </td>
@@ -97,7 +107,7 @@ As suas inscrições do YouTube dentro do Hermes Agent.<br>Você e o seu agente 
 <p align="center">
 <img src="docs/screenshots/watching-tab.png" alt="Um vídeo tocando na seção Watch do HermesTube, no player embutido do próprio Hermes, com o título e o canal embaixo" width="100%">
 </p>
-<h3>Assistir dentro do Hermes</h3>
+<h3>Assista no Hermes ou no navegador</h3>
 <p>Os vídeos tocam dentro do Hermes, no player dele.</p>
 <ul><li>Visto, depois, arquivar, não é pra mim</li><li>⌘/Ctrl-clique abre no YouTube</li></ul>
 <p><kbd>Desktop</kbd></p>
@@ -111,8 +121,8 @@ As suas inscrições do YouTube dentro do Hermes Agent.<br>Você e o seu agente 
 <p align="center">
 <img src="docs/screenshots/cleanup.png" alt="A seção Cleanup com dados de exemplo: canais agrupados pelo motivo (Not watched, Off your profile), dois deles marcados, o botão Review cancellation (2) e a lista Ex-subscriptions vazia" width="100%">
 </p>
-<h3>Faxina, só com o seu clique</h3>
-<p>Regras listam canais parados. O modelo diz por quê.</p>
+<h3>Largue os canais que pararam</h3>
+<p>O Hermes lista e diz por quê. Você decide.</p>
 <ul><li>Nada é cancelado antes do Run now</li><li>Reinscrição possível por 30 dias</li></ul>
 <p><kbd>Desktop</kbd> <kbd>IA</kbd> <kbd>Extensão</kbd></p>
 </td>
@@ -120,8 +130,8 @@ As suas inscrições do YouTube dentro do Hermes Agent.<br>Você e o seu agente 
 <p align="center">
 <img src="docs/screenshots/playlists.png" alt="A aba Playlists do HermesTube com dados de exemplo: uma playlist, Weekend watchlist, com a capa e uma linha dizendo que ela fica no HermesTube neste computador, não na sua conta do YouTube" width="100%">
 </p>
-<h3>Playlists</h3>
-<p>Adicione qualquer vídeo pelo cartão ou pelo player.</p>
+<h3>As suas próprias playlists</h3>
+<p>Guarde vídeos nas suas próprias playlists.</p>
 <ul><li>Tocar tudo, renomear, apagar</li><li>Ficam no seu computador, não no YouTube</li></ul>
 <p><kbd>Desktop</kbd></p>
 </td>
@@ -135,8 +145,8 @@ As suas inscrições do YouTube dentro do Hermes Agent.<br>Você e o seu agente 
 <img src="docs/screenshots/folder-pane.png" alt="O painel de pastas ao lado do Hermes Desktop com pastas, canais e contagem de vídeos novos" height="300">
 <img src="docs/screenshots/youtube-sidebar.png" alt="A seção do HermesTube no menu lateral do YouTube, acima de Inscrições, com pastas e contagem de vídeos novos" height="300">
 </p>
-<h3>As suas pastas, em todo lugar</h3>
-<p>Um painel de pastas no Hermes e uma barra no youtube.com.</p>
+<h3>Espelhado no seu navegador</h3>
+<p>As suas pastas, no Hermes e no youtube.com.</p>
 <ul><li>Edite as pastas pela barra, com Desfazer</li><li>Um cartão no canal para seguir ou guardar</li></ul>
 <p><kbd>Desktop</kbd> <kbd>Extensão</kbd> <kbd>Novo na 0.2.0</kbd></p>
 </td>
@@ -144,8 +154,8 @@ As suas inscrições do YouTube dentro do Hermes Agent.<br>Você e o seu agente 
 <p align="center">
 <img src="docs/screenshots/telegram-favorite.png" alt="Um alerta de favoritos no Telegram com dados de exemplo: a capa do vídeo, o canal, o título e o link" width="100%">
 </p>
-<h3>Telegram e rotinas</h3>
-<p><code>/tube</code> com botões, mais nove ferramentas para o agente.</p>
+<h3>Nunca perca o que você curte</h3>
+<p>Integração total com o Hermes, inclusive no Telegram.</p>
 <ul><li>Cinco rotinas; quatro sem modelo</li><li>Vídeos novos dos favoritos, com capa</li></ul>
 <p><kbd>Telegram</kbd></p>
 </td>

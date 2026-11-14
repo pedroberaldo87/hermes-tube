@@ -4,7 +4,9 @@
 
 # Take back your feed.
 
-Your YouTube subscriptions inside Hermes Agent.<br>You and your agent decide what you watch. Not the algorithm.
+Remember that channel you liked that stopped showing up in your feed?<br>And all the stuff you never asked for that keeps coming anyway?
+
+**HermesTube brings your subscriptions into Hermes, and you decide what shows up.**
 
 **English** · [Português](README.pt-BR.md)
 
@@ -21,26 +23,34 @@ Your YouTube subscriptions inside Hermes Agent.<br>You and your agent decide wha
 
 ![HermesTube cover image with the project name](assets/hermes-tube.jpg)
 
+### What HermesTube does
+
 <table>
 <tr>
-<td width="50%" valign="top">
-<h3>Organized your way</h3>
-<p>Folders, tags and your own tabs. See at a glance what's new from the channels you care about.</p>
-<h3>Your data stays on your machine</h3>
-<p>No sign-up and no server on our side: we collect nothing.</p>
+<td valign="top">
+<ul>
+<li><b>Fully featured folders, tabs and playlists</b></li>
+<li><b>One-click, curated tab on any topic</b></li>
+<li><b>Hermes organizes all your subs for you</b></li>
+<li><b>Watch in Hermes or in your browser</b></li>
+</ul>
 </td>
-<td width="50%" valign="top">
-<h3>Your model does the boring part</h3>
-<p>It suggests folders and builds a whole tab from a topic you type.</p>
-<h3>Never without your click</h3>
-<p>A small browser extension hooks up your YouTube account. It never unsubscribes from anything unless you click.</p>
+<td valign="top">
+<ul>
+<li><b>Cleanup list for channels that went quiet</b></li>
+<li><b>Full Hermes integration, incl. Telegram</b></li>
+<li><b>Everything mirrored in your browser</b></li>
+<li><b>All data is yours and local</b></li>
+</ul>
 </td>
 </tr>
 </table>
 
+**And it all runs on your machine.**
+
 ![The Subscriptions section of HermesTube in Hermes Desktop with sample data: the tab bar across the top, the tab of all new videos selected, and a grid of new videos, each card with a line saying why it is there](docs/screenshots/home.png)
 
-<p align="center"><sub>All screenshots use sample data invented for this project: made-up channels and videos, no real account.</sub></p>
+<p align="center"><sub>What's new from your channels, in your own tabs.</sub></p>
 
 ## About
 
@@ -65,8 +75,8 @@ Your YouTube subscriptions inside Hermes Agent.<br>You and your agent decide wha
 <p align="center">
 <img src="docs/screenshots/organize-suggestions.png" alt="The Organize with Hermes dialog with sample data: folder suggestions grouped by folder, each with Reject group and Accept group buttons and an Accept all button; nothing changes until you accept" width="100%">
 </p>
-<h3>Organize with Hermes</h3>
-<p>Your model proposes folders and tags. Nothing changes until you accept.</p>
+<h3>Hermes organizes your subs</h3>
+<p>Hermes suggests folders. You approve.</p>
 <ul><li>Accept or reject by group</li><li>Nested folders and favorite folders</li></ul>
 <p><kbd>Desktop</kbd> <kbd>AI</kbd></p>
 </td>
@@ -74,8 +84,8 @@ Your YouTube subscriptions inside Hermes Agent.<br>You and your agent decide wha
 <p align="center">
 <img src="docs/screenshots/topic-tab-building.png" alt="The new topic tab dialog while the tab is being built, with sample data: a step list (expanding the topic, searching YouTube, curating with AI, building the preview) and empty preview slots" width="100%">
 </p>
-<h3>Topic tabs</h3>
-<p>Type a topic. The model searches YouTube and keeps what fits.</p>
+<h3>One-click topic tabs</h3>
+<p>Type a topic. Hermes builds the tab.</p>
 <ul><li>Says why each video is in the tab</li><li>Filters: Shorts, unwatched, duration</li></ul>
 <p><kbd>Desktop</kbd> <kbd>AI</kbd></p>
 </td>
@@ -97,7 +107,7 @@ Your YouTube subscriptions inside Hermes Agent.<br>You and your agent decide wha
 <p align="center">
 <img src="docs/screenshots/watching-tab.png" alt="A video playing in the Watch section of HermesTube with Hermes's own embedded player, the title and channel below it" width="100%">
 </p>
-<h3>Watch inside Hermes</h3>
+<h3>Watch in Hermes or in your browser</h3>
 <p>Videos play inside Hermes, in its own player.</p>
 <ul><li>Watched, later, archive, not for me</li><li>⌘/Ctrl-click opens it on YouTube</li></ul>
 <p><kbd>Desktop</kbd></p>
@@ -111,8 +121,8 @@ Your YouTube subscriptions inside Hermes Agent.<br>You and your agent decide wha
 <p align="center">
 <img src="docs/screenshots/cleanup.png" alt="The Cleanup section with sample data: channels grouped by reason (Not watched, Off your profile), two of them ticked, the Review cancellation (2) button and an empty Ex-subscriptions list" width="100%">
 </p>
-<h3>Cleanup, only with your click</h3>
-<p>Rules list inactive channels. The model says why.</p>
+<h3>Drop the channels that went quiet</h3>
+<p>Hermes lists them and says why. You decide.</p>
 <ul><li>No unsubscribe before you click Run now</li><li>Resubscribe within 30 days</li></ul>
 <p><kbd>Desktop</kbd> <kbd>AI</kbd> <kbd>Extension</kbd></p>
 </td>
@@ -120,8 +130,8 @@ Your YouTube subscriptions inside Hermes Agent.<br>You and your agent decide wha
 <p align="center">
 <img src="docs/screenshots/playlists.png" alt="The Playlists tab of HermesTube with sample data: one playlist, Weekend watchlist, with its cover and a line saying it is kept in HermesTube on this computer, not on your YouTube account" width="100%">
 </p>
-<h3>Playlists</h3>
-<p>Add any video from its card or from the player.</p>
+<h3>Your own playlists</h3>
+<p>Save videos to your own playlists.</p>
 <ul><li>Play all, rename, delete</li><li>Kept on your computer, not on YouTube</li></ul>
 <p><kbd>Desktop</kbd></p>
 </td>
@@ -135,8 +145,8 @@ Your YouTube subscriptions inside Hermes Agent.<br>You and your agent decide wha
 <img src="docs/screenshots/folder-pane.png" alt="The folder pane at the side of Hermes Desktop with folders, channels and new-video counts" height="300">
 <img src="docs/screenshots/youtube-sidebar.png" alt="The HermesTube section in YouTube's left menu, above Subscriptions, with folders and new-video counts" height="300">
 </p>
-<h3>Your folders, everywhere</h3>
-<p>A folder pane in Hermes and a bar on youtube.com.</p>
+<h3>Mirrored in your browser</h3>
+<p>Your folders, in Hermes and on youtube.com.</p>
 <ul><li>Edit your folders from the bar, with Undo</li><li>A card on channel pages to follow or file</li></ul>
 <p><kbd>Desktop</kbd> <kbd>Extension</kbd> <kbd>New in 0.2.0</kbd></p>
 </td>
@@ -144,8 +154,8 @@ Your YouTube subscriptions inside Hermes Agent.<br>You and your agent decide wha
 <p align="center">
 <img src="docs/screenshots/telegram-favorite.png" alt="A favorites alert on Telegram with sample data: the video cover, the channel, the title and the link" width="100%">
 </p>
-<h3>Telegram and routines</h3>
-<p><code>/tube</code> with buttons, plus nine tools for the agent.</p>
+<h3>Never miss what you like</h3>
+<p>Full integration with Hermes, incl. Telegram delivery.</p>
 <ul><li>Five routines; four use no model</li><li>New videos from favorites, with cover</li></ul>
 <p><kbd>Telegram</kbd></p>
 </td>
