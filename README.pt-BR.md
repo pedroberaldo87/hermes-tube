@@ -4,7 +4,7 @@
 
 # Retome o seu feed.
 
-As suas inscrições do YouTube dentro do Hermes Agent, onde você e o seu agente decidem o que você assiste. Não o algoritmo.
+As suas inscrições do YouTube dentro do Hermes Agent.<br>Você e o seu agente decidem o que você assiste. Não o algoritmo.
 
 [English](README.md) · **Português**
 
@@ -25,21 +25,15 @@ As suas inscrições do YouTube dentro do Hermes Agent, onde você e o seu agent
 <tr>
 <td width="50%" valign="top">
 <h3>Organizado do seu jeito</h3>
-Pastas, tags e as suas próprias abas. Veja de relance o que saiu de novo nos canais que importam.
+<p>Pastas, tags e as suas próprias abas. Veja de relance o que saiu de novo nos canais que importam.</p>
+<h3>Os seus dados ficam no seu computador</h3>
+<p>Não há cadastro nem servidor nosso: não coletamos nada.</p>
 </td>
 <td width="50%" valign="top">
 <h3>O seu modelo faz a parte chata</h3>
-Ele sugere pastas e monta uma aba inteira a partir de um assunto que você digita.
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<h3>Os seus dados ficam no seu computador</h3>
-Não há cadastro nem servidor nosso: não coletamos nada.
-</td>
-<td width="50%" valign="top">
+<p>Ele sugere pastas e monta uma aba inteira a partir de um assunto que você digita.</p>
 <h3>Nunca sem o seu clique</h3>
-Uma pequena extensão de navegador conecta a sua conta do YouTube. Ela nunca cancela inscrição nenhuma sem o seu clique.
+<p>Uma pequena extensão de navegador conecta a sua conta do YouTube. Ela nunca cancela inscrição nenhuma sem o seu clique.</p>
 </td>
 </tr>
 </table>
@@ -51,7 +45,7 @@ Uma pequena extensão de navegador conecta a sua conta do YouTube. Ela nunca can
 ## Sobre
 
 | O HermesTube faz | O HermesTube não faz |
-|---|---|
+|:---|:---|
 | Acrescenta uma página ao Hermes Desktop, ferramentas para o agente, o comando `/tube` e rotinas opcionais | Não cancela inscrições sozinho: a IA, as ferramentas e as rotinas só montam listas |
 | Mexe na sua conta do YouTube só por uma extensão do Chrome que você carrega | Não usa nuvem, conta, chave de API própria nem telemetria |
 | Funciona em inglês e em português do Brasil | Não baixa vídeos |
@@ -67,76 +61,93 @@ Uma pequena extensão de navegador conecta a sua conta do YouTube. Ela nunca can
 
 <table>
 <tr>
-<td width="56%" valign="middle" align="center">
+<td width="50%" valign="top">
+<p align="center">
 <img src="docs/screenshots/organize-suggestions.png" alt="O diálogo Organize with Hermes com dados de exemplo: sugestões de pasta agrupadas por pasta, cada grupo com os botões Reject group e Accept group, e um botão Accept all; nada muda até você aceitar" width="100%">
-</td>
-<td width="44%" valign="middle">
+</p>
 <h3>Organizar com o Hermes</h3>
-<p>O seu modelo propõe pastas e tags para os seus canais. Nada muda até você aceitar.</p>
-<kbd>Desktop</kbd> <kbd>IA</kbd>
+<p>O seu modelo propõe pastas e tags. Nada muda até você aceitar.</p>
+<ul><li>Aceite ou rejeite por grupo</li><li>Pastas aninhadas e pastas favoritas</li></ul>
+<p><kbd>Desktop</kbd> <kbd>IA</kbd></p>
 </td>
-</tr>
-<tr>
-<td width="44%" valign="middle">
+<td width="50%" valign="top">
+<p align="center">
+<img src="docs/screenshots/topic-tab-building.png" alt="O diálogo de nova aba por assunto enquanto a aba é montada, com dados de exemplo: a lista de etapas (expandir o assunto, buscar no YouTube, selecionar com IA, montar a prévia) e espaços vazios para a prévia" width="100%">
+</p>
 <h3>Abas por assunto</h3>
-<p>Digite um assunto. O modelo busca no YouTube, fica com o que serve e diz por que cada vídeo está ali.</p>
-<kbd>Desktop</kbd> <kbd>IA</kbd>
-</td>
-<td width="56%" valign="middle" align="center">
-
-![O diálogo de nova aba por assunto mostrando a prévia: os vídeos que ficaram, por que cada um serve e os canais por trás deles](docs/screenshots/theme-tab-preview.png)
-
+<p>Digite um assunto. O modelo busca no YouTube e fica com o que serve.</p>
+<ul><li>Diz por que cada vídeo está na aba</li><li>Filtros: Shorts, não vistos, duração</li></ul>
+<p><kbd>Desktop</kbd> <kbd>IA</kbd></p>
 </td>
 </tr>
+</table>
+
+<table>
 <tr>
-<td width="56%" valign="middle" align="center">
+<td width="50%" valign="top">
+<p align="center">
 <img src="docs/screenshots/manage.png" alt="A tabela Manage com vários canais selecionados e a barra de ações em lote" width="100%">
-</td>
-<td width="44%" valign="middle">
+</p>
 <h3>Manage, com desfazer</h3>
-<p>Todos os canais numa tabela, com ações em lote. Cada mudança tem Desfazer, e há histórico e backup.</p>
-<kbd>Desktop</kbd>
+<p>Todos os canais numa tabela, com ações em lote.</p>
+<ul><li>Último vídeo, ritmo, fatia de Shorts</li><li>Desfazer, histórico e backup</li></ul>
+<p><kbd>Desktop</kbd></p>
 </td>
-</tr>
-<tr>
-<td width="44%" valign="middle">
-<h3>Watch e playlists</h3>
-<p>Os vídeos tocam dentro do Hermes. As playlists ficam no seu computador, não na sua conta do YouTube.</p>
-<kbd>Desktop</kbd>
-</td>
-<td width="56%" valign="middle" align="center">
+<td width="50%" valign="top">
+<p align="center">
 <img src="docs/screenshots/watching-tab.png" alt="Um vídeo tocando na seção Watch do HermesTube, no player embutido do próprio Hermes, com o título e o canal embaixo" width="100%">
+</p>
+<h3>Assistir dentro do Hermes</h3>
+<p>Os vídeos tocam dentro do Hermes, no player dele.</p>
+<ul><li>Visto, depois, arquivar, não é pra mim</li><li>⌘/Ctrl-clique abre no YouTube</li></ul>
+<p><kbd>Desktop</kbd></p>
 </td>
 </tr>
+</table>
+
+<table>
 <tr>
-<td width="56%" valign="middle" align="center">
+<td width="50%" valign="top">
+<p align="center">
 <img src="docs/screenshots/cleanup.png" alt="A seção Cleanup com dados de exemplo: canais agrupados pelo motivo (Not watched, Off your profile), dois deles marcados, o botão Review cancellation (2) e a lista Ex-subscriptions vazia" width="100%">
-</td>
-<td width="44%" valign="middle">
+</p>
 <h3>Faxina, só com o seu clique</h3>
-<p>Regras fixas listam canais parados; o modelo explica o porquê. Nada é cancelado sem você aprovar e clicar em Run now.</p>
-<kbd>Desktop</kbd> <kbd>IA</kbd> <kbd>Extensão</kbd>
+<p>Regras listam canais parados. O modelo diz por quê.</p>
+<ul><li>Nada é cancelado antes do Run now</li><li>Reinscrição possível por 30 dias</li></ul>
+<p><kbd>Desktop</kbd> <kbd>IA</kbd> <kbd>Extensão</kbd></p>
+</td>
+<td width="50%" valign="top">
+<p align="center">
+<img src="docs/screenshots/playlists.png" alt="A aba Playlists do HermesTube com dados de exemplo: uma playlist, Weekend watchlist, com a capa e uma linha dizendo que ela fica no HermesTube neste computador, não na sua conta do YouTube" width="100%">
+</p>
+<h3>Playlists</h3>
+<p>Adicione qualquer vídeo pelo cartão ou pelo player.</p>
+<ul><li>Tocar tudo, renomear, apagar</li><li>Ficam no seu computador, não no YouTube</li></ul>
+<p><kbd>Desktop</kbd></p>
 </td>
 </tr>
+</table>
+
+<table>
 <tr>
-<td width="44%" valign="middle">
+<td width="50%" valign="top">
+<p align="center">
+<img src="docs/screenshots/folder-pane.png" alt="O painel de pastas ao lado do Hermes Desktop com pastas, canais e contagem de vídeos novos" height="300">
+<img src="docs/screenshots/youtube-sidebar.png" alt="A seção do HermesTube no menu lateral do YouTube, acima de Inscrições, com pastas e contagem de vídeos novos" height="300">
+</p>
 <h3>As suas pastas, em todo lugar</h3>
-<p>Um painel de pastas no Hermes Desktop e uma barra no youtube.com. Dá para organizar pela barra, com Desfazer.</p>
-<kbd>Desktop</kbd> <kbd>Extensão</kbd> <kbd>Novo na 0.2.0</kbd>
+<p>Um painel de pastas no Hermes e uma barra no youtube.com.</p>
+<ul><li>Edite as pastas pela barra, com Desfazer</li><li>Um cartão no canal para seguir ou guardar</li></ul>
+<p><kbd>Desktop</kbd> <kbd>Extensão</kbd> <kbd>Novo na 0.2.0</kbd></p>
 </td>
-<td width="56%" valign="middle" align="center">
-<img src="docs/screenshots/folder-pane.png" alt="O painel de pastas ao lado do Hermes Desktop com pastas, canais e contagem de vídeos novos" width="36%">
-<img src="docs/screenshots/youtube-sidebar.png" alt="A seção do HermesTube no menu lateral do YouTube, acima de Inscrições, com pastas e contagem de vídeos novos" width="55%">
-</td>
-</tr>
-<tr>
-<td width="56%" valign="middle" align="center">
+<td width="50%" valign="top">
+<p align="center">
 <img src="docs/screenshots/telegram-favorite.png" alt="Um alerta de favoritos no Telegram com dados de exemplo: a capa do vídeo, o canal, o título e o link" width="100%">
-</td>
-<td width="44%" valign="middle">
+</p>
 <h3>Telegram e rotinas</h3>
-<p><code>/tube</code> com botões e cinco rotinas agendadas. O vídeo novo de um canal favorito chega com capa, título e link.</p>
-<kbd>Telegram</kbd>
+<p><code>/tube</code> com botões, mais nove ferramentas para o agente.</p>
+<ul><li>Cinco rotinas; quatro sem modelo</li><li>Vídeos novos dos favoritos, com capa</li></ul>
+<p><kbd>Telegram</kbd></p>
 </td>
 </tr>
 </table>
@@ -146,16 +157,9 @@ Uma pequena extensão de navegador conecta a sua conta do YouTube. Ela nunca can
 
 **Mais telas**
 
-<table>
-<tr>
-<td width="50%" valign="middle" align="center">
-<img src="docs/screenshots/topic-tab-building.png" alt="O diálogo de nova aba por assunto enquanto a aba é montada, com dados de exemplo: a lista de etapas (expandir o assunto, buscar no YouTube, selecionar com IA, montar a prévia) e espaços vazios para a prévia" width="100%">
-</td>
-<td width="50%" valign="middle" align="center">
-<img src="docs/screenshots/playlists.png" alt="A aba Playlists do HermesTube com dados de exemplo: uma playlist, Weekend watchlist, com a capa e uma linha dizendo que ela fica no HermesTube neste computador, não na sua conta do YouTube" width="100%">
-</td>
-</tr>
-</table>
+
+![O diálogo de nova aba por assunto mostrando a prévia: os vídeos que ficaram, por que cada um serve e os canais por trás deles](docs/screenshots/theme-tab-preview.png)
+
 
 **Todas as funcionalidades**
 
@@ -197,8 +201,8 @@ Os nomes das telas e dos botões ficam em inglês aqui porque as imagens e o gui
 
 ## Instalação
 
-| Você precisa de | |
-|---|---|
+| Você precisa de | Observação |
+|:---|:---|
 | **Hermes Agent 0.23.1** ou mais novo | com o Hermes Desktop |
 | **Um modelo** configurado no Hermes | só para os recursos de IA |
 | **Um navegador Chromium** com a conta do YouTube aberta | Chrome 120 ou mais novo, Edge, Brave, Vivaldi, Opera, Arc |
@@ -216,7 +220,7 @@ Os nomes das telas e dos botões ficam em inglês aqui porque as imagens e o gui
 
    O Hermes avisa que é uma "custom (unreviewed) source": é o esperado para um plugin instalado de um repositório.
 
-2. **Abra o HermesTube** na barra lateral do Hermes Desktop. Carregue a demonstração, cole um canal ou conecte a extensão.
+2. **Abra o HermesTube** na barra lateral: carregue a demonstração, cole um canal ou conecte a extensão.
 
 3. **Configure a extensão.** Aperte **Set up the extension**; depois ligue o Developer mode no navegador e arraste a pasta para a página de extensões.
 
@@ -307,11 +311,11 @@ EXT_DIST_DIR=extension/dist npm run build:ext
 ## Uso
 
 | Onde | Experimente |
-|---|---|
-| **Hermes Desktop** | Abra o HermesTube na barra lateral. Clique num vídeo para assistir; ⌘/Ctrl-clique abre no YouTube. |
+|:---|:---|
+| **Hermes Desktop** | Abra o HermesTube na barra lateral e clique num vídeo para assistir |
 | **Chat** | "O que saiu hoje no YouTube?" · "Monta uma aba sobre café espresso em casa" |
-| **Telegram** | `/tube` · `/tube triage` · `/tube cleanup` · `/tube topic <assunto>` · `/tube routines` |
-| **youtube.com** | As suas pastas numa barra do HermesTube, e um cartão nas páginas de canal para seguir, favoritar ou guardar numa pasta |
+| **Telegram** | `/tube` · `/tube triage` · `/tube cleanup`<br>`/tube topic <assunto>` · `/tube routines` |
+| **youtube.com** | As suas pastas numa barra do HermesTube, e um cartão em cada página de canal |
 
 **Guias (em inglês):** [instalação](docs/user/install.md) · [Telegram](docs/user/telegram.md)
 
@@ -351,15 +355,15 @@ EXT_DIST_DIR=extension/dist npm run build:ext
 
 ## Privacidade e divulgação
 
-| | Em resumo |
-|---|---|
+| O quê | Em resumo |
+|:---|:---|
 | **A sua biblioteca** | Um banco SQLite no seu perfil do Hermes |
 | **O que o plugin lê** | Páginas públicas do `www.youtube.com`, sem login |
-| **O que os recursos de IA enviam** | Nomes de canais, títulos de vídeos e os nomes das suas pastas, para o modelo que você configurou no Hermes |
-| **A extensão** | Só conversa com o plugin em `127.0.0.1` e só age no navegador onde a sua conta está aberta |
+| **O que a IA envia** | Nomes de canais, títulos de vídeos e nomes de pastas, ao seu modelo no Hermes |
+| **A extensão** | Só fala com o plugin em `127.0.0.1`, no navegador com a sua conta aberta |
 | **Telemetria** | Nenhuma: sem analytics, sem servidor nosso |
 
-- Tudo o que o plugin faz no seu computador e na rede, com o arquivo que mostra cada coisa, está na [seção Disclosure do plugin/README.md](plugin/README.md#disclosure) (em inglês).
+- Cada ação, com o arquivo por trás: [Disclosure no plugin/README.md](plugin/README.md#disclosure) (em inglês).
 
 <details>
 <summary><b>A lista completa</b></summary>
@@ -375,16 +379,13 @@ EXT_DIST_DIR=extension/dist npm run build:ext
 
 ## Como funciona
 
-```mermaid
-flowchart LR
-    yt["youtube.com<br/>no seu navegador"] <--> ext["Extensão<br/>Manifest V3"]
-    ext <-->|"127.0.0.1, pareada com um código"| plugin["Plugin HermesTube<br/>Python, dentro do Hermes"]
-    desk["Hermes Desktop<br/>a página do HermesTube"] <-->|"REST e RPC"| plugin
-    chat["Chat e Telegram<br/>ferramentas, /tube, rotinas"] <--> plugin
-    plugin --> model["O seu modelo no Hermes"]
-    plugin --> db[("SQLite<br/>no seu perfil do Hermes")]
-    plugin -->|"lê"| pub["Páginas públicas do YouTube<br/>sem login"]
-```
+| **youtube.com** | ⇄ **Extensão** | ⇄ **Plugin HermesTube** | ⇄ **Hermes Desktop, chat, Telegram** |
+|:-:|:-:|:-:|:-:|
+| no seu navegador | pareada, só fala com 127.0.0.1 | Python, dentro do Hermes | página, ferramentas, /tube, rotinas |
+
+- **Guarda:** um banco SQLite no seu perfil do Hermes
+- **Pensa com:** o seu modelo no Hermes, só nos recursos de IA
+- **Lê:** páginas públicas do YouTube, sem login
 
 <details>
 <summary><b>As partes, e os arquivos por trás de cada uma</b></summary>
@@ -415,13 +416,13 @@ flowchart LR
 
 ## Desenvolvimento
 
-- Você precisa de um checkout local do Hermes Agent com o comando `hermes` no PATH, do [uv](https://docs.astral.sh/uv/) e do Node.js 22 ou mais novo.
+- Você precisa de um checkout do Hermes Agent com `hermes` no PATH, do [uv](https://docs.astral.sh/uv/) e do Node.js 22+.
 - Detalhes em [CONTRIBUTING.md](CONTRIBUTING.md) (em inglês).
 
 ```bash
 make venv              # .venv com o Python do Hermes mais pytest e ruff
 npm ci
-scripts/check          # ruff, pytest, plugin doctor, tsc, vitest, os dois builds, tipos gerados, validação do catálogo
+scripts/check          # todas as checagens: lint, testes, tipos, builds, catálogo
 scripts/check --fast   # o mesmo sem os builds
 npm run typecheck      # só o tsc
 npm run test:js        # só o vitest

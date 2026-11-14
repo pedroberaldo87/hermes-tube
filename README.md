@@ -4,7 +4,7 @@
 
 # Take back your feed.
 
-Your YouTube subscriptions inside Hermes Agent, where you and your agent decide what you watch. Not the algorithm.
+Your YouTube subscriptions inside Hermes Agent.<br>You and your agent decide what you watch. Not the algorithm.
 
 **English** · [Português](README.pt-BR.md)
 
@@ -25,21 +25,15 @@ Your YouTube subscriptions inside Hermes Agent, where you and your agent decide 
 <tr>
 <td width="50%" valign="top">
 <h3>Organized your way</h3>
-Folders, tags and your own tabs. See at a glance what's new from the channels you care about.
+<p>Folders, tags and your own tabs. See at a glance what's new from the channels you care about.</p>
+<h3>Your data stays on your machine</h3>
+<p>No sign-up and no server on our side: we collect nothing.</p>
 </td>
 <td width="50%" valign="top">
 <h3>Your model does the boring part</h3>
-It suggests folders and builds a whole tab from a topic you type.
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<h3>Your data stays on your machine</h3>
-No sign-up and no server on our side: we collect nothing.
-</td>
-<td width="50%" valign="top">
+<p>It suggests folders and builds a whole tab from a topic you type.</p>
 <h3>Never without your click</h3>
-A small browser extension hooks up your YouTube account. It never unsubscribes from anything unless you click.
+<p>A small browser extension hooks up your YouTube account. It never unsubscribes from anything unless you click.</p>
 </td>
 </tr>
 </table>
@@ -51,7 +45,7 @@ A small browser extension hooks up your YouTube account. It never unsubscribes f
 ## About
 
 | HermesTube does | HermesTube does not |
-|---|---|
+|:---|:---|
 | Add a page to Hermes Desktop, tools for the agent, a `/tube` command and optional routines | Unsubscribe on its own: the AI, the tools and the routines only build lists |
 | Touch your YouTube account only through a Chrome extension that you load | Use a cloud, an account, an API key of its own or telemetry |
 | Work in English and Brazilian Portuguese | Download videos |
@@ -67,76 +61,93 @@ A small browser extension hooks up your YouTube account. It never unsubscribes f
 
 <table>
 <tr>
-<td width="56%" valign="middle" align="center">
+<td width="50%" valign="top">
+<p align="center">
 <img src="docs/screenshots/organize-suggestions.png" alt="The Organize with Hermes dialog with sample data: folder suggestions grouped by folder, each with Reject group and Accept group buttons and an Accept all button; nothing changes until you accept" width="100%">
-</td>
-<td width="44%" valign="middle">
+</p>
 <h3>Organize with Hermes</h3>
-<p>Your model proposes folders and tags for your channels. Nothing changes until you accept.</p>
-<kbd>Desktop</kbd> <kbd>AI</kbd>
+<p>Your model proposes folders and tags. Nothing changes until you accept.</p>
+<ul><li>Accept or reject by group</li><li>Nested folders and favorite folders</li></ul>
+<p><kbd>Desktop</kbd> <kbd>AI</kbd></p>
 </td>
-</tr>
-<tr>
-<td width="44%" valign="middle">
+<td width="50%" valign="top">
+<p align="center">
+<img src="docs/screenshots/topic-tab-building.png" alt="The new topic tab dialog while the tab is being built, with sample data: a step list (expanding the topic, searching YouTube, curating with AI, building the preview) and empty preview slots" width="100%">
+</p>
 <h3>Topic tabs</h3>
-<p>Type a topic. The model searches YouTube, keeps what fits and says why each video is there.</p>
-<kbd>Desktop</kbd> <kbd>AI</kbd>
-</td>
-<td width="56%" valign="middle" align="center">
-
-![The new topic tab dialog showing the preview: the videos kept, why each one fits, and the channels behind them](docs/screenshots/theme-tab-preview.png)
-
+<p>Type a topic. The model searches YouTube and keeps what fits.</p>
+<ul><li>Says why each video is in the tab</li><li>Filters: Shorts, unwatched, duration</li></ul>
+<p><kbd>Desktop</kbd> <kbd>AI</kbd></p>
 </td>
 </tr>
+</table>
+
+<table>
 <tr>
-<td width="56%" valign="middle" align="center">
+<td width="50%" valign="top">
+<p align="center">
 <img src="docs/screenshots/manage.png" alt="The Manage table with several channels selected and the batch action bar" width="100%">
-</td>
-<td width="44%" valign="middle">
+</p>
 <h3>Manage, with undo</h3>
-<p>Every channel in one table, with batch actions. Each change has an Undo, and there is a History and a backup.</p>
-<kbd>Desktop</kbd>
+<p>Every channel in one table, with batch actions.</p>
+<ul><li>Last video, pace, share of Shorts</li><li>Undo, a History and a backup</li></ul>
+<p><kbd>Desktop</kbd></p>
 </td>
-</tr>
-<tr>
-<td width="44%" valign="middle">
-<h3>Watch and playlists</h3>
-<p>Videos play inside Hermes. Playlists live on your computer, not on your YouTube account.</p>
-<kbd>Desktop</kbd>
-</td>
-<td width="56%" valign="middle" align="center">
+<td width="50%" valign="top">
+<p align="center">
 <img src="docs/screenshots/watching-tab.png" alt="A video playing in the Watch section of HermesTube with Hermes's own embedded player, the title and channel below it" width="100%">
+</p>
+<h3>Watch inside Hermes</h3>
+<p>Videos play inside Hermes, in its own player.</p>
+<ul><li>Watched, later, archive, not for me</li><li>⌘/Ctrl-click opens it on YouTube</li></ul>
+<p><kbd>Desktop</kbd></p>
 </td>
 </tr>
+</table>
+
+<table>
 <tr>
-<td width="56%" valign="middle" align="center">
+<td width="50%" valign="top">
+<p align="center">
 <img src="docs/screenshots/cleanup.png" alt="The Cleanup section with sample data: channels grouped by reason (Not watched, Off your profile), two of them ticked, the Review cancellation (2) button and an empty Ex-subscriptions list" width="100%">
-</td>
-<td width="44%" valign="middle">
+</p>
 <h3>Cleanup, only with your click</h3>
-<p>Fixed rules list inactive channels; the model explains why. Nothing is unsubscribed until you approve and click Run now.</p>
-<kbd>Desktop</kbd> <kbd>AI</kbd> <kbd>Extension</kbd>
+<p>Rules list inactive channels. The model says why.</p>
+<ul><li>No unsubscribe before you click Run now</li><li>Resubscribe within 30 days</li></ul>
+<p><kbd>Desktop</kbd> <kbd>AI</kbd> <kbd>Extension</kbd></p>
+</td>
+<td width="50%" valign="top">
+<p align="center">
+<img src="docs/screenshots/playlists.png" alt="The Playlists tab of HermesTube with sample data: one playlist, Weekend watchlist, with its cover and a line saying it is kept in HermesTube on this computer, not on your YouTube account" width="100%">
+</p>
+<h3>Playlists</h3>
+<p>Add any video from its card or from the player.</p>
+<ul><li>Play all, rename, delete</li><li>Kept on your computer, not on YouTube</li></ul>
+<p><kbd>Desktop</kbd></p>
 </td>
 </tr>
+</table>
+
+<table>
 <tr>
-<td width="44%" valign="middle">
+<td width="50%" valign="top">
+<p align="center">
+<img src="docs/screenshots/folder-pane.png" alt="The folder pane at the side of Hermes Desktop with folders, channels and new-video counts" height="300">
+<img src="docs/screenshots/youtube-sidebar.png" alt="The HermesTube section in YouTube's left menu, above Subscriptions, with folders and new-video counts" height="300">
+</p>
 <h3>Your folders, everywhere</h3>
-<p>A folder pane in Hermes Desktop and a HermesTube bar on youtube.com. Organize from the bar too, with Undo.</p>
-<kbd>Desktop</kbd> <kbd>Extension</kbd> <kbd>New in 0.2.0</kbd>
+<p>A folder pane in Hermes and a bar on youtube.com.</p>
+<ul><li>Edit your folders from the bar, with Undo</li><li>A card on channel pages to follow or file</li></ul>
+<p><kbd>Desktop</kbd> <kbd>Extension</kbd> <kbd>New in 0.2.0</kbd></p>
 </td>
-<td width="56%" valign="middle" align="center">
-<img src="docs/screenshots/folder-pane.png" alt="The folder pane at the side of Hermes Desktop with folders, channels and new-video counts" width="36%">
-<img src="docs/screenshots/youtube-sidebar.png" alt="The HermesTube section in YouTube's left menu, above Subscriptions, with folders and new-video counts" width="55%">
-</td>
-</tr>
-<tr>
-<td width="56%" valign="middle" align="center">
+<td width="50%" valign="top">
+<p align="center">
 <img src="docs/screenshots/telegram-favorite.png" alt="A favorites alert on Telegram with sample data: the video cover, the channel, the title and the link" width="100%">
-</td>
-<td width="44%" valign="middle">
+</p>
 <h3>Telegram and routines</h3>
-<p><code>/tube</code> with buttons and five scheduled routines. A favorite channel's new video arrives with cover, title and link.</p>
-<kbd>Telegram</kbd>
+<p><code>/tube</code> with buttons, plus nine tools for the agent.</p>
+<ul><li>Five routines; four use no model</li><li>New videos from favorites, with cover</li></ul>
+<p><kbd>Telegram</kbd></p>
 </td>
 </tr>
 </table>
@@ -146,16 +157,9 @@ A small browser extension hooks up your YouTube account. It never unsubscribes f
 
 **More screens**
 
-<table>
-<tr>
-<td width="50%" valign="middle" align="center">
-<img src="docs/screenshots/topic-tab-building.png" alt="The new topic tab dialog while the tab is being built, with sample data: a step list (expanding the topic, searching YouTube, curating with AI, building the preview) and empty preview slots" width="100%">
-</td>
-<td width="50%" valign="middle" align="center">
-<img src="docs/screenshots/playlists.png" alt="The Playlists tab of HermesTube with sample data: one playlist, Weekend watchlist, with its cover and a line saying it is kept in HermesTube on this computer, not on your YouTube account" width="100%">
-</td>
-</tr>
-</table>
+
+![The new topic tab dialog showing the preview: the videos kept, why each one fits, and the channels behind them](docs/screenshots/theme-tab-preview.png)
+
 
 **Every feature**
 
@@ -195,8 +199,8 @@ A small browser extension hooks up your YouTube account. It never unsubscribes f
 
 ## Installation
 
-| You need | |
-|---|---|
+| You need | Notes |
+|:---|:---|
 | **Hermes Agent 0.23.1** or newer | with Hermes Desktop |
 | **A model** set up in Hermes | only for the AI features |
 | **A Chromium browser** signed in to YouTube | Chrome 120 or newer, Edge, Brave, Vivaldi, Opera, Arc |
@@ -214,7 +218,7 @@ A small browser extension hooks up your YouTube account. It never unsubscribes f
 
    Hermes warns that this is a "custom (unreviewed) source": expected for a plugin installed from a repository.
 
-2. **Open HermesTube** in the Hermes Desktop sidebar. Load the demo, paste a channel, or connect the extension.
+2. **Open HermesTube** in the sidebar: load the demo, paste a channel or connect the extension.
 
 3. **Set up the extension.** Press **Set up the extension**, then turn on Developer mode in your browser and drag the folder onto its Extensions page.
 
@@ -305,11 +309,11 @@ EXT_DIST_DIR=extension/dist npm run build:ext
 ## Usage
 
 | Where | Try this |
-|---|---|
-| **Hermes Desktop** | Open HermesTube in the sidebar. Click a video to watch it; ⌘/Ctrl-click opens it on YouTube. |
+|:---|:---|
+| **Hermes Desktop** | Open HermesTube in the sidebar and click a video to watch it |
 | **Chat** | "What's new on YouTube today?" · "Make a tab about home espresso" |
-| **Telegram** | `/tube` · `/tube triage` · `/tube cleanup` · `/tube topic <subject>` · `/tube routines` |
-| **youtube.com** | Your folders in a HermesTube bar, and a card on channel pages to follow, favorite or file a channel |
+| **Telegram** | `/tube` · `/tube triage` · `/tube cleanup`<br>`/tube topic <subject>` · `/tube routines` |
+| **youtube.com** | Your folders in a HermesTube bar, and a card on every channel page |
 
 **Guides:** [install](docs/user/install.md) · [Telegram](docs/user/telegram.md)
 
@@ -349,15 +353,15 @@ EXT_DIST_DIR=extension/dist npm run build:ext
 
 ## Privacy and disclosure
 
-| | In short |
-|---|---|
+| What | In short |
+|:---|:---|
 | **Your library** | One SQLite database in your Hermes profile |
 | **What the plugin reads** | Public `www.youtube.com` pages, without login |
-| **What the AI features send** | Channel names, video titles and your folder names, to the model you set up in Hermes |
-| **The extension** | Talks only to the plugin on `127.0.0.1` and acts only in your signed-in browser |
+| **What the AI sends** | Channel names, video titles and folder names, to your Hermes model |
+| **The extension** | Talks only to the plugin on `127.0.0.1`, in your signed-in browser |
 | **Telemetry** | None: no analytics, no server of ours |
 
-- Everything the plugin does on your machine and on the network, with the file that shows it, is in the [Disclosure section of plugin/README.md](plugin/README.md#disclosure).
+- Every action, with the file behind it: [Disclosure in plugin/README.md](plugin/README.md#disclosure).
 
 <details>
 <summary><b>The full list</b></summary>
@@ -373,16 +377,13 @@ EXT_DIST_DIR=extension/dist npm run build:ext
 
 ## How it works
 
-```mermaid
-flowchart LR
-    yt["youtube.com<br/>in your browser"] <--> ext["Extension<br/>Manifest V3"]
-    ext <-->|"127.0.0.1, paired with a code"| plugin["HermesTube plugin<br/>Python, inside Hermes"]
-    desk["Hermes Desktop<br/>the HermesTube page"] <-->|"REST and RPC"| plugin
-    chat["Chat and Telegram<br/>tools, /tube, routines"] <--> plugin
-    plugin --> model["Your Hermes model"]
-    plugin --> db[("SQLite<br/>in your Hermes profile")]
-    plugin -->|"reads"| pub["Public YouTube pages<br/>no login"]
-```
+| **youtube.com** | ⇄ **Extension** | ⇄ **HermesTube plugin** | ⇄ **Hermes Desktop, chat, Telegram** |
+|:-:|:-:|:-:|:-:|
+| in your browser | paired, talks only to 127.0.0.1 | Python, inside Hermes | page, tools, /tube, routines |
+
+- **Stores:** one SQLite database in your Hermes profile
+- **Thinks with:** your Hermes model, only for the AI features
+- **Reads:** public YouTube pages, without login
 
 <details>
 <summary><b>The parts, and the files behind each one</b></summary>
@@ -413,13 +414,13 @@ flowchart LR
 
 ## Development
 
-- You need a local checkout of Hermes Agent with the `hermes` command on your PATH, [uv](https://docs.astral.sh/uv/), and Node.js 22 or newer.
+- You need a Hermes Agent checkout with `hermes` on your PATH, [uv](https://docs.astral.sh/uv/) and Node.js 22+.
 - Details in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ```bash
 make venv              # .venv with Hermes's Python plus pytest and ruff
 npm ci
-scripts/check          # ruff, pytest, plugin doctor, tsc, vitest, both builds, generated types, catalog validation
+scripts/check          # every check: lint, tests, types, builds, catalog
 scripts/check --fast   # the same without the builds
 npm run typecheck      # tsc only
 npm run test:js        # vitest only
