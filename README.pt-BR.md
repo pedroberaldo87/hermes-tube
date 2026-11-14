@@ -7,6 +7,8 @@ uma aba inteira a partir de um assunto que você digita. Não há cadastro nem s
 seus dados ficam no seu computador. Uma pequena extensão de navegador conecta a sua conta do YouTube, e ela nunca
 cancela inscrição nenhuma sem o seu clique.
 
+Se o HermesTube for útil para você, uma estrela neste repositório ajuda outras pessoas a encontrá-lo.
+
 [English](README.md) · **Português**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)

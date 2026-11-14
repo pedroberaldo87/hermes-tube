@@ -7,6 +7,8 @@ whole tab from a topic you type. There's no sign-up and no server on our side: w
 on your machine. A small browser extension hooks up your YouTube account, and it never unsubscribes from anything
 unless you click.
 
+If HermesTube is useful to you, a star on this repository helps other people find it.
+
 **English** · [Português](README.pt-BR.md)
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
